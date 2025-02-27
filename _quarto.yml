@@ -1,0 +1,27 @@
+project:
+  type: book
+  output-dir: docs
+
+book:
+  title: "Biological language models"
+  author: "Miche Nivard"
+  date: "2/27/2025"
+  chapters:
+    - index.qmd
+    - Chapter1.qmd
+    - Chapter2.qmd
+    - summary.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+  pdf:
+    documentclass: scrreprt
+
+
+

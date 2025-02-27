@@ -1,0 +1,177 @@
+---
+title: "Collecting and Preparing DNA Sequences for a Language Model"
+format: html
+---
+
+
+## Introduction
+
+High-quality data is essential for training effective machine learning models. In natural language processing (NLP), researchers invest significant effort in curating clean datasets from raw internet text. For example a dataset like 'fineweb-edu' contains english text that is of very high quality. models trained on fineweb-edu (and similar high quality datasets) will improve MUCH faster.
+
+![Relative training efficiency using a high quality dataset like fineweb-edu and other massive datasets of English language texts. Image obtained from: https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu](https://cdn-uploads.huggingface.co/production/uploads/61c141342aac764ce1654e43/QqXOM8h_ZjjhuCv71xmV7.png){fig-align="center"}
+
+Those with experience with **genetics** will know most of what I am about to explain when it comes to the sources of genetic data and the file formats these come in. Those with an **ML** background will be very familiar with Huggingface and the amazing data/model/training integration their libraries offer. Assembing a useful genomics fatal for language modeling requires familiarity with both.
+
+When working with DNA, RNA, and protein sequences, the authoritative sources of data are specialized databases and infrastructures rather than data scraped from the internet. If you want to learn to train DNA/RNA/Protein-based language model, we must learn how, and where, to retrieve data and convert it into a structured format.
+
+In this tutorial, we will begin by collecting coding DNA sequences (CDS) from the human genome using the Ensembl database via BioMart. The goal is to store these sequences in a format suitable for training a DNA-based language model. We will then upload the processed data to Hugging Face, an efficient platform for hosting datasets for machine learning tasks.
+
+This chapter will introduce key biological and computational concepts, ensuring that both biology newcomers and those unfamiliar with language modeling tools can follow along.
+
+## Understanding Ensembl and BioMart
+
+**Ensembl** is a genomic database that provides extensive annotations for various species, including humans. It offers access to gene sequences, transcript annotations, and protein-coding information. One of its most powerful tools is **BioMart**, a flexible data retrieval system that allows users to download specific genomic datasets easily.
+
+Before working with the data, we need to store it in a format that is accessible and efficient for machine learning. Unlike text-based NLP datasets, genomic data is structured differently and must be properly formatted before use in a model.
+
+### What Are FASTA Files?
+
+A **FASTA file** is a simple text-based format used for storing biological sequences. Each entry in a FASTA file consists of: 1. A **header line** (starting with `>`), which contains metadata such as gene IDs and chromosome locations. 2. A **sequence** line, which contains the nucleotide or protein sequence.
+
+There is a very comprehensive Wikipedia entry on the FASTA format.
+
+"Sequences may be protein sequences or nucleic acid sequences, and they can contain gaps or alignment characters (see sequence alignment). Sequences are expected to be represented in the standard IUB/IUPAC amino acid and nucleic acid codes, with these exceptions: lower-case letters are accepted and are mapped into upper-case; a single hyphen or dash can be used to represent a gap character; and in amino acid sequences, U and \* are acceptable letters (see below). Numerical digits are not allowed but are used in some databases to indicate the position in the sequence." ((source: <https://en.wikipedia.org/wiki/FASTA_format>))
+
+| Nucleic Acid Code | Meaning | Mnemonic |
+|:----------------------:|:----------------------:|:----------------------:|
+| A | A | [**A**denine](https://en.wikipedia.org/wiki/Adenine "Adenine") |
+| C | C | [**C**ytosine](https://en.wikipedia.org/wiki/Cytosine "Cytosine") |
+| G | G | [**G**uanine](https://en.wikipedia.org/wiki/Guanine "Guanine") |
+| T | T | [**T**hymine](https://en.wikipedia.org/wiki/Thymine "Thymine") |
+| U | U | [**U**racil](https://en.wikipedia.org/wiki/Uracil "Uracil") |
+| \(i\) | i | [**i**nosine](https://en.wikipedia.org/wiki/Inosine "Inosine") (non-standard) |
+| R | A or G (I) | [pu**R**ine](https://en.wikipedia.org/wiki/Purine "Purine") |
+| Y | C, T or U | [p**Y**rimidines](https://en.wikipedia.org/wiki/Pyrimidine "Pyrimidine") |
+| K | G, T or U | bases which are [**K**etones](https://en.wikipedia.org/wiki/Ketone "Ketone") |
+| M | A or C | bases with [a**M**ino groups](https://en.wikipedia.org/wiki/Amino "Amino") |
+| S | C or G | **S**trong interaction |
+| W | A, T or U | **W**eak interaction |
+| B | not A (i.e. C, G, T or U) | **B** comes after A |
+| D | not C (i.e. A, G, T or U) | **D** comes after C |
+| H | not G (i.e., A, C, T or U) | **H** comes after G |
+| V | neither T nor U (i.e. A, C or G) | **V** comes after U |
+| N | A C G T U | **N**ucleic acid |
+| \- | gap of indeterminate length |  |
+
+The amino acid codes supported (22 amino acids and 3 special codes) are:
+
+| Amino Acid Code | Meaning |
+|:----------------------------------:|:----------------------------------:|
+| A | [Alanine](https://en.wikipedia.org/wiki/Alanine "Alanine") |
+| B | [Aspartic acid](https://en.wikipedia.org/wiki/Aspartic_acid "Aspartic acid") (D) or [Asparagine](https://en.wikipedia.org/wiki/Asparagine "Asparagine") (N) |
+| C | [Cysteine](https://en.wikipedia.org/wiki/Cysteine "Cysteine") |
+| D | [Aspartic acid](https://en.wikipedia.org/wiki/Aspartic_acid "Aspartic acid") |
+| E | [Glutamic acid](https://en.wikipedia.org/wiki/Glutamic_acid "Glutamic acid") |
+| F | [Phenylalanine](https://en.wikipedia.org/wiki/Phenylalanine "Phenylalanine") |
+| G | [Glycine](https://en.wikipedia.org/wiki/Glycine "Glycine") |
+| H | [Histidine](https://en.wikipedia.org/wiki/Histidine "Histidine") |
+| I | [Isoleucine](https://en.wikipedia.org/wiki/Isoleucine "Isoleucine") |
+| J | [Leucine](https://en.wikipedia.org/wiki/Leucine "Leucine") (L) or [Isoleucine](https://en.wikipedia.org/wiki/Isoleucine "Isoleucine") (I) |
+| K | [Lysine](https://en.wikipedia.org/wiki/Lysine "Lysine") |
+| L | [Leucine](https://en.wikipedia.org/wiki/Leucine "Leucine") |
+| M | [Methionine](https://en.wikipedia.org/wiki/Methionine "Methionine")/[Start codon](https://en.wikipedia.org/wiki/Start_codon "Start codon") |
+| N | [Asparagine](https://en.wikipedia.org/wiki/Asparagine "Asparagine") |
+| O | [Pyrrolysine](https://en.wikipedia.org/wiki/Pyrrolysine "Pyrrolysine") (rare) |
+| P | [Proline](https://en.wikipedia.org/wiki/Proline "Proline") |
+| Q | [Glutamine](https://en.wikipedia.org/wiki/Glutamine "Glutamine") |
+| R | [Arginine](https://en.wikipedia.org/wiki/Arginine "Arginine") |
+| S | [Serine](https://en.wikipedia.org/wiki/Serine "Serine") |
+| T | [Threonine](https://en.wikipedia.org/wiki/Threonine "Threonine") |
+| U | [Selenocysteine](https://en.wikipedia.org/wiki/Selenocysteine "Selenocysteine") (rare) |
+| V | [Valine](https://en.wikipedia.org/wiki/Valine "Valine") |
+| W | [Tryptophan](https://en.wikipedia.org/wiki/Tryptophan "Tryptophan") |
+| Y | [Tyrosine](https://en.wikipedia.org/wiki/Tyrosine "Tyrosine") |
+| Z | [Glutamic acid](https://en.wikipedia.org/wiki/Glutamic_acid "Glutamic acid") (E) or [Glutamine](https://en.wikipedia.org/wiki/Glutamine "Glutamine") (Q) |
+| X | any |
+| \* | translation stop |
+| \- | gap of indeterminate length |
+
+You'll notice the FASTA format has a well defined structure, and it could be leveraged to build a complete tokenizer, for now though our 4 character (+6 special characters) tokenizer will have to do.
+
+### Why Focus on Coding DNA Sequences (CDS)?
+
+In our case, we will retrieve the **human coding DNA sequences (CDS)**, which represent the DNA sequence of protein-coding regions of genes.
+
+While our ultimate goal is to model the entire human genome—and potentially multiple genomes across species or individuals—such tasks require significant computational resources. The tutorials in this book are designed to be accessible, running efficiently on a MacBook or Google Colab. Therefore, we focus on **CDS**, which are highly structured DNA sequences within genes, that directly transcribed into RNA which is in turn translate into proteins. the Table below contains the direct translation from 3 letter DNA sequence to amino-acid (which are the building blocks of proteins).
+
+![The Genetic code to translate codins (3 leter DNA sequences) to amino-acids that are in turn the building blocks of proteins (source: https://a-little-book-of-r-for-bioinformatics.readthedocs.io/en/latest/\_images/P7_image1.png)](images/paste-3.png){fig-align="center"}
+
+In contrast, much of the rest of the genome consists of regulatory regions, which are more complex and less structured. CDS sequences provide a strong foundation for a small DNA-based language model because they contain well-defined biological structure, making them a logical starting point before expanding to more complex genomic elements.
+
+## Why Upload DNA Data to Hugging Face?
+
+Hugging Face provides a robust ecosystem for hosting and sharing datasets, particularly for machine learning applications. Some key advantages include: - **Easy accessibility**: Researchers and models can easily retrieve datasets. - **Standardized format**: Datasets are structured for seamless integration with deep learning frameworks. - **Direct integration with Hugging Face tools**: The data on the Hugging Face Hub integrates seamlessly with their **Transformers** and **Trainer** Python libraries, making it easy to load datasets and train models. - **Version control and updates**: Data can be refined and expanded over time.
+
+By storing our dataset on Hugging Face, we enable efficient training and collaboration for DNA language modeling.
+
+## The Script: Downloading and Formatting Human CDS Data
+
+Below is the R script that downloads human CDS from Ensembl using BioMart, extracts metadata, and saves the processed data into a CSV file. the package we use, `biomartr` isnt the official R package but its a great option! it has very extensive documentation, so if you want to download other sequences in the future make sure to start here: <https://docs.ropensci.org/biomartr/>
+
+``` r
+# Install necessary packages
+install.packages("biomartr", dependencies = TRUE)
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
+  install.packages("BiocManager")
+}
+
+# Load required libraries
+library(Biostrings)
+library(biomartr)
+
+# Download the human CDS dataset from Ensembl
+HS.cds.ensembl <- getCDS(db = "ensembl", organism = "Homo sapiens", path = file.path("_ncbi_downloads","CDS"))
+
+# Read CDS data as a Biostrings object
+Human_CDS <- read_cds(file = HS.cds.ensembl, obj.type = "Biostrings")
+
+# Extract headers and sequences
+headers <- names(Human_CDS)
+sequences <- as.character(Human_CDS)
+
+# Function to extract metadata from headers
+extract_metadata <- function(header) {
+  transcript_id <- sub("^>([^ ]+).*", "\\1", header)
+  chromosome <- sub(".*chromosome:([^ ]+).*", "\\1", header)
+  start <- sub(".*chromosome:[^:]+:([^:]+).*", "\\1", header)
+  end <- sub(".*chromosome:[^:]+:[^:]+:([^:]+).*", "\\1", header)
+  strand <- sub(".*chromosome:[^:]+:[^:]+:[^:]+:([^ ]+).*", "\\1", header)
+  gene_id <- sub(".*gene:([^ ]+).*", "\\1", header)
+  gene_biotype <- sub(".*gene_biotype:([^ ]+).*", "\\1", header)
+  transcript_biotype <- sub(".*transcript_biotype:([^ ]+).*", "\\1", header)
+  gene_symbol <- sub(".*gene_symbol:([^ ]+).*", "\\1", header)
+  description <- sub(".*description:(.*)", "\\1", header)
+
+  list(
+    transcript_id = transcript_id,
+    chromosome = chromosome,
+    start = start,
+    end = end,
+    strand = strand,
+    gene_id = gene_id,
+    gene_biotype = gene_biotype,
+    transcript_biotype = transcript_biotype,
+    gene_symbol = gene_symbol,
+    description = description
+  )
+}
+
+# Extract metadata from headers
+metadata_list <- lapply(headers, extract_metadata)
+metadata_df <- do.call(rbind, lapply(metadata_list, as.data.frame))
+metadata_df$sequence <- sequences
+
+# Save data to CSV
+write.csv(metadata_df, "genome_sequences.csv", row.names = FALSE, quote = TRUE)
+
+# Print sample data
+head(metadata_df)
+```
+
+You can run the script yourself, but I have also gone ahead and uploaded it to huggingface: <https://huggingface.co/datasets/MichelNivard/Human-genome-CDS-GRCh38>
+
+## Summary
+
+In this chapter, we: - Introduced **Ensembl** and **BioMart** as tools for retrieving genomic data. - Explained **FASTA files** and **human CDS**, which form the core of our dataset. - Discussed the advantages of **uploading datasets to Hugging Face**, emphasizing its integration with **Transformers** and **Trainer** libraries. - Provided an **R script** to download, process, and store human CDS in a structured format.
+
+In the next chapter, we will explore **preprocessing techniques** and strategies for encoding DNA sequences into a format suitable for training a deep learning language model, and use Huggingface to train our first little DNA language model!
