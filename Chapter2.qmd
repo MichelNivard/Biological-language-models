@@ -129,7 +129,7 @@ def tokenize_function(examples):
 tokenized_dataset = dataset.map(tokenize_function, batched=True, remove_columns=[column_name])
 ```
 
-## Saving and Preparing the Dataset for Training
+### Saving and Preparing the Dataset for Training
 
 Once tokenized, we save the dataset for efficient access during training.
 
@@ -199,7 +199,7 @@ from transformers import ModernBertConfig, ModernBertForMaskedLM
 config = ModernBertConfig(
     vocab_size=len(dna_vocab),
     hidden_size=256,
-    num_hidden_layers=4,
+    num_hidden_layers=8,
     num_attention_heads=8,
     intermediate_size=512,
     max_position_embeddings=512,
