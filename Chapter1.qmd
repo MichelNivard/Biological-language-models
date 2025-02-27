@@ -3,10 +3,9 @@ title: "Collecting and Preparing DNA Sequences for a Language Model"
 format: html
 ---
 
-
 ## Introduction
 
-High-quality data is essential for training effective machine learning models. In natural language processing (NLP), researchers invest significant effort in curating clean datasets from raw internet text. For example a dataset like 'fineweb-edu' contains english text that is of very high quality. models trained on fineweb-edu (and similar high quality datasets) will improve MUCH faster.
+High-quality data is essential for training effective machine learning models. In natural language processing (NLP), researchers invest significant effort in curating clean datasets from raw internet text. For example a dataset like 'fineweb-edu' contains English text that is of very high quality. models trained on fineweb-edu (and similar high quality datasets) will improve MUCH faster.
 
 ![Relative training efficiency using a high quality dataset like fineweb-edu and other massive datasets of English language texts. Image obtained from: https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu](https://cdn-uploads.huggingface.co/production/uploads/61c141342aac764ce1654e43/QqXOM8h_ZjjhuCv71xmV7.png){fig-align="center"}
 
@@ -20,9 +19,9 @@ This chapter will introduce key biological and computational concepts, ensuring 
 
 ## Understanding Ensembl and BioMart
 
-**Ensembl** is a genomic database that provides extensive annotations for various species, including humans. It offers access to gene sequences, transcript annotations, and protein-coding information. One of its most powerful tools is **BioMart**, a flexible data retrieval system that allows users to download specific genomic datasets easily.
+Fortunately for us, there is decades of work cleaning up genomic data and we can just go and get it from US government funded websites, where it is deposited by the global scientific community. **Ensembl** is a genomic database that provides extensive annotations for various species, including humans. It offers access to gene sequences, transcript annotations, and protein-coding information. One of its most powerful tools is **BioMart**, a flexible data retrieval system that allows users to download specific genomic datasets easily.
 
-Before working with the data, we need to store it in a format that is accessible and efficient for machine learning. Unlike text-based NLP datasets, genomic data is structured differently and must be properly formatted before use in a model.
+If we want t work with the data in a language model its efficient to store it in a format that is tailored for machine learning libraries. Unlike text-based NLP datasets, genomic data is structured differently and must be properly formatted before use in a model.
 
 ### What Are FASTA Files?
 
@@ -90,7 +89,7 @@ You'll notice the FASTA format has a well defined structure, and it could be lev
 
 ### Why Focus on Coding DNA Sequences (CDS)?
 
-In our case, we will retrieve the **human coding DNA sequences (CDS)**, which represent the DNA sequence of protein-coding regions of genes.
+In the example, we retrieve the **human coding DNA sequences (CDS)**, which represent the DNA sequence of protein-coding regions of genes.
 
 While our ultimate goal is to model the entire human genome—and potentially multiple genomes across species or individuals—such tasks require significant computational resources. The tutorials in this book are designed to be accessible, running efficiently on a MacBook or Google Colab. Therefore, we focus on **CDS**, which are highly structured DNA sequences within genes, that directly transcribed into RNA which is in turn translate into proteins. the Table below contains the direct translation from 3 letter DNA sequence to amino-acid (which are the building blocks of proteins).
 
@@ -174,4 +173,4 @@ You can run the script yourself, but I have also gone ahead and uploaded it to h
 
 In this chapter, we: - Introduced **Ensembl** and **BioMart** as tools for retrieving genomic data. - Explained **FASTA files** and **human CDS**, which form the core of our dataset. - Discussed the advantages of **uploading datasets to Hugging Face**, emphasizing its integration with **Transformers** and **Trainer** libraries. - Provided an **R script** to download, process, and store human CDS in a structured format.
 
-In the next chapter, we will explore **preprocessing techniques** and strategies for encoding DNA sequences into a format suitable for training a deep learning language model, and use Huggingface to train our first little DNA language model!
+In the next chapter, we will explore **preprocessing techniques like tokenization** and strategies for encoding DNA sequences into a format suitable for training a deep learning language model, and we use Huggingface Transformers and Trainer library to train our first little DNA language model!
