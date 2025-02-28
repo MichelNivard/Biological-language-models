@@ -4,7 +4,37 @@
     "href": "index.html",
     "title": "Biological language models",
     "section": "",
-    "text": "Preface\nThese are study notes on training DNA/RNA/Protein language models.\nThe first section covers DNA language models\nChapter 1 covers downloading (DNA) sequences data from ensembl and uploading it to Huggingface. Chapter 2 covers training a first small DNA sequence language model. in Chapter 3 we explore how you’d evaluate whether a DNA model is any good, is our model learning anything at all?\nThese notes are written by me, Michel Nivard, a professor of Epidemiology at the University of Bristol, and as this book is not a core outputs for my job, I rely heavily on LLMs to help me with spelling and formatting.\nThese study notes are influences by discussion with Robbee Wedow and Seyedeh Zahra Paylakhi with whom I work on relate projects.",
+    "text": "Preface\nThese are study notes on training DNA/RNA/Protein and other biomedical language models. The book is intended for peopel who will either on-ramp to actually train DNA/Biological language models, or for their PIs, all anxious aging millennial and bitter gen-X’ers who want to be able to understand the next generation of computational genomics that is about to wash over us all.\nAt all times I’ll try to add minimal biological context (though I am no biologist!) for people who ave an ML background but no college bio experience and ill try to add context on ML concepts for those with a bio background but limited experience with language models.",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "index.html#structure",
+    "href": "index.html#structure",
+    "title": "Biological language models",
+    "section": "Structure",
+    "text": "Structure\nThe book is divided up into sections that deal with a specific modality or data type.\nThe first section covers DNA language models\nChapter 1 covers downloading (DNA) sequences data from ensembl and uploading it to Huggingface. Chapter 2 covers training a first small DNA sequence language model. in Chapter 3 we explore how you’d evaluate whether a DNA model is any good, is our model learning anything at all?\nThe second section will cover RNA language models\nThe thirds section will cover protein language models\nThe forth section covers epidemiological language models",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "index.html#practicalities",
+    "href": "index.html#practicalities",
+    "title": "Biological language models",
+    "section": "Practicalities",
+    "text": "Practicalities\nThe book is accompanied by scripts in both the R and Python programming languages. IF you want to code along, and aren’t training any models that need to out compete the state of the art you can run most of this on a macbook. Maybe you’ll need to run a training run overnight. If you want a bit more performance you can use google colab for access to A100 GPUs training the DNABert we outline in Chapter 2 on 500k coding sequences from 13 species took ±6 hours on an A100 on Colab, which means that cost me ±4$ in colab credit.\nI can highly recommend using positron as an IDE when following along with this book (https://positron.posit.co), its a vscode fork, and a great alternative to RStudio. it has tooling integrated for datascience in both python and R and I can switch between python and R sessions instantly!",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "index.html#acknowledgements",
+    "href": "index.html#acknowledgements",
+    "title": "Biological language models",
+    "section": "Acknowledgements",
+    "text": "Acknowledgements\nThese notes are written by me, Michel Nivard, a professor of Epidemiology at the University of Bristol, and as this book is not a core outputs for my job, I rely heavily on LLMs to help me with spelling and formatting.\nThese study notes are influences by discussion with Robbee Wedow and Seyedeh Zahra Paylakhi with whom I work on relate projects.",
     "crumbs": [
       "Preface"
     ]

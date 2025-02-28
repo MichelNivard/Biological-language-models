@@ -164,7 +164,12 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#preface" id="toc-preface" class="nav-link active" data-scroll-target="#preface">Preface</a></li>
+  <li><a href="#preface" id="toc-preface" class="nav-link active" data-scroll-target="#preface">Preface</a>
+  <ul class="collapse">
+  <li><a href="#structure" id="toc-structure" class="nav-link" data-scroll-target="#structure">Structure</a></li>
+  <li><a href="#practicalities" id="toc-practicalities" class="nav-link" data-scroll-target="#practicalities">Practicalities</a></li>
+  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements">Acknowledgements</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -204,13 +209,29 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="preface" class="level1 unnumbered">
 <h1 class="unnumbered">Preface</h1>
-<p>These are study notes on training DNA/RNA/Protein language models.</p>
+<p>These are study notes on training DNA/RNA/Protein and other biomedical language models. The book is intended for peopel who will either on-ramp to actually train DNA/Biological language models, or for their PIs, all anxious aging millennial and bitter gen-X’ers who want to be able to understand the next generation of computational genomics that is about to wash over us all.</p>
+<p>At all times I’ll try to add minimal biological context (though I am no biologist!) for people who ave an ML background but no college bio experience and ill try to add context on ML concepts for those with a bio background but limited experience with language models.</p>
+<section id="structure" class="level2">
+<h2 class="anchored" data-anchor-id="structure">Structure</h2>
+<p>The book is divided up into sections that deal with a specific modality or data type.</p>
 <p>The first section covers DNA language models</p>
 <p><strong>Chapter 1 covers</strong> downloading (DNA) sequences data from ensembl and uploading it to Huggingface. <strong>Chapter 2 covers</strong> training a first small DNA sequence language model. in <strong>Chapter 3</strong> we explore how you’d evaluate whether a DNA model is any good, is our model learning anything at all?</p>
+<p>The second section will cover RNA language models</p>
+<p>The thirds section will cover protein language models</p>
+<p>The forth section covers epidemiological language models</p>
+</section>
+<section id="practicalities" class="level2">
+<h2 class="anchored" data-anchor-id="practicalities">Practicalities</h2>
+<p>The book is accompanied by scripts in both the R and Python programming languages. IF you want to code along, and aren’t training any models that need to out compete the state of the art you can run most of this on a macbook. Maybe you’ll need to run a training run overnight. If you want a bit more performance you can use google colab for access to A100 GPUs training the DNABert we outline in Chapter 2 on 500k coding sequences from 13 species took ±6 hours on an A100 on Colab, which means that cost me ±4$ in colab credit.</p>
+<p>I can highly recommend using positron as an IDE when following along with this book (<a href="https://positron.posit.co" class="uri">https://positron.posit.co</a>), its a vscode fork, and a great alternative to RStudio. it has tooling integrated for datascience in both python and R and I can switch between python and R sessions instantly!</p>
+</section>
+<section id="acknowledgements" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
 <p>These notes are written by me, Michel Nivard, a professor of Epidemiology at the University of Bristol, and as this book is not a core outputs for my job, I rely heavily on LLMs to help me with spelling and formatting.</p>
 <p>These study notes are influences by discussion with Robbee Wedow and Seyedeh Zahra Paylakhi with whom I work on relate projects.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
