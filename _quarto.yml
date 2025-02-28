@@ -2,10 +2,12 @@ project:
   type: book
   output-dir: docs
 
+
 book:
   title: "Biological language models & Neural Networks"
   author: "Miche Nivard"
   date: "2/27/2025"
+  reader-mode: true
   chapters:
     - index.qmd
     - part: "DNA"
