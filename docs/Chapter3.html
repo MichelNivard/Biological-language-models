@@ -229,9 +229,9 @@ window.Quarto = {
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">3.1</span> Introduction</a></li>
   <li><a href="#biological-background-the-genetic-code-and-mutation-types" id="toc-biological-background-the-genetic-code-and-mutation-types" class="nav-link" data-scroll-target="#biological-background-the-genetic-code-and-mutation-types"><span class="header-section-number">3.2</span> Biological Background: The Genetic Code and Mutation Types</a></li>
   <li><a href="#enumerating-all-single-nucleotide-mutants" id="toc-enumerating-all-single-nucleotide-mutants" class="nav-link" data-scroll-target="#enumerating-all-single-nucleotide-mutants"><span class="header-section-number">3.3</span> Enumerating All Single-Nucleotide Mutants</a></li>
-  <li><a href="#evaluating-mutant-likelihoods-with-a-bert-model" id="toc-evaluating-mutant-likelihoods-with-a-bert-model" class="nav-link" data-scroll-target="#evaluating-mutant-likelihoods-with-a-bert-model"><span class="header-section-number">3.4</span> Evaluating Mutant Likelihoods with a BERT Model</a>
+  <li><a href="#evaluating-base-position-likelihoods-with-a-bert-model" id="toc-evaluating-base-position-likelihoods-with-a-bert-model" class="nav-link" data-scroll-target="#evaluating-base-position-likelihoods-with-a-bert-model"><span class="header-section-number">3.4</span> Evaluating base position likelihoods with a BERT Model</a>
   <ul class="collapse">
-  <li><a href="#the-likelihood-ratio-as-a-metric-for-mutations" id="toc-the-likelihood-ratio-as-a-metric-for-mutations" class="nav-link" data-scroll-target="#the-likelihood-ratio-as-a-metric-for-mutations"><span class="header-section-number">3.4.1</span> The Likelihood Ratio as a metric for mutations</a></li>
+  <li><a href="#the-likelihood-ratio-to-evaluate-mutations" id="toc-the-likelihood-ratio-to-evaluate-mutations" class="nav-link" data-scroll-target="#the-likelihood-ratio-to-evaluate-mutations"><span class="header-section-number">3.4.1</span> The Likelihood Ratio to evaluate mutations</a></li>
   <li><a href="#language-models-provide-biological-insight-trough-the-likelihood-ratio" id="toc-language-models-provide-biological-insight-trough-the-likelihood-ratio" class="nav-link" data-scroll-target="#language-models-provide-biological-insight-trough-the-likelihood-ratio"><span class="header-section-number">3.4.2</span> Language Models Provide Biological Insight trough the likelihood ratio</a></li>
   </ul></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">3.5</span> Summary</a></li>
@@ -597,8 +597,8 @@ Tip
 <span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(<span class="at">file=</span><span class="st">"DRD2_mutations.csv"</span>,output)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The code can be used to generate massive amounts of mutations for validation, but missense vs synonymous is a very simple and crude distinction to make! to fully validate a DNA model we’ll want to obtain additional external information and well do so in later chapters!</p>
 </section>
-<section id="evaluating-mutant-likelihoods-with-a-bert-model" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="evaluating-mutant-likelihoods-with-a-bert-model"><span class="header-section-number">3.4</span> Evaluating Mutant Likelihoods with a BERT Model</h2>
+<section id="evaluating-base-position-likelihoods-with-a-bert-model" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="evaluating-base-position-likelihoods-with-a-bert-model"><span class="header-section-number">3.4</span> Evaluating base position likelihoods with a BERT Model</h2>
 <p>In machine learning terms, the&nbsp;<strong>MLM loss</strong>&nbsp;is the&nbsp;<strong>negative log likelihood (NLL)</strong>&nbsp;of the correct nucleotide. For example, if the correct nucleotide is “A” at a given position, and the model assigns “A” a probability of 0.8, then the contribution to the loss is:</p>
 <p><span class="math display">\[loss = −ln(0.8) = 0.22\]</span></p>
 <p>The lower this value, the better the model’s confidence matches reality — indicating that the nucleotide was expected. Near the end of training our models loss hovered around 1.09, meaning that the average true base had a predicted probability of ±34%. The loss is highly dependent on the tokenizer, for example if we would have used a more complex tokenizer with say 100 options for each next token (encoding for example all 3-mer combinations of bases: A,C,T,G,AA,AC,AT,AG etc etc until GGA,GGG) the the probability of geting the one correct token is way lower as the base rate is way lower!</p>
@@ -673,11 +673,12 @@ Tip
 <span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>    log_prob_mutant <span class="op">=</span> log_probs[mutant_base_id].item()</span>
 <span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> log_prob_wild <span class="op">-</span> log_prob_mutant</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<section id="the-likelihood-ratio-as-a-metric-for-mutations" class="level3" data-number="3.4.1">
-<h3 data-number="3.4.1" class="anchored" data-anchor-id="the-likelihood-ratio-as-a-metric-for-mutations"><span class="header-section-number">3.4.1</span> The Likelihood Ratio as a metric for mutations</h3>
+<section id="the-likelihood-ratio-to-evaluate-mutations" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="the-likelihood-ratio-to-evaluate-mutations"><span class="header-section-number">3.4.1</span> The Likelihood Ratio to evaluate mutations</h3>
 <p>The log-likelihood ratio (LLR) compares how much more (or less) likely the wild-type sequence is compared to a mutant sequence, given the DNA language model. Specifically, we compare the log likelihood of the correct wild-type nucleotide to the log likelihood of the mutant nucleotide at the mutated position only.</p>
-<p>L L R = log ⁡ P ( wild-type&nbsp;nucleotide ∣ context ) − log ⁡ P ( mutant&nbsp;nucleotide ∣ context ) LLR=logP(wild-type&nbsp;nucleotide∣context)−logP(mutant&nbsp;nucleotide∣context) This metric is widely used in bioinformatics because it focuses on the exact site of the mutation, instead of comparing entire sequences. A positive LLR indicates the wild-type is favored by the model, while a negative LLR means the mutant is more likely.</p>
-<p>We then apply these functions to all the synthetic DRD2 mutations we generated (in the first 512 bases) to evaluate whether the DNABert we trained thinks the missense mutations are generally less likely given the model.</p>
+<p><span class="math display">\[LLR = log ⁡ P ( wild-type&nbsp;nucleotide ∣ context ) − log ⁡ P ( mutant&nbsp;nucleotide ∣ context )\]</span></p>
+<p>This metric is widely used in bioinformatics because it focuses on the exact site of the mutation, instead of comparing entire sequences. A positive LLR indicates the wild-type is favored by the model (the mutation is unlikely and therefore possibly deliterious), while a negative LLR means the mutant is more likely (the mutation is neural or maybe even protectivr).</p>
+<p>We then apply these functions to all the synthetic DRD2 mutations we generated (in the first 512 bases) to evaluate whether the DNABert we trained thinks the missense mutations are generally less likely, and therefore possibly damaging, given the model.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load dataset directly from Hugging Face dataset repo</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>dataset_url <span class="op">=</span> <span class="st">"https://huggingface.co/datasets/MichelNivard/DRD2-mutations/raw/main/DRD2_mutations.csv"</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(dataset_url)</span>
@@ -692,41 +693,83 @@ Tip
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx, row <span class="kw">in</span> df.iterrows():</span>
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    sequence <span class="op">=</span> row[<span class="st">'sequence'</span>][:MAX_CONTEXT_LENGTH]</span>
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    mutation_type <span class="op">=</span> row[<span class="st">'mutation_type'</span>]</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    mutation_position <span class="op">=</span> <span class="bu">int</span>(row[<span class="st">'mutation_position'</span>]) <span class="op">-</span> <span class="dv">1</span>  <span class="co"># Convert 1-based to 0-based</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    mutation_position <span class="op">=</span> row[<span class="st">'mutation_position'</span>] <span class="op">-</span> <span class="dv">1</span>  <span class="co"># Convert 1-based to 0-based</span></span>
 <span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Skip mutants where the mutation position is beyond 512 bases</span></span>
 <span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> mutation_type <span class="op">!=</span> <span class="st">'wildtype'</span> <span class="kw">and</span> mutation_position <span class="op">&gt;=</span> MAX_CONTEXT_LENGTH:</span>
 <span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">continue</span></span>
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    pll <span class="op">=</span> compute_log_likelihood(sequence, tokenizer, model)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(idx)</span>
 <span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    llr <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> mutation_type <span class="op">!=</span> <span class="st">'wildtype'</span>:</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>        llr <span class="op">=</span> compute_mutant_log_likelihood_ratio(</span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>            wild_type_sequence, sequence, mutation_position, tokenizer, model</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    results.append({</span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>        <span class="st">'sequence'</span>: sequence,</span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">'mutation_type'</span>: mutation_type,</span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">'pll'</span>: pll,</span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">'llr'</span>: llr</span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to DataFrame for saving or inspection</span></span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>results_df <span class="op">=</span> pd.DataFrame(results)</span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Save or print results</span></span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(results_df)</span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a><span class="co"># Optionally, save to CSV</span></span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>results_df.to_csv(<span class="st">"sequence_log_likelihoods.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    log_prob_wild <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    prob_wild <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> mutation_type <span class="op">!=</span> <span class="st">'wildtype'</span>:</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>        llr, log_prob_wild, prob_wild <span class="op">=</span> compute_mutant_log_likelihood_ratio(</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>            wild_type_sequence, sequence, <span class="bu">int</span>(mutation_position), tokenizer, model</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># append results for each mutation:</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    results.append({</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>        <span class="st">'sequence'</span>: sequence,</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>        <span class="st">'mutation_type'</span>: mutation_type,</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">'pll'</span>: <span class="dv">0</span>,</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>        <span class="st">'llr'</span>: llr,</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>        <span class="st">'wildtype_log_prob'</span>: log_prob_wild,</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>        <span class="st">'wildtype_prob'</span>: prob_wild,</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>        <span class="st">'mutation_position'</span>: mutation_position <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to DataFrame for saving or inspection</span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>results_df <span class="op">=</span> pd.DataFrame(results)</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Save or print results</span></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(results_df)</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Optionally, save to CSV</span></span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>results_df.to_csv(<span class="st">"sequence_log_likelihoods.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="language-models-provide-biological-insight-trough-the-likelihood-ratio" class="level3" data-number="3.4.2">
 <h3 data-number="3.4.2" class="anchored" data-anchor-id="language-models-provide-biological-insight-trough-the-likelihood-ratio"><span class="header-section-number">3.4.2</span> Language Models Provide Biological Insight trough the likelihood ratio</h3>
-<p>Why do we care about these log likelihoods and likelihood ratios? Because they provide a direct, data-driven estimate of how plausible or “natural” each sequence looks to the model. Since the model was trained on real DNA sequences, sequences with high likelihoods resemble biological reality, while sequences with low likelihoods deviate from patterns the model has learned.</p>
-<p>This lets us flag potentially deleterious mutations (those with sharp likelihood drops), prioritize candidate variants for functional follow-up, or even explore adaptive evolution by identifying mutations that DNA BERT “likes” more than the wild-type.</p>
-<p>Lets first simply plot the likelihood ratio’s for all synonymous and missense mutations we introduced to DRD2:</p>
+<p>Why do we care about these log likelihoods and log likelihood ratios? Because they provide a direct, data-driven estimate of how plausible or “natural” each mutated sequence looks to the model compared to the wild type sequence. Since the model was trained on real DNA sequences, sequences with high likelihoods resemble biological reality, while sequences with low likelihoods deviate from patterns the model has learned. A high “mutation log likelihood ratio” corresponds tot he model strongly favoring the reference sequences over the mutation. This test lets us flag potentially deleterious mutations (those with sharp likelihood drops), prioritize candidate variants for functional follow-up, or even explore adaptive evolution by identifying mutations that DNA BERT “likes” more than the wild-type</p>
+<p>To explore our result here, we can plot the LLR versus the position within the DRD2 gene, this can give us insight into the location within the coding sequence where we find unlikely (and therefore potentially damaging) mutations. in the lot below a LOW LLR means the variant is unlikely. Most variants cluster around a neural LLR, consistent with some statistical noise.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter to only mutations (skip wildtype which has no llr)</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>plot_df <span class="op">=</span> results_df[results_df[<span class="st">'mutation_type'</span>].isin([<span class="st">'synonymous'</span>, <span class="st">'missense'</span>])].copy()</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Optional: Clip LLR to avoid excessive sizes</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>plot_df[<span class="st">'size'</span>] <span class="op">=</span> plot_df[<span class="st">'llr'</span>].clip(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>)  <span class="co"># LLRs smaller than -5 get maximum size</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatter plot with enhanced size scaling</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">5</span>))</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">'mutation_position'</span>, </span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span><span class="st">'llr'</span>, </span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    hue<span class="op">=</span><span class="st">'mutation_type'</span>, </span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    size<span class="op">=</span><span class="st">'size'</span>,  <span class="co"># Use clipped size column</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    sizes<span class="op">=</span>(<span class="dv">20</span>, <span class="dv">200</span>),  <span class="co"># Bigger range for better visibility</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">0.7</span>, </span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    palette<span class="op">=</span>{<span class="st">'synonymous'</span>: <span class="st">'green'</span>, <span class="st">'missense'</span>: <span class="st">'orange'</span>},</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>plot_df</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>plt.axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">'gray'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'Neutral LLR'</span>)</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Mutation Log Likelihood Ratio (LLR) Along DRD2 Gene'</span>)</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Position in Gene'</span>)</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Log Likelihood Ratio (LLR)'</span>)</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>plt.legend(title<span class="op">=</span><span class="st">'Mutation Type'</span>, bbox_to_anchor<span class="op">=</span>(<span class="fl">1.02</span>, <span class="dv">1</span>), loc<span class="op">=</span><span class="st">'upper left'</span>)</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="images/paste-9.png" class="img-fluid"></p>
+<p>ou’ll notice from the plot along the coding sequence that 1. really almost all very unlikely mutations (positive LLR) are missense mutations and 2. There are potentially certain locations within this particular coding sequence where there is an abundance of unlikely mutations packed closely together, these could be regions that are intolerant to deleterious mutations.</p>
+<p>Its important to not get overconfident in our predictions! Rember this is a relatively tiny DNA sequence model (±5m parameters) we trained on sequences for 13 fairly randomly picked vertebrae. Lets look at the likelihood of the true base in the references (wild-type) sequence given the model. The mean probability is 40%, given the model essentially is trying to pick between 4 tokens (G,C,T &amp; A) 40% is considerably better then chance! Its also clear the probability is not even across the gene, the first few based are almost certain (almost all coding sequences in these species start with the start codon ATG, the model obviously learned this). After that there is quite a spread, which is logical I think, in many places across the sequence the specific base might be very obvious, as all three alternates might be missense mutations, but in other spot one, two or even all three alternate tokens might be synonymous, and perhaps even present int he analog gene int he other 12 species we trained our model on! This would make the model FAR less certain about the true base at that location.</p>
+<p><img src="images/paste-10.png" class="img-fluid"></p>
 </section>
 </section>
 <section id="summary" class="level2" data-number="3.5">
