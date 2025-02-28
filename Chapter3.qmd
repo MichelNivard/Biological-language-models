@@ -19,7 +19,7 @@ This chapter has two goals:
 
 Before diving into code, it’s useful to recall the basics of how DNA encodes proteins. DNA is transcribed into RNA, and RNA is translated into proteins using **codons**, groups of three nucleotides. Each codon corresponds to a specific amino acid — this mapping is called the **genetic code**.
 
-![DNA is translated to RNA then transcribed to amino-acids which form proteins. Source: https://www.khanacademy.org/science/ap-biology/gene-expression-and-regulation/translation/a/intro-to-gene-expression-central-dogma](images/paste-6.png){fig-align="center"}
+![**Figure 3.1** DNA is translated to RNA then transcribed to amino-acids which form proteins. Source: https://www.khanacademy.org/science/ap-biology/gene-expression-and-regulation/translation/a/intro-to-gene-expression-central-dogma](images/paste-6.png){fig-align="center"}
 
 Crucially, some amino acids can be encoded by multiple codons, a property called **degeneracy**. This degeneracy is why **synonymous mutations** exist — changes in the DNA sequence that do not alter the resulting amino acid. In contrast, **missense mutations** alter the encoded amino acid, which may change protein function.
 
@@ -366,20 +366,20 @@ plt.grid(True, linestyle='--', alpha=0.5)
 plt.show()
 ```
 
-![](images/paste-9.png)
+![**Figure 3.2.** The LLR for the mutation, high values mean the reference or wild type sequence is far more likely then the mutation., very high LLR values are almost exclusively missense mutations, consistent with a DNA model able to pick up dewleterious variants based on its training](images/paste-11.png)
 
-ou'll notice from the plot along the coding sequence that 1. really almost all very unlikely mutations (positive LLR) are missense mutations and 2. There are potentially certain locations within this particular coding sequence where there is an abundance of unlikely mutations packed closely together, these could be regions that are intolerant to deleterious mutations.
+Its obvious from **Figure 3.2** that 1. really almost all very unlikely mutations (positive LLR) are missense mutations and 2. There are potentially certain locations within this particular coding sequence where there is an abundance of unlikely mutations packed closely together, these could be regions that are intolerant to deleterious mutations.
 
-Its important to not get overconfident in our predictions! Rember this is a relatively tiny DNA sequence model (±5m parameters) we trained on sequences for 13 fairly randomly picked vertebrae. Lets look at the likelihood of the true base in the references (wild-type) sequence given the model. The mean probability is 40%, given the model essentially is trying to pick between 4 tokens (G,C,T & A) 40% is considerably better then chance! Its also clear the probability is not even across the gene, the first few based are almost certain (almost all coding sequences in these species start with the start codon ATG, the model obviously learned this). After that there is quite a spread, which is logical I think, in many places across the sequence the specific base might be very obvious, as all three alternates might be missense mutations, but in other spot one, two or even all three alternate tokens might be synonymous, and perhaps even present int he analog gene int he other 12 species we trained our model on! This would make the model FAR less certain about the true base at that location.
+Its important to not get overconfident in our predictions! Rember this is a relatively tiny DNA sequence model (±5m parameters) we trained on sequences for 13 fairly randomly picked vertebrae. Lets look at the likelihood of the true base in the references (wild-type) sequence given the model. The mean probability is 40% (**Figure 3.3**), given the model essentially is trying to pick between 4 tokens (G,C,T & A) 40% is considerably better then chance! Its also clear the probability is not even across the gene, the first few based are almost certain (almost all coding sequences in these species start with the start codon ATG, the model obviously learned this). After that there is quite a spread, which is logical I think, in many places across the sequence the specific base might be very obvious, as all three alternates might be missense mutations, but in other spot one, two or even all three alternate tokens might be synonymous, and perhaps even present int he analog gene int he other 12 species we trained our model on! This would make the model FAR less certain about the true base at that location.
 
-![](images/paste-10.png)
+![**Figure 3.3** The probability of the base in the reference, or wild type, sequence given the DNABert model we trained. The model clearly performed above random (random guessing would be 1 in 4, or 25%).](images/paste-10.png)
 
 ## Summary
 
-This chapter introduced:
+This chapter introduced soem key pieces that are esential for DNA Langisage models.
 
--   How to systematically generate all **synonymous and missense mutations**.
--   How to compute **log-likelihoods using DNA BERT**, a proxy for how natural the model considers each sequence.
--   How to link these computational scores to the underlying **genetic code**.
+-   We explored how to systematically generate all **synonymous and missense mutations in a gene,** these simuated mutations then form an important part in imnnitial evaluation of our model.
+-   We discussed how to compute the **log-likelihood. of a sequences, and log-likelihood ratio of a single mutation using DNA BERT**. These metrics are a proxy for how natural the model considers each sequence.
+-   We finally used these simulated mutation, some knowledge of biology (whether the mutations are synonymous or missense) to validate our language model actually did do some learning.
 
-These techniques provide the foundation for variant effect prediction using **genomic language models**.
+The analyses outlined in this chapter form the foundation for variant effect prediction using **genomic language models**.

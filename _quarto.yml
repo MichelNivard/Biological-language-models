@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 book:
-  title: "Biological language models"
+  title: "Biological language models & Neural Networks"
   author: "Miche Nivard"
   date: "2/27/2025"
   chapters:
