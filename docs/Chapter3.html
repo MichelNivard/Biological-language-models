@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; Evaluating DNA Language Models with syneteticly mutated sequences – Biological language models</title>
+<title>3&nbsp; Evaluating DNA Language Models with synthetic sequences – Biological language models</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -144,7 +144,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter3.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating DNA Language Models with syneteticly mutated sequences</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter3.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating DNA Language Models with synthetic sequences</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -175,24 +175,35 @@ window.Quarto = {
  <span class="menu-text">Preface</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">DNA</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter1.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Collecting and Preparing DNA Sequences for a Language Model</span></span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter2.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Training our first DNA Language Model: BERT</span></span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter3.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating DNA Language Models with syneteticly mutated sequences</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating DNA Language Models with synthetic sequences</span></span></a>
   </div>
 </li>
+      </ul>
+  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./summary.html" class="sidebar-item-text sidebar-link">
@@ -220,7 +231,7 @@ window.Quarto = {
   <li><a href="#enumerating-all-single-nucleotide-mutants" id="toc-enumerating-all-single-nucleotide-mutants" class="nav-link" data-scroll-target="#enumerating-all-single-nucleotide-mutants"><span class="header-section-number">3.3</span> Enumerating All Single-Nucleotide Mutants</a></li>
   <li><a href="#evaluating-mutant-likelihoods-with-a-bert-model" id="toc-evaluating-mutant-likelihoods-with-a-bert-model" class="nav-link" data-scroll-target="#evaluating-mutant-likelihoods-with-a-bert-model"><span class="header-section-number">3.4</span> Evaluating Mutant Likelihoods with a BERT Model</a>
   <ul class="collapse">
-  <li><a href="#what-is-a-likelihood-ratio" id="toc-what-is-a-likelihood-ratio" class="nav-link" data-scroll-target="#what-is-a-likelihood-ratio"><span class="header-section-number">3.4.1</span> What is a Likelihood Ratio?</a></li>
+  <li><a href="#the-likelihood-ratio-as-a-metric-for-mutations" id="toc-the-likelihood-ratio-as-a-metric-for-mutations" class="nav-link" data-scroll-target="#the-likelihood-ratio-as-a-metric-for-mutations"><span class="header-section-number">3.4.1</span> The Likelihood Ratio as a metric for mutations</a></li>
   <li><a href="#language-models-provide-biological-insight-trough-the-likelihood-ratio" id="toc-language-models-provide-biological-insight-trough-the-likelihood-ratio" class="nav-link" data-scroll-target="#language-models-provide-biological-insight-trough-the-likelihood-ratio"><span class="header-section-number">3.4.2</span> Language Models Provide Biological Insight trough the likelihood ratio</a></li>
   </ul></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">3.5</span> Summary</a></li>
@@ -230,9 +241,9 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter3.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating DNA Language Models with synthetic sequences</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating DNA Language Models with syneteticly mutated sequences</span></h1>
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating DNA Language Models with synthetic sequences</span></h1>
 </div>
 
 
@@ -470,7 +481,20 @@ window.Quarto = {
 </section>
 <section id="enumerating-all-single-nucleotide-mutants" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="enumerating-all-single-nucleotide-mutants"><span class="header-section-number">3.3</span> Enumerating All Single-Nucleotide Mutants</h2>
-<p>The code below systematically generates&nbsp;<strong>every possible single nucleotide substitution</strong>&nbsp;across the input sequence. Since each codon consists of three nucleotides, and each nucleotide can mutate into three alternatives, there are up to 9 potential codon variants for each original codon.</p>
+<p>The code in this section systematically generates&nbsp;<strong>every possible single nucleotide substitution</strong>&nbsp;across the input sequence. Since each codon consists of three nucleotides, and each nucleotide can mutate into three alternatives, there are up to 9 potential codon variants for each original codon.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The data generated by applying this “mutator” to the DRD2 (Dopamine receptor D2) gene is on huggingface: <a href="https://huggingface.co/datasets/MichelNivard/DRD2-mutations" class="uri">https://huggingface.co/datasets/MichelNivard/DRD2-mutations</a></p>
+</div>
+</div>
 <p>For each mutation, we check the&nbsp;<strong>original amino acid</strong>&nbsp;and the&nbsp;<strong>new amino acid</strong>&nbsp;using the standard genetic code table. This allows us to classify each mutation as either:</p>
 <ul>
 <li><p><strong>Synonymous</strong>&nbsp;— Same amino acid, no apparent change to the protein.</p></li>
@@ -570,7 +594,7 @@ window.Quarto = {
 <span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(<span class="at">file=</span><span class="st">"DRD2_mutations.csv"</span>,output)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>I have uploaded the resulting dataset for a specific coding sequence of the DRD2 gene to huggingface so its easy to evaluate later: <a href="https://huggingface.co/datasets/MichelNivard/DRD2-mutations" class="uri">https://huggingface.co/datasets/MichelNivard/DRD2-mutations</a></p>
+<p>The code can be used to generate massive amounts of mutations for validation, but missense vs synonymous is a very simple and crude distinction to make! to fully validate a DNA model we’ll want to obtain additional external information and well do so in later chapters!</p>
 </section>
 <section id="evaluating-mutant-likelihoods-with-a-bert-model" class="level2" data-number="3.4">
 <h2 data-number="3.4" class="anchored" data-anchor-id="evaluating-mutant-likelihoods-with-a-bert-model"><span class="header-section-number">3.4</span> Evaluating Mutant Likelihoods with a BERT Model</h2>
@@ -648,8 +672,8 @@ window.Quarto = {
 <span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>    log_prob_mutant <span class="op">=</span> log_probs[mutant_base_id].item()</span>
 <span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> log_prob_wild <span class="op">-</span> log_prob_mutant</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<section id="what-is-a-likelihood-ratio" class="level3" data-number="3.4.1">
-<h3 data-number="3.4.1" class="anchored" data-anchor-id="what-is-a-likelihood-ratio"><span class="header-section-number">3.4.1</span> What is a Likelihood Ratio?</h3>
+<section id="the-likelihood-ratio-as-a-metric-for-mutations" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="the-likelihood-ratio-as-a-metric-for-mutations"><span class="header-section-number">3.4.1</span> The Likelihood Ratio as a metric for mutations</h3>
 <p>The log-likelihood ratio (LLR) compares how much more (or less) likely the wild-type sequence is compared to a mutant sequence, given the DNA language model. Specifically, we compare the log likelihood of the correct wild-type nucleotide to the log likelihood of the mutant nucleotide at the mutated position only.</p>
 <p>L L R = log ⁡ P ( wild-type&nbsp;nucleotide ∣ context ) − log ⁡ P ( mutant&nbsp;nucleotide ∣ context ) LLR=logP(wild-type&nbsp;nucleotide∣context)−logP(mutant&nbsp;nucleotide∣context) This metric is widely used in bioinformatics because it focuses on the exact site of the mutation, instead of comparing entire sequences. A positive LLR indicates the wild-type is favored by the model, while a negative LLR means the mutant is more likely.</p>
 <p>We then apply these functions to all the synthetic DRD2 mutations we generated (in the first 512 bases) to evaluate whether the DNABert we trained thinks the missense mutations are generally less likely given the model.</p>

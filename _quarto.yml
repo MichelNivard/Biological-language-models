@@ -8,9 +8,11 @@ book:
   date: "2/27/2025"
   chapters:
     - index.qmd
-    - Chapter1.qmd
-    - Chapter2.qmd
-    - Chapter3.qmd
+    - part: "DNA"
+      chapters: 
+        - Chapter1.qmd
+        - Chapter2.qmd
+        - Chapter3.qmd
     - summary.qmd
     - references.qmd
 

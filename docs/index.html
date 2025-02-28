@@ -113,24 +113,35 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Preface</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">DNA</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter1.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Collecting and Preparing DNA Sequences for a Language Model</span></span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter2.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Training our first DNA Language Model: BERT</span></span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter3.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating DNA Language Models with syneteticly mutated sequences</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating DNA Language Models with synthetic sequences</span></span></a>
   </div>
 </li>
+      </ul>
+  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./summary.html" class="sidebar-item-text sidebar-link">
@@ -193,8 +204,10 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="preface" class="level1 unnumbered">
 <h1 class="unnumbered">Preface</h1>
-<p>These are study notes I take while exploring how to train DNA/RNA/Protein language models. <strong>Chapter one covers</strong> downloading (DNA) sequences data from ensembl and uploading it to Huggingface. <strong>Chapter two covers</strong> training a first small DNA sequence language model.</p>
-<p>These notes are written by me, Michel Nivard, and as this book is not a core outputs for my job, I rely heavily on LLMs to help me with spelling and formatting.</p>
+<p>These are study notes on training DNA/RNA/Protein language models.</p>
+<p>The first section covers DNA language models</p>
+<p><strong>Chapter 1 covers</strong> downloading (DNA) sequences data from ensembl and uploading it to Huggingface. <strong>Chapter 2 covers</strong> training a first small DNA sequence language model. in <strong>Chapter 3</strong> we explore how you’d evaluate whether a DNA model is any good, is our model learning anything at all?</p>
+<p>These notes are written by me, Michel Nivard, a professor of Epidemiology at the University of Bristol, and as this book is not a core outputs for my job, I rely heavily on LLMs to help me with spelling and formatting.</p>
 <p>These study notes are influences by discussion with Robbee Wedow and Seyedeh Zahra Paylakhi with whom I work on relate projects.</p>
 
 
