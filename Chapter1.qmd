@@ -1,9 +1,9 @@
 ---
-title: "Collecting and Preparing DNA Sequences for a Language Model"
+title: "Preparing DNA data for training"
 format: html
 ---
 
-## Introduction
+## Garbage in garbage out
 
 High-quality data is essential for training effective machine learning models. In natural language processing (NLP), researchers invest significant effort in curating clean datasets from raw internet text. For example a dataset like 'fineweb-edu' contains English text that is of very high quality. Models trained on fineweb-edu (and similar high quality datasets) will improve MUCH faster then the equivalent model trained on other less carefully processed and evaluated datasets.
 

@@ -1,13 +1,13 @@
 ---
-title: "Training our first DNA Language Model: BERT"
+title: "Training our first DNA Language Model"
 format: html
 ---
 
 ## Introduction
 
-Now that we have collected and formatted a DNA dataset in Chapter 1, we can proceed to train a language model using BERT. In this chapter, we will walk through the process of tokenizing DNA sequences, configuring a BERT model, and training it using the **Masked Language Modeling (MLM)** objective.
+Now that we have collected and formatted a DNA dataset in Chapter 1, we can proceed to train a language model using the (Modern)BERT model architecture. In this chapter, we will walk through the process of tokenizing DNA sequences, configuring a BERT model, and training it using the **Masked Language Modeling (MLM)** objective.
 
-We will cover the utility and rational behing DNA language models, and the key concepts behind tokenization, BERT, and MLM before diving into the Python script.
+We will cover the utility and rational behing DNA language models, and the key concepts behind tokenization, the BERT model, and the idea of masked language modeling (MLM) before diving into the Python script that trains the actual model.
 
 ## Why would we train DNA language models?
 

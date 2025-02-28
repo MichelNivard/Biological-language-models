@@ -21,8 +21,7 @@ bibliography: references.bib
 format:
   html:
     theme:
-      - cosmo
-      - brand
+      - lex
 
 
 

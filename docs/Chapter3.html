@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; Evaluating DNA Language Models with synthetic sequences – Biological language models</title>
+<title>3&nbsp; Evaluating DNA Language Models – Biological language models</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -74,7 +74,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-626149efe8f5d16e1d391ba177679bf0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-5e2915e4d4df5928b2b0a61215b328b6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -144,7 +144,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter3.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating DNA Language Models with synthetic sequences</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter3.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating DNA Language Models</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -187,19 +187,19 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Collecting and Preparing DNA Sequences for a Language Model</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Preparing DNA data for training</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Training our first DNA Language Model: BERT</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Training our first DNA Language Model</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter3.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating DNA Language Models with synthetic sequences</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating DNA Language Models</span></span></a>
   </div>
 </li>
       </ul>
@@ -241,9 +241,9 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter3.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating DNA Language Models with synthetic sequences</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter3.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating DNA Language Models</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating DNA Language Models with synthetic sequences</span></h1>
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating DNA Language Models</span></h1>
 </div>
 
 
@@ -263,6 +263,7 @@ window.Quarto = {
 <section id="introduction" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">3.1</span> Introduction</h2>
 <p>In Chapters 1 and 2, we introduced the process of preparing DNA sequences and training a BERT language model for genomic data. In this chapter, we will turn our attention to how <strong>single nucleotide mutations</strong> can be systematically generated and evaluated using the trained DNA language model.</p>
+<p>These synethetic mutations can form the basis for an evaluation of our DNA language model.</p>
 <p>This chapter has two goals:</p>
 <ul>
 <li><p>To explain to <strong>machine learning readers</strong> how to enumerate <strong>synonymous</strong> and <strong>missense</strong> mutations based on the standard <strong>genetic code</strong>, and why this is biologically meaningful. Consider the Kahn Academy “ap bio” course if this chapter doesn’t really offer enough for you <a href="https://www.khanacademy.org/science/ap-biology" class="uri">https://www.khanacademy.org/science/ap-biology</a></p></li>
@@ -1161,8 +1162,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./Chapter2.html" class="pagination-link" aria-label="Training our first DNA Language Model: BERT">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Training our first DNA Language Model: BERT</span></span>
+      <a href="./Chapter2.html" class="pagination-link" aria-label="Training our first DNA Language Model">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Training our first DNA Language Model</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

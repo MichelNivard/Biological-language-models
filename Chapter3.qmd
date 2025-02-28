@@ -1,11 +1,13 @@
 ---
-title: "Evaluating DNA Language Models with synthetic sequences"
+title: "Evaluating DNA Language Models"
 format: html
 ---
 
 ## Introduction
 
 In Chapters 1 and 2, we introduced the process of preparing DNA sequences and training a BERT language model for genomic data. In this chapter, we will turn our attention to how **single nucleotide mutations** can be systematically generated and evaluated using the trained DNA language model.
+
+These synethetic mutations can form the basis for an evaluation of our DNA language model.
 
 This chapter has two goals:
 
@@ -17,7 +19,7 @@ This chapter has two goals:
 
 Before diving into code, it’s useful to recall the basics of how DNA encodes proteins. DNA is transcribed into RNA, and RNA is translated into proteins using **codons**, groups of three nucleotides. Each codon corresponds to a specific amino acid — this mapping is called the **genetic code**.
 
-![DNA is translated to RNA then transcribed to amino-acids which form proteins. Source: https://www.khanacademy.org/science/ap-biology/gene-expression-and-regulation/translation/a/intro-to-gene-expression-central-dogma ](images/paste-6.png){fig-align="center"}
+![DNA is translated to RNA then transcribed to amino-acids which form proteins. Source: https://www.khanacademy.org/science/ap-biology/gene-expression-and-regulation/translation/a/intro-to-gene-expression-central-dogma](images/paste-6.png){fig-align="center"}
 
 Crucially, some amino acids can be encoded by multiple codons, a property called **degeneracy**. This degeneracy is why **synonymous mutations** exist — changes in the DNA sequence that do not alter the resulting amino acid. In contrast, **missense mutations** alter the encoded amino acid, which may change protein function.
 
