@@ -3,12 +3,21 @@ title: "Training our first DNA Language Model: BERT"
 format: html
 ---
 
-
 ## Introduction
 
 Now that we have collected and formatted a DNA dataset in Chapter 1, we can proceed to train a language model using BERT. In this chapter, we will walk through the process of tokenizing DNA sequences, configuring a BERT model, and training it using the **Masked Language Modeling (MLM)** objective.
 
-We will cover the key concepts behind tokenization, BERT, and MLM before diving into the Python script.
+We will cover the utility and rational behing DNA language models, and the key concepts behind tokenization, BERT, and MLM before diving into the Python script.
+
+## Why would we train DNA language models?
+
+For a full review of the utility of language models you should dig into the literature. I can recommend [@benegas2025] for example. Genomic language models (gLMs) apply AI techniques to DNA sequences, enabling breakthroughs in variant effect prediction, sequence design, and genomic analysis.
+
+Like larger language models like chatGPT DNA language models have "emergent properties:. If you train a gnomic Language models (gLM) on the reference genome sequence of humans, and various other species then the model that emerges is able to detect damaging mutations, without ever being trained on mutations (as mutations are defined as deviations from the reference)[@benegas2023]. To assess functional constraints, a widely used metric is the **log-likelihood ratio (LLR)** between two alleles. This measures the probability of a nucleotide variant appearing in a given context, with lower probabilities indicating potential deleterious effects. This application will be one of the examples I use throughout, simply because my experience in genetics align with it.
+
+Another key application is transfer learning, where pretrained gLMs improve predictions in tasks like gene expression and chromatin accessibility. However, training effective models is difficult due to the vast, complex, and often non-functional nature of genomes. Unlike protein models, gLMs struggle with limited genomic diversity in training data and require more sophisticated benchmarks for evaluation.
+
+Future advancements will focus on improving long-range genomic interactions, integrating multimodal biological data, and refining sequence design for practical applications. Despite challenges, gLMs hold great promise for revolutionizing genome research, advancing genetic disease understanding, and enabling synthetic biology innovations.
 
 ## Understanding Tokenization
 
@@ -328,4 +337,3 @@ In this section, we:
 -   Saved the **final trained model and tokenizer** for future use.
 
 With this trained model, we can now **fine-tune or apply it to various genomic tasks**, such as predicting genetic variations or classifying functional DNA sequences. In the next chapter, we will explore **how to fine-tune our DNA BERT model for specific applications**.
-

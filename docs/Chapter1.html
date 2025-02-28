@@ -160,8 +160,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./Chapter3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating DNA Language Models with syneteticly mutated sequences</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -216,16 +222,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1.1</span> Introduction</h2>
-<p>High-quality data is essential for training effective machine learning models. In natural language processing (NLP), researchers invest significant effort in curating clean datasets from raw internet text. For example a dataset like ‘fineweb-edu’ contains English text that is of very high quality. models trained on fineweb-edu (and similar high quality datasets) will improve MUCH faster.</p>
+<p>High-quality data is essential for training effective machine learning models. In natural language processing (NLP), researchers invest significant effort in curating clean datasets from raw internet text. For example a dataset like ‘fineweb-edu’ contains English text that is of very high quality. Models trained on fineweb-edu (and similar high quality datasets) will improve MUCH faster then the equivalent model trained on other less carefully processed and evaluated datasets.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://cdn-uploads.huggingface.co/production/uploads/61c141342aac764ce1654e43/QqXOM8h_ZjjhuCv71xmV7.png" class="img-fluid figure-img"></p>
 <figcaption>Relative training efficiency using a high quality dataset like fineweb-edu and other massive datasets of English language texts. Image obtained from: https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu</figcaption>
 </figure>
 </div>
-<p>Those with experience with <strong>genetics</strong> will know most of what I am about to explain when it comes to the sources of genetic data and the file formats these come in. Those with an <strong>ML</strong> background will be very familiar with Huggingface and the amazing data/model/training integration their libraries offer. Assembing a useful genomics fatal for language modeling requires familiarity with both.</p>
-<p>When working with DNA, RNA, and protein sequences, the authoritative sources of data are specialized databases and infrastructures rather than data scraped from the internet. If you want to learn to train DNA/RNA/Protein-based language model, we must learn how, and where, to retrieve data and convert it into a structured format.</p>
-<p>In this tutorial, we will begin by collecting coding DNA sequences (CDS) from the human genome using the Ensembl database via BioMart. The goal is to store these sequences in a format suitable for training a DNA-based language model. We will then upload the processed data to Hugging Face, an efficient platform for hosting datasets for machine learning tasks.</p>
+<p>Those with experience with <strong>genetics</strong> will know most of what I am about to explain when it comes to the sources of genetic data and the file formats these come in. Those with an <strong>ML</strong> background will be very familiar with Huggingface and the amazing data/model/training integration their libraries offer. Assembing high quality genomics datasets for language modeling requires familiarity with both. When working with DNA, RNA, and protein sequences, the authoritative sources of data are specialized databases and infrastructures rather than data scraped from the internet. If you want to learn to train DNA/RNA/Protein-based language model, we must learn how, and where, to retrieve data and convert it into a structured format.</p>
+<p>In this tutorial, we will begin by collecting coding DNA sequences (CDS) from the human genome using the Ensembl database via BioMart. The goal is to store these sequences in a format suitable for training a DNA-based language model. We will then upload the processed data to <a href="https://huggingface.co">Huggingface</a>, a platform for hosting datasets and models for machine learning tasks.</p>
 <p>This chapter will introduce key biological and computational concepts, ensuring that both biology newcomers and those unfamiliar with language modeling tools can follow along.</p>
 </section>
 <section id="understanding-ensembl-and-biomart" class="level2" data-number="1.2">
@@ -483,7 +488,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="the-script-downloading-and-formatting-human-cds-data" class="level2" data-number="1.4">
 <h2 data-number="1.4" class="anchored" data-anchor-id="the-script-downloading-and-formatting-human-cds-data"><span class="header-section-number">1.4</span> The Script: Downloading and Formatting Human CDS Data</h2>
-<p>Below is the R script that downloads human CDS from Ensembl using BioMart, extracts metadata, and saves the processed data into a CSV file. the package we use, <code>biomartr</code> isnt the official R package but its a great option! it has very extensive documentation, so if you want to download other sequences in the future make sure to start here: <a href="https://docs.ropensci.org/biomartr/" class="uri">https://docs.ropensci.org/biomartr/</a></p>
+<p>Below is the R script that downloads human CDS from Ensembl using BioMart, extracts metadata, and saves the processed data into a CSV file. the package we use, <code>biomartr</code> isn’t the official R package but its a great option! it has very extensive documentation, so if you want to download other sequences in the future make sure to start here: <a href="https://docs.ropensci.org/biomartr/" class="uri">https://docs.ropensci.org/biomartr/</a></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install necessary packages</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"biomartr"</span>, <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"BiocManager"</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
