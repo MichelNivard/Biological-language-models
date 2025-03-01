@@ -3,6 +3,12 @@ title: "Evaluating DNA Language Models"
 format: html
 ---
 
+::: callout-tip
+## Abstract
+
+I this chapter we'll discuss how we can evaluate whether our DNA language model has learned anything. We pick a simple, biologically informed, evaluation. We compare the plausibility (according to the model) of 2 classes of mutations, missense mutations which change a protein ans synonymous mutations which do not change the protein. To do this we'll take a gene (DRD2) and introduce synthetic mutations that are either missense, or synonymous.
+:::
+
 ## Introduction
 
 In Chapters 1 and 2, we introduced the process of preparing DNA sequences and training a BERT language model for genomic data. In this chapter, we will turn our attention to how **single nucleotide mutations** can be systematically generated and evaluated using the trained DNA language model.
@@ -23,7 +29,7 @@ Before diving into code, it’s useful to recall the basics of how DNA encodes p
 
 Crucially, some amino acids can be encoded by multiple codons, a property called **degeneracy**. This degeneracy is why **synonymous mutations** exist — changes in the DNA sequence that do not alter the resulting amino acid. In contrast, **missense mutations** alter the encoded amino acid, which may change protein function.
 
-This distinction between **synonymous** and **missense** mutations will allow us to systematically categorize the impact of each possible single nucleotide substitution. Below is the **standard genetic code table**:
+This distinction between **synonymous** and **missense** mutations will allow us to systematically categorize the impact of each possible single nucleotide substitution. Below is the **standard genetic code table it contains a full translation from DNA to protein**.
 
 | Codon | Amino Acid | Codon | Amino Acid | Codon | Amino Acid | Codon | Amino Acid |
 |-------|------------|-------|------------|-------|------------|-------|------------|
@@ -182,7 +188,7 @@ The lower this value, the better the model’s confidence matches reality — in
 
 When we compute the **pseudo-log-likelihood (PLL)** for an entire sequence, we mask and score each position, adding up these log probabilities:
 
-$$log⁡P(nucleotide1)+log⁡P(nucleotide2)+⋯+log⁡P(nucleotiden)​$$
+$$log⁡P(nucleotide_1)+log⁡P(nucleotide_2)+⋯+log⁡P(nucleotide_n)​$$
 
 This sum is the **total log likelihood** of the sequence under the model — it quantifies how natural the model thinks the sequence is.
 
@@ -366,17 +372,17 @@ plt.grid(True, linestyle='--', alpha=0.5)
 plt.show()
 ```
 
-![**Figure 3.2.** The LLR for the mutation, high values mean the reference or wild type sequence is far more likely then the mutation., very high LLR values are almost exclusively missense mutations, consistent with a DNA model able to pick up dewleterious variants based on its training](images/paste-11.png)
+![**Figure 3.2** The LLR for the mutation (y-axis) give the position in the DRD2 gne (x-axis). High values indicate the reference, or wild, type sequence is far more likely then the mutation. Very high LLR values are almost exclusively missense mutations, consistent with a DNA model able to pick up dewleterious variants based on its training](images/paste-14.png){fig-align="center"}
 
 Its obvious from **Figure 3.2** that 1. really almost all very unlikely mutations (positive LLR) are missense mutations and 2. There are potentially certain locations within this particular coding sequence where there is an abundance of unlikely mutations packed closely together, these could be regions that are intolerant to deleterious mutations.
 
 Its important to not get overconfident in our predictions! Rember this is a relatively tiny DNA sequence model (±5m parameters) we trained on sequences for 13 fairly randomly picked vertebrae. Lets look at the likelihood of the true base in the references (wild-type) sequence given the model. The mean probability is 40% (**Figure 3.3**), given the model essentially is trying to pick between 4 tokens (G,C,T & A) 40% is considerably better then chance! Its also clear the probability is not even across the gene, the first few based are almost certain (almost all coding sequences in these species start with the start codon ATG, the model obviously learned this). After that there is quite a spread, which is logical I think, in many places across the sequence the specific base might be very obvious, as all three alternates might be missense mutations, but in other spot one, two or even all three alternate tokens might be synonymous, and perhaps even present int he analog gene int he other 12 species we trained our model on! This would make the model FAR less certain about the true base at that location.
 
-![**Figure 3.3** The probability of the base in the reference, or wild type, sequence given the DNABert model we trained. The model clearly performed above random (random guessing would be 1 in 4, or 25%).](images/paste-10.png)
+![**Figure 3.3** The probability of the base in the reference, or wild type, sequence given the DNABert model we trained. The model clearly performed above random (random guessing would be 1 in 4, or 25%).](images/paste-10.png){fig-align="center"}
 
 ## Summary
 
-This chapter introduced soem key pieces that are esential for DNA Langisage models.
+This chapter introduced key pieces that are esential for those who want to train, or just understand, DNA Language models.
 
 -   We explored how to systematically generate all **synonymous and missense mutations in a gene,** these simuated mutations then form an important part in imnnitial evaluation of our model.
 -   We discussed how to compute the **log-likelihood. of a sequences, and log-likelihood ratio of a single mutation using DNA BERT**. These metrics are a proxy for how natural the model considers each sequence.

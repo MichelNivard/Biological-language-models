@@ -74,13 +74,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-626149efe8f5d16e1d391ba177679bf0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-687258f6a899824ebad24e93c100d594.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
-  "location": "sidebar",
+  "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
-  "panel-placement": "start",
-  "type": "textbox",
+  "panel-placement": "end",
+  "type": "overlay",
   "limit": 50,
   "keyboard-shortcut": [
     "f",
@@ -135,10 +135,27 @@ window.Quarto = {
 
 </head>
 
-<body class="nav-sidebar floating">
+<body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Biological language models &amp; Neural Networks</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
@@ -147,26 +164,13 @@ window.Quarto = {
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter3.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating DNA Language Models</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
-      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
-        <i class="bi bi-search"></i>
-      </button>
     </div>
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
-    <div class="sidebar-title mb-0 py-0">
-      <a href="./">Biological language models &amp; Neural Networks</a> 
-    </div>
-      </div>
-        <div class="mt-2 flex-shrink-0 align-items-center">
-        <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Search"></div>
-        </div>
-        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
@@ -260,6 +264,19 @@ window.Quarto = {
 </header>
 
 
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Abstract
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>I this chapter we’ll discuss how we can evaluate whether our DNA language model has learned anything. We pick a simple, biologically informed, evaluation. We compare the plausibility (according to the model) of 2 classes of mutations, missense mutations which change a protein ans synonymous mutations which do not change the protein. To do this we’ll take a gene (DRD2) and introduce synthetic mutations that are either missense, or synonymous.</p>
+</div>
+</div>
 <section id="introduction" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">3.1</span> Introduction</h2>
 <p>In Chapters 1 and 2, we introduced the process of preparing DNA sequences and training a BERT language model for genomic data. In this chapter, we will turn our attention to how <strong>single nucleotide mutations</strong> can be systematically generated and evaluated using the trained DNA language model.</p>
@@ -280,7 +297,7 @@ window.Quarto = {
 </figure>
 </div>
 <p>Crucially, some amino acids can be encoded by multiple codons, a property called&nbsp;<strong>degeneracy</strong>. This degeneracy is why&nbsp;<strong>synonymous mutations</strong>&nbsp;exist — changes in the DNA sequence that do not alter the resulting amino acid. In contrast,&nbsp;<strong>missense mutations</strong>&nbsp;alter the encoded amino acid, which may change protein function.</p>
-<p>This distinction between&nbsp;<strong>synonymous</strong>&nbsp;and&nbsp;<strong>missense</strong>&nbsp;mutations will allow us to systematically categorize the impact of each possible single nucleotide substitution. Below is the <strong>standard genetic code table</strong>:</p>
+<p>This distinction between&nbsp;<strong>synonymous</strong>&nbsp;and&nbsp;<strong>missense</strong>&nbsp;mutations will allow us to systematically categorize the impact of each possible single nucleotide substitution. Below is the <strong>standard genetic code table it contains a full translation from DNA to protein</strong>.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 9%">
@@ -603,7 +620,7 @@ Tip
 <p><span class="math display">\[loss = −ln(0.8) = 0.22\]</span></p>
 <p>The lower this value, the better the model’s confidence matches reality — indicating that the nucleotide was expected. Near the end of training our models loss hovered around 1.09, meaning that the average true base had a predicted probability of ±34%. The loss is highly dependent on the tokenizer, for example if we would have used a more complex tokenizer with say 100 options for each next token (encoding for example all 3-mer combinations of bases: A,C,T,G,AA,AC,AT,AG etc etc until GGA,GGG) the the probability of geting the one correct token is way lower as the base rate is way lower!</p>
 <p>When we compute the&nbsp;<strong>pseudo-log-likelihood (PLL)</strong>&nbsp;for an entire sequence, we mask and score each position, adding up these log probabilities:</p>
-<p><span class="math display">\[log⁡P(nucleotide1)+log⁡P(nucleotide2)+⋯+log⁡P(nucleotiden)​\]</span></p>
+<p><span class="math display">\[log⁡P(nucleotide_1)+log⁡P(nucleotide_2)+⋯+log⁡P(nucleotide_n)​\]</span></p>
 <p>This sum is the&nbsp;<strong>total log likelihood</strong>&nbsp;of the sequence under the model — it quantifies how natural the model thinks the sequence is.</p>
 <p>First we load the model I trained in Chapter 2, if you trained your own on more data, or for longer, or want to evaluate a different model you can load those yourself easily.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> AutoTokenizer, AutoModelForMaskedLM</span>
@@ -768,8 +785,8 @@ Tip
 <span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/paste-11.png" class="img-fluid figure-img"></p>
-<figcaption><strong>Figure 3.2.</strong> The LLR for the mutation, high values mean the reference or wild type sequence is far more likely then the mutation., very high LLR values are almost exclusively missense mutations, consistent with a DNA model able to pick up dewleterious variants based on its training</figcaption>
+<p><img src="images/paste-14.png" class="img-fluid figure-img"></p>
+<figcaption><strong>Figure 3.2</strong> The LLR for the mutation (y-axis) give the position in the DRD2 gne (x-axis). High values indicate the reference, or wild, type sequence is far more likely then the mutation. Very high LLR values are almost exclusively missense mutations, consistent with a DNA model able to pick up dewleterious variants based on its training</figcaption>
 </figure>
 </div>
 <p>Its obvious from <strong>Figure 3.2</strong> that 1. really almost all very unlikely mutations (positive LLR) are missense mutations and 2. There are potentially certain locations within this particular coding sequence where there is an abundance of unlikely mutations packed closely together, these could be regions that are intolerant to deleterious mutations.</p>
@@ -784,7 +801,7 @@ Tip
 </section>
 <section id="summary" class="level2" data-number="3.5">
 <h2 data-number="3.5" class="anchored" data-anchor-id="summary"><span class="header-section-number">3.5</span> Summary</h2>
-<p>This chapter introduced soem key pieces that are esential for DNA Langisage models.</p>
+<p>This chapter introduced key pieces that are esential for those who want to train, or just understand, DNA Language models.</p>
 <ul>
 <li>We explored how to systematically generate all <strong>synonymous and missense mutations in a gene,</strong> these simuated mutations then form an important part in imnnitial evaluation of our model.</li>
 <li>We discussed how to compute the <strong>log-likelihood. of a sequences, and log-likelihood ratio of a single mutation using DNA BERT</strong>. These metrics are a proxy for how natural the model considers each sequence.</li>

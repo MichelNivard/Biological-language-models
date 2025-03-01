@@ -1,0 +1,14 @@
+/*-- scss:defaults --*/
+$h2-font-size:          1.6rem !default;
+$headings-font-weight:  200 !default;
+
+
+/*-- scss:rules --*/
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 200;
+  }
+
+  /*-- scss:rules --*/
+div {
+    line-height: 1.7;
+  }

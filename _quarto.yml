@@ -5,8 +5,11 @@ project:
 
 book:
   title: "Biological language models & Neural Networks"
-  author: "Miche Nivard"
+  reader-mode: true
+  author: "Michel Nivard"
   date: "2/27/2025"
+  navbar:
+    search: true
   chapters:
     - index.qmd
     - part: "DNA"
@@ -23,6 +26,7 @@ format:
   html:
     theme:
       - cosmo
+      - style.scss
 
 
 

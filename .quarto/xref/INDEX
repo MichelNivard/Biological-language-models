@@ -6,18 +6,33 @@
     "intro.html": "5a27f6ca"
   },
   "Chapter1.qmd": {
-    "Chapter1.html": "05506da1"
+    "Chapter1.html": "05506da1",
+    "Chapter1.embed.ipynb": "97dc945e",
+    "Chapter1.out.ipynb": "655a4632",
+    "Chapter1-preview.html": "0f27e186"
   },
   "Chapter2.qmd": {
-    "Chapter2.html": "e8f2d252"
+    "Chapter2.html": "e8f2d252",
+    "Chapter2.embed.ipynb": "d4b6913e",
+    "Chapter2.out.ipynb": "4594e715",
+    "Chapter2-preview.html": "e2b52c26"
   },
   "summary.qmd": {
-    "summary.html": "18ca3aa9"
+    "summary.html": "18ca3aa9",
+    "summary.embed.ipynb": "b55a607a",
+    "summary.out.ipynb": "9907be82",
+    "summary-preview.html": "ac9ccb95"
   },
   "references.qmd": {
-    "references.html": "948c8c4b"
+    "references.html": "948c8c4b",
+    "references.embed.ipynb": "49b53f66",
+    "references.out.ipynb": "147b3727",
+    "references-preview.html": "54eda77c"
   },
   "Chapter3.qmd": {
-    "Chapter3.html": "70d85365"
+    "Chapter3.html": "70d85365",
+    "Chapter3.embed.ipynb": "4962d079",
+    "Chapter3.out.ipynb": "04e0c149",
+    "Chapter3-preview.html": "7bfaddf1"
   }
 }
