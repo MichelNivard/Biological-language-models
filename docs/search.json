@@ -238,13 +238,101 @@
     ]
   },
   {
+    "objectID": "Chapter4.html",
+    "href": "Chapter4.html",
+    "title": "4  Chapter 4 - Evolution-Aware BERT: Designing Encoders for Genomics",
+    "section": "",
+    "text": "4.1 Introduction\nIn previous chapters, we introduced the basic principles of BERT for DNA sequences. We took inspiration from natural language processing (NLP), treating DNA as a language, where sequences of nucleotides (A, T, C, G, -) could be processed using transformers. This approach, while powerful, carries over several assumptions from natural language that do not perfectly align with biological sequences. In this chapter, we will re-examine how we encode genomic data and introduce a new design paradigm — evolutionary-aware encoding — inspired by the recently proposed GPN (Genomic Pre-trained Network).",
+    "crumbs": [
+      "DNA",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Chapter 4 - Evolution-Aware BERT: Designing Encoders for Genomics</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter4.html#tokenization-and-embedding-in-language-models",
+    "href": "Chapter4.html#tokenization-and-embedding-in-language-models",
+    "title": "4  Chapter 4 - Evolution-Aware BERT: Designing Encoders for Genomics",
+    "section": "4.2 1. Tokenization and Embedding in Language Models",
+    "text": "4.2 1. Tokenization and Embedding in Language Models\nModern language models, whether BERT, GPT, or similar architectures, rely heavily on how input sequences are tokenized and encoded before they ever reach the attention layers. This initial step — often overlooked — plays a profound role in shaping how the model learns.\n\n4.2.1 Tokenization in Natural Language\nIn human languages like English or French, the vocabulary is large, often comprising tens of thousands of tokens. These tokens could be:\n\nWhole words (“cat”, “sat”).\nSubwords (“cat” might break into “c”, “at”).\nEven characters (in rare cases).\n\nSince the number of tokens is so large, each token is assigned a unique vector embedding — a dense, learnable representation of its “meaning”. These embeddings are gradually refined during training as the model learns how tokens behave in different contexts.\n\n\n4.2.2 The Embedding Process (NLP BERT)\nInput Sentence:  \"The cat sat on the mat\"\n\nStep 1 - Tokenization:\n    [\"The\", \"cat\", \"sat\", \"on\", \"the\", \"mat\"]\n\nStep 2 - Lookup:\n    Each token gets a fixed vector from an embedding table.\n\n    \"The\" -&gt; [0.25, 0.13, -0.11, ..., 0.04]\n    \"cat\" -&gt; [0.88, -0.23, 0.45, ..., -0.67]\n\nStep 3 - Transformer Layers:\n    These embeddings are updated based on surrounding words (context).\n\n\n4.2.3 Language Evolution is Decayed\nThe design of these token embeddings reflects a key fact about human languages: the evolutionary history of words is largely irrelevant to understanding their meaning today. While linguistic etymology exists, the meaning of “cat” today does not rely on whether the word originated from Latin or Proto-Indo-European. Context (the words around “cat”) matters far more than distant etymology.",
+    "crumbs": [
+      "DNA",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Chapter 4 - Evolution-Aware BERT: Designing Encoders for Genomics</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter4.html#biological-sequences-are-fundamentally-different",
+    "href": "Chapter4.html#biological-sequences-are-fundamentally-different",
+    "title": "4  Chapter 4 - Evolution-Aware BERT: Designing Encoders for Genomics",
+    "section": "4.3 2. Biological Sequences are Fundamentally Different",
+    "text": "4.3 2. Biological Sequences are Fundamentally Different\nIn genomics, this assumption breaks down. Each nucleotide (A, T, G, C, -) has a fixed biochemical meaning, but its biological relevance depends profoundly on its evolutionary history across species.\n\n4.3.1 Key Differences Between Language and DNA\n\n\n\n\n\n\n\n\nAspect\nNatural Language\nGenomics\n\n\n\n\nNumber of Tokens\nTens of thousands\n~5 (A, T, G, C, -)\n\n\nMeaning\nFlexible, evolves over time\nBiochemically fixed\n\n\nEvolutionary Context\nMostly irrelevant to meaning\nOften crucial (conservation, divergence)\n\n\nToken Embedding\nFully learned\nCan be partly predefined (one-hot)\n\n\nNeighboring Context\nDefines meaning\nDefines local motifs, but evolutionary context adds extra layer\n\n\n\n\n\n4.3.2 Evolution is a Rich Context Layer\nThe evolutionary history of a genomic position — how conserved it is, how it varies across species — directly influences its biological function. A nucleotide in a highly conserved enhancer region means something different from a nucleotide in a rapidly evolving spacer.",
+    "crumbs": [
+      "DNA",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Chapter 4 - Evolution-Aware BERT: Designing Encoders for Genomics</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter4.html#encoding-genomes-with-evolution-in-mind",
+    "href": "Chapter4.html#encoding-genomes-with-evolution-in-mind",
+    "title": "4  Chapter 4 - Evolution-Aware BERT: Designing Encoders for Genomics",
+    "section": "4.4 3. Encoding Genomes with Evolution in Mind",
+    "text": "4.4 3. Encoding Genomes with Evolution in Mind\nTo capture this cross-species evolutionary context, we need an embedding strategy that combines:\n\nThe identity of the nucleotide itself (A, T, G, C, -).\nThe state of this position in aligned species (what bases appear at the same position in other species).\n\nThis evolutionary-aware encoding is at the heart of the Genomic Pre-trained Network (GPN) architecture.",
+    "crumbs": [
+      "DNA",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Chapter 4 - Evolution-Aware BERT: Designing Encoders for Genomics</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter4.html#introducing-gpn-bert",
+    "href": "Chapter4.html#introducing-gpn-bert",
+    "title": "4  Chapter 4 - Evolution-Aware BERT: Designing Encoders for Genomics",
+    "section": "4.5 4. Introducing GPN-BERT",
+    "text": "4.5 4. Introducing GPN-BERT\nGPN-BERT (inspired by Benegas et al., 2024) adapts BERT-style masked language modeling (MLM) to DNA sequences, but incorporates multispecies alignment (MSA) data directly into the model’s input.\n\n4.5.1 Key Idea: Dynamic Position Embeddings\nFor each position in the human genome, the model receives:\n\nThe human base (A, T, G, C, -) — this is the usual input.\nThe aligned bases from other species — these are additional features.\nThese aligned bases are one-hot encoded and concatenated to the human base’s embedding.\n\nThis turns a simple nucleotide (A) into a dynamic, position-specific vector that depends on its evolutionary context across species.\n\n\n4.5.2 Visualization\nHuman Position:     A\nAligned Species:    A  G  A  (species 1, species 2, species 3)\n\nEmbedding:\n    [ OneHot_A | OneHot_A | OneHot_G | OneHot_A ]\nThis combined vector captures:\n\nWhat the human base is.\nHow conserved the site is.\nWhich substitutions are tolerated across species.\n\n\n\n\n4.5.3 Practical Implementation - Replacing the BERT Encoder\nTo implement this in practice, we can directly modify a Hugging Face model class (like ModernBertForMaskedLM) to use our custom GPNEmbedding layer in place of the standard token embedding layer.\nThis requires:\n\nDefining a GPNEmbedding class that concatenates the one-hot human base with species features.\nSubclassing ModernBertForMaskedLM to replace the embedding layer.\nEnsuring the forward method accepts both input_ids and aux_features, which are passed into the embedding layer.\n\nclass GPNEmbedding(nn.Module):\n    def __init__(self, config, n_species):\n        super().__init__()\n        self.config = config\n        self.n_species = n_species\n        self.vocab_size = 5\n        self.species_feature_size = self.n_species * self.vocab_size\n\n    def forward(self, input_ids, aux_features):\n        one_hot = F.one_hot(input_ids, num_classes=self.config.vocab_size).float()\n        combined = torch.cat([one_hot[..., :self.vocab_size], aux_features], dim=-1)\n        if combined.shape[-1] &lt; self.config.hidden_size:\n            combined = F.pad(combined, (0, self.config.hidden_size - combined.shape[-1]))\n        return combined\n\nclass ModernBertForMaskedLMWithGPN(ModernBertForMaskedLM):\n    def __init__(self, config, n_species):\n        super().__init__(config)\n        self.gpn_embedding = GPNEmbedding(config, n_species)\n\n    def forward(self, input_ids=None, aux_features=None, **kwargs):\n        embeddings = self.gpn_embedding(input_ids, aux_features)\n        outputs = self.bert.encoder(inputs_embeds=embeddings, **kwargs)\n        logits = self.cls(outputs[0])\n        return {'logits': logits}\nThis illustrates how pre-trained transformers can be adapted for genomics while preserving compatibility with Hugging Face’s Trainer ecosystem.",
+    "crumbs": [
+      "DNA",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Chapter 4 - Evolution-Aware BERT: Designing Encoders for Genomics</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter4.html#recap-of-our-approach",
+    "href": "Chapter4.html#recap-of-our-approach",
+    "title": "4  Chapter 4 - Evolution-Aware BERT: Designing Encoders for Genomics",
+    "section": "4.6 5. Recap of Our Approach",
+    "text": "4.6 5. Recap of Our Approach\nIn Chapter 2, we trained a vanilla BERT on DNA sequences alone — treating DNA as just another language. That model only had access to the human sequence, with no evolutionary context.\nIn this chapter, we’ve reimagined that process. Instead of treating A, T, G, C, - as abstract symbols, we inject evolutionary history directly into the input encoding. This allows our model to:\n\nUse the aligned species data as a rich evolutionary prior.\nStill leverage transformers for learning sequence motifs.\nPredict masked human bases using both local sequence and cross-species evolutionary patterns.",
+    "crumbs": [
+      "DNA",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Chapter 4 - Evolution-Aware BERT: Designing Encoders for Genomics</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter4.html#preview-of-chapter-5",
+    "href": "Chapter4.html#preview-of-chapter-5",
+    "title": "4  Chapter 4 - Evolution-Aware BERT: Designing Encoders for Genomics",
+    "section": "4.7 6. Preview of Chapter 5",
+    "text": "4.7 6. Preview of Chapter 5\nIn Chapter 5, we will put these two models — Vanilla BERT and GPN-BERT — to the test. We will evaluate their performance on:\n\nPredicting masked bases (MLM accuracy).\nIdentifying regulatory elements.\nPredicting the functional impact of mutations.\n\nThis head-to-head comparison will highlight the strengths and weaknesses of each approach and show the value of embedding evolutionary context directly into genomic language models.",
+    "crumbs": [
+      "DNA",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Chapter 4 - Evolution-Aware BERT: Designing Encoders for Genomics</span>"
+    ]
+  },
+  {
+    "objectID": "Chapter4.html#references",
+    "href": "Chapter4.html#references",
+    "title": "4  Chapter 4 - Evolution-Aware BERT: Designing Encoders for Genomics",
+    "section": "4.8 References",
+    "text": "4.8 References\n\nBenegas et al., Nature Biotechnology, 2024.\nA DNA language model based on multispecies alignment predicts the effects of genome-wide variants",
+    "crumbs": [
+      "DNA",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Chapter 4 - Evolution-Aware BERT: Designing Encoders for Genomics</span>"
+    ]
+  },
+  {
     "objectID": "summary.html",
     "href": "summary.html",
-    "title": "4  Summary",
+    "title": "5  Summary",
     "section": "",
     "text": "In summary, this book has no content whatsoever.",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Summary</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Summary</span>"
     ]
   },
   {

@@ -17,6 +17,7 @@ book:
         - Chapter1.qmd
         - Chapter2.qmd
         - Chapter3.qmd
+        - Chapter4.qmd
     - summary.qmd
     - references.qmd
 
