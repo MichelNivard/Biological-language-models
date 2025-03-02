@@ -7,6 +7,8 @@ format: html
 ## Abstract
 
 I this chapter we'll discuss how we can evaluate whether our DNA language model has learned anything. We pick a simple, biologically informed, evaluation. We compare the plausibility (according to the model) of 2 classes of mutations, missense mutations which change a protein ans synonymous mutations which do not change the protein. To do this we'll take a gene (DRD2) and introduce synthetic mutations that are either missense, or synonymous.
+
+All scripts for this chapter are found here: <https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Chapter_3>
 :::
 
 ## Introduction
