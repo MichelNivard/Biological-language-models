@@ -113,51 +113,141 @@ This combined vector captures:
 -   How conserved the site is.
 -   Which substitutions are tolerated across species.
 
-------------------------------------------------------------------------
-
 ### Practical Implementation - Replacing the BERT Encoder
 
 To implement this in practice, we can directly modify a Hugging Face model class (like `ModernBertForMaskedLM`) to use our custom **GPNEmbedding** layer in place of the standard token embedding layer.
 
 This requires:
 
--   Defining a **GPNEmbedding** class that concatenates the one-hot human base with species features.
--   Subclassing `ModernBertForMaskedLM` to replace the embedding layer.
--   Ensuring the `forward` method accepts both `input_ids` and `aux_features`, which are passed into the embedding layer.
+-   Defining a tokenizer that toekenizes each base, and aligned bases in other species into the structure expected by the embedding
+-   Defining a **GPNEmbedding** class that can handle one-hot human base with species features and builds the embedding for each base.
+-   requires we replace `ModernBertForMaskedLM` with a custom `GPNBBERTMaskedLM` class
+-   Ensuring all `forward` methods accept both `input_ids` and `aux_features`, which are passed into the embedding layer.
+-   We additionally define our own tokenizer, and data collator (not show here but available in the full script)
+
+THe code below takes a human sequence, encodes it in a one hot encoding (so A: 10000, T: 01000, G: 00100, C: 00010, -: 00001 for example), does the same for any auxiliary aligned sequences from other species. Then the embedding function combines both into one.
 
 ``` python
+# --------------------------------
+# 5. Encode Humand and auxillary species sequnces in 
+# --------------------------------
+
+def one_hot_encode_base(base):
+    """One-hot encodes A, T, G, C, - (5 bases total)."""
+    base_to_idx = {"A": 0, "T": 1, "C": 2, "G": 3, "-": 4}
+    one_hot = np.zeros(5, dtype=np.float32)
+    if base in base_to_idx:
+        one_hot[base_to_idx[base]] = 1.0
+    return one_hot
+
+def tokenize_with_aux(examples):
+    human_seq = clean_sequence(examples["human_sequence"])
+
+    # Drop first 10 species (closest relatives)
+    species_seqs = [clean_sequence(seq) for seq in examples["species_sequences"]]
+    species_seqs = species_seqs[10:]  # <-- This line omits the first 10 species
+
+    # Tokenize human sequence
+    tokens = hf_tokenizer(human_seq, truncation=True, padding="max_length", max_length=512)
+    input_ids = tokens["input_ids"]
+
+    # Process species sequences into concatenated one-hot vectors (aux features)
+    seq_len = len(input_ids)
+    num_species = len(species_seqs)
+
+    aux_features = np.zeros((seq_len, num_species * 5), dtype=np.float32)
+
+    for pos in range(seq_len):
+        if pos >= len(human_seq):  # Handle padding case
+            break
+        for species_idx, species_seq in enumerate(species_seqs):
+            if pos < len(species_seq):
+                aux_features[pos, species_idx * 5:(species_idx + 1) * 5] = one_hot_encode_base(species_seq[pos])
+
+    tokens["aux_features"] = aux_features.tolist()
+    return tokens
+
+
+# --------------------------------
+# 8. Define GPNEmbedding 
+# --------------------------------
 class GPNEmbedding(nn.Module):
     def __init__(self, config, n_species):
         super().__init__()
         self.config = config
         self.n_species = n_species
-        self.vocab_size = 5
+        self.vocab_size = 5  # A, T, G, C, -
         self.species_feature_size = self.n_species * self.vocab_size
 
     def forward(self, input_ids, aux_features):
         one_hot = F.one_hot(input_ids, num_classes=self.config.vocab_size).float()
-        combined = torch.cat([one_hot[..., :self.vocab_size], aux_features], dim=-1)
+
+        # Combine human one-hot with species aux_features
+        combined = torch.cat([one_hot, aux_features], dim=-1)
+
         if combined.shape[-1] < self.config.hidden_size:
-            combined = F.pad(combined, (0, self.config.hidden_size - combined.shape[-1]))
+            pad = self.config.hidden_size - combined.shape[-1]
+            combined = F.pad(combined, (0, pad))
+
         return combined
-
-class ModernBertForMaskedLMWithGPN(ModernBertForMaskedLM):
-    def __init__(self, config, n_species):
-        super().__init__(config)
-        self.gpn_embedding = GPNEmbedding(config, n_species)
-
-    def forward(self, input_ids=None, aux_features=None, **kwargs):
-        embeddings = self.gpn_embedding(input_ids, aux_features)
-        outputs = self.bert.encoder(inputs_embeds=embeddings, **kwargs)
-        logits = self.cls(outputs[0])
-        return {'logits': logits}
 ```
 
-This illustrates how **pre-trained transformers can be adapted for genomics** while preserving compatibility with Hugging Face's `Trainer` ecosystem.
+From here on out things are fairly standard, a transformer model (here bert but could be anything really) is initialized to learn the relationship between adjacent tokens using a masked language model training regime. In the code below the custom embedding are introduced into the masked language model (ModernBert in this case) while the encoder part of the model (the core part of the model that learns the relation between adjacent tokens) remain unchanged.
 
-------------------------------------------------------------------------
+``` python
+# --------------------------------
+# 6. GPNBERTMaskedLM
+# --------------------------------
 
-## 5. Recap of Our Approach
+class GPNBERTMaskedLM(nn.Module):
+    def __init__(self, config, n_species):
+        super().__init__()
+        self.config = config
+        self.n_species = n_species
+        self.vocab_size = 5  # A, T, G, C, -
+        self.species_feature_size = n_species * self.vocab_size
+
+        self.encoder = ModernBertModel(config)  # Directly initialize the transformer backbone
+        self.cls = nn.Linear(config.hidden_size, config.vocab_size)
+        self.embedding = GPNEmbedding(config, n_species)
+
+    def forward(self, input_ids=None, aux_features=None, labels=None, **kwargs):
+        embeddings = self.embedding(input_ids, aux_features)
+
+        # Only pass valid args to the encoder
+        encoder_kwargs = {k: v for k, v in kwargs.items() if k in {"attention_mask", "position_ids", "head_mask"}}
+
+        outputs = self.encoder(inputs_embeds=embeddings, **encoder_kwargs)
+
+        sequence_output = outputs.last_hidden_state
+        prediction_scores = self.cls(sequence_output)
+
+        loss = None
+        if labels is not None:
+            loss_fct = nn.CrossEntropyLoss(ignore_index=-100)
+            loss = loss_fct(prediction_scores.view(-1, self.config.vocab_size), labels.view(-1))
+
+        return MaskedLMOutput(
+            loss=loss,
+            logits=prediction_scores,
+            hidden_states=outputs.hidden_states,
+            attentions=outputs.attentions,
+        )
+```
+
+## What are we masking?
+
+I promised dwe'd have to deeply consider what we count as prediction, and that's going to have to happen right now. In Chapter 2 we trained a DNA language model, and in Chapter 3 we saw how well idt did, and did not predict specific features. In **Figure 3.3 you saw the model predicts the true bases in the DRD2 gene with about 40%.** What if I told you I can predict the bases in the human reference genome with \> 95% probability with a "model" or based on. supervised model. TO do so I'd just pick the consensus base across other species! Humand DNA and chimpanzee DNA are \> 90% identical, so are human and mouse genomes are remarkably similar (85% I think). In **Figure 4.3** (from [@initial2002]) we see the human sequences that are preserved well in the mouse genome, and they cover a staggering portion of it. This means we can "beat" base predictions made by our previous model by a mile, simply by piking the base the is most frequent across evolutionary history.
+
+![**Figure 4.3** The mouse genome, with in it sections of the human genome (color codes) that are largely preserved across evolution (figure 3 in [@initial2002])](images/paste-18.png){fig-align="center"}
+
+In training our GPNBert model with auxiliary sequences we train by **masking the human base only** (following [@Benegas2024]). This very obviously, and dramatically, improves base prediction, and does so very quickly. after a few hundred iterations (trained on about 5000 genes) the model learns that it should just assign the base most often found in other species. But as the evaluations the authors of the original GNP-MSA paper make clear, eventually the model learns more than that. The model outperforms just picking the consensus base across species. It is a better predictor of the allele frequency in humans then just picking the allele frequency across species ans an estimate of the allele frequency within human.
+
+### Ablation studies
+
+The authors use ablation studies to proof their model learns more then just the base history, and still learns from the base in its sequence. Anyone who wants to train language models should come to understand ablation studies so this is a good a point as any to discuss theirs and run our own!
+
+## Recap of Our Approach
 
 In **Chapter 2**, we trained a vanilla **BERT** on DNA sequences alone — treating DNA as just another language. That model only had access to the **human sequence**, with no evolutionary context.
 
@@ -169,7 +259,7 @@ In **this chapter**, we’ve reimagined that process. Instead of treating A, T, 
 
 ------------------------------------------------------------------------
 
-## 6. Preview of Chapter 5
+## Preview of Chapter 5
 
 In **Chapter 5**, we will put these two models — **Vanilla BERT** and **GPN-BERT** — to the test. We will evaluate their performance on:
 
