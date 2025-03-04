@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>4&nbsp; Chapter 4 - Evolution-Aware BERT: Designing Encoders for Genomics – Biological language models &amp; Neural Networks</title>
+<title>4&nbsp; Evolution-Aware BERT: Designing Encoders for Genomics – Biological language models &amp; Neural Networks</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -54,7 +54,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -132,7 +152,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter4.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Chapter 4 - Evolution-Aware BERT: Designing Encoders for Genomics</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter4.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Evolution-Aware BERT: Designing Encoders for Genomics</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -180,7 +200,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter4.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Chapter 4 - Evolution-Aware BERT: Designing Encoders for Genomics</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Evolution-Aware BERT: Designing Encoders for Genomics</span></span></a>
   </div>
 </li>
       </ul>
@@ -208,36 +228,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">4.1</span> Introduction</a></li>
-  <li><a href="#tokenization-and-embedding-in-language-models" id="toc-tokenization-and-embedding-in-language-models" class="nav-link" data-scroll-target="#tokenization-and-embedding-in-language-models"><span class="header-section-number">4.2</span> 1. Tokenization and Embedding in Language Models</a>
+  <li><a href="#tokenization-and-embedding-in-language-models" id="toc-tokenization-and-embedding-in-language-models" class="nav-link" data-scroll-target="#tokenization-and-embedding-in-language-models"><span class="header-section-number">4.2</span> Tokenization and Embedding in Language Models</a>
   <ul class="collapse">
   <li><a href="#tokenization-in-natural-language" id="toc-tokenization-in-natural-language" class="nav-link" data-scroll-target="#tokenization-in-natural-language"><span class="header-section-number">4.2.1</span> Tokenization in Natural Language</a></li>
   <li><a href="#the-embedding-process-nlp-bert" id="toc-the-embedding-process-nlp-bert" class="nav-link" data-scroll-target="#the-embedding-process-nlp-bert"><span class="header-section-number">4.2.2</span> The Embedding Process (NLP BERT)</a></li>
   <li><a href="#language-evolution-is-decayed" id="toc-language-evolution-is-decayed" class="nav-link" data-scroll-target="#language-evolution-is-decayed"><span class="header-section-number">4.2.3</span> Language Evolution is Decayed</a></li>
+  <li><a href="#biological-sequences-are-fundamentally-different" id="toc-biological-sequences-are-fundamentally-different" class="nav-link" data-scroll-target="#biological-sequences-are-fundamentally-different"><span class="header-section-number">4.2.4</span> Biological Sequences are Fundamentally Different</a></li>
+  <li><a href="#evolutionary-context-as-an-embedding" id="toc-evolutionary-context-as-an-embedding" class="nav-link" data-scroll-target="#evolutionary-context-as-an-embedding"><span class="header-section-number">4.2.5</span> Evolutionary context as an embedding</a></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"><span class="header-section-number">4.2.6</span> </a></li>
   </ul></li>
-  <li><a href="#biological-sequences-are-fundamentally-different" id="toc-biological-sequences-are-fundamentally-different" class="nav-link" data-scroll-target="#biological-sequences-are-fundamentally-different"><span class="header-section-number">4.3</span> 2. Biological Sequences are Fundamentally Different</a>
+  <li><a href="#introducing-gpn-msa-bert" id="toc-introducing-gpn-msa-bert" class="nav-link" data-scroll-target="#introducing-gpn-msa-bert"><span class="header-section-number">4.3</span> 4. Introducing GPN-MSA-BERT</a>
   <ul class="collapse">
-  <li><a href="#key-differences-between-language-and-dna" id="toc-key-differences-between-language-and-dna" class="nav-link" data-scroll-target="#key-differences-between-language-and-dna"><span class="header-section-number">4.3.1</span> Key Differences Between Language and DNA</a></li>
-  <li><a href="#evolution-is-a-rich-context-layer" id="toc-evolution-is-a-rich-context-layer" class="nav-link" data-scroll-target="#evolution-is-a-rich-context-layer"><span class="header-section-number">4.3.2</span> Evolution is a Rich Context Layer</a></li>
+  <li><a href="#key-idea-dynamic-position-embeddings" id="toc-key-idea-dynamic-position-embeddings" class="nav-link" data-scroll-target="#key-idea-dynamic-position-embeddings"><span class="header-section-number">4.3.1</span> Key Idea: Dynamic Position Embeddings</a></li>
+  <li><a href="#visualization" id="toc-visualization" class="nav-link" data-scroll-target="#visualization"><span class="header-section-number">4.3.2</span> Visualization</a></li>
+  <li><a href="#practical-implementation---replacing-the-bert-encoder" id="toc-practical-implementation---replacing-the-bert-encoder" class="nav-link" data-scroll-target="#practical-implementation---replacing-the-bert-encoder"><span class="header-section-number">4.3.3</span> Practical Implementation - Replacing the BERT Encoder</a></li>
   </ul></li>
-  <li><a href="#encoding-genomes-with-evolution-in-mind" id="toc-encoding-genomes-with-evolution-in-mind" class="nav-link" data-scroll-target="#encoding-genomes-with-evolution-in-mind"><span class="header-section-number">4.4</span> 3. Encoding Genomes with Evolution in Mind</a></li>
-  <li><a href="#introducing-gpn-bert" id="toc-introducing-gpn-bert" class="nav-link" data-scroll-target="#introducing-gpn-bert"><span class="header-section-number">4.5</span> 4. Introducing GPN-BERT</a>
-  <ul class="collapse">
-  <li><a href="#key-idea-dynamic-position-embeddings" id="toc-key-idea-dynamic-position-embeddings" class="nav-link" data-scroll-target="#key-idea-dynamic-position-embeddings"><span class="header-section-number">4.5.1</span> Key Idea: Dynamic Position Embeddings</a></li>
-  <li><a href="#visualization" id="toc-visualization" class="nav-link" data-scroll-target="#visualization"><span class="header-section-number">4.5.2</span> Visualization</a></li>
-  <li><a href="#practical-implementation---replacing-the-bert-encoder" id="toc-practical-implementation---replacing-the-bert-encoder" class="nav-link" data-scroll-target="#practical-implementation---replacing-the-bert-encoder"><span class="header-section-number">4.5.3</span> Practical Implementation - Replacing the BERT Encoder</a></li>
-  </ul></li>
-  <li><a href="#recap-of-our-approach" id="toc-recap-of-our-approach" class="nav-link" data-scroll-target="#recap-of-our-approach"><span class="header-section-number">4.6</span> 5. Recap of Our Approach</a></li>
-  <li><a href="#preview-of-chapter-5" id="toc-preview-of-chapter-5" class="nav-link" data-scroll-target="#preview-of-chapter-5"><span class="header-section-number">4.7</span> 6. Preview of Chapter 5</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">4.8</span> References</a></li>
+  <li><a href="#recap-of-our-approach" id="toc-recap-of-our-approach" class="nav-link" data-scroll-target="#recap-of-our-approach"><span class="header-section-number">4.4</span> 5. Recap of Our Approach</a></li>
+  <li><a href="#preview-of-chapter-5" id="toc-preview-of-chapter-5" class="nav-link" data-scroll-target="#preview-of-chapter-5"><span class="header-section-number">4.5</span> 6. Preview of Chapter 5</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">4.6</span> References</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter4.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Chapter 4 - Evolution-Aware BERT: Designing Encoders for Genomics</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter4.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Evolution-Aware BERT: Designing Encoders for Genomics</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Chapter 4 - Evolution-Aware BERT: Designing Encoders for Genomics</span></h1>
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Evolution-Aware BERT: Designing Encoders for Genomics</span></h1>
 </div>
 
 
@@ -264,17 +281,17 @@ Abstract
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>I this chapter we’ll evaluate the architecture of natural language models, which we have up to this point uncritically adopted for DNA modeling from our NLP/corporate brethern. We’ll discuss how some reseachers have bugun to move on from applying known model architectures to DNA and started to (re)designing model architectures specifically with DNA in mind. These models lean into our very extensive knowledge of the evolutionary history of the Genome.</p>
+<p>In this chapter we’ll evaluate the architecture of natural language models, which we have up to this point uncritically adopted for DNA modeling from our NLP/corporate brethren. We’ll discuss how some researchers have begun to move on from applying known model architectures to DNA and started to (re)designing model architectures specifically with DNA in mind. These models lean into our very extensive knowledge of the evolutionary history of the Genome.</p>
+<p>In this chapter we are forced to confront some fundamental questions, what is prediction? what do we want a model to learn?</p>
 <p>All scripts for this chapter are found here: <a href="https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Chapter_4" class="uri">https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Chapter_4</a></p>
 </div>
 </div>
 <section id="introduction" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">4.1</span> Introduction</h2>
 <p>In previous chapters, we introduced the basic principles of <strong>BERT for DNA sequences</strong>. We took inspiration from natural language processing (NLP), treating DNA as a <strong>language</strong>, where sequences of nucleotides (A, T, C, G, -) could be processed using transformers. This approach, while powerful, carries over several assumptions from natural language that do not perfectly align with biological sequences. In this chapter, we will re-examine how we encode genomic data and introduce <strong>a new design paradigm — evolutionary-aware encoding — inspired by the recently proposed GPN (Genomic Pre-trained Network).</strong></p>
-<hr>
 </section>
 <section id="tokenization-and-embedding-in-language-models" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="tokenization-and-embedding-in-language-models"><span class="header-section-number">4.2</span> 1. Tokenization and Embedding in Language Models</h2>
+<h2 data-number="4.2" class="anchored" data-anchor-id="tokenization-and-embedding-in-language-models"><span class="header-section-number">4.2</span> Tokenization and Embedding in Language Models</h2>
 <p>Modern language models, whether <strong>BERT</strong>, <strong>GPT</strong>, or similar architectures, rely heavily on <strong>how input sequences are tokenized and encoded before they ever reach the attention layers</strong>. This initial step — often overlooked — plays a profound role in shaping how the model learns.</p>
 <section id="tokenization-in-natural-language" class="level3" data-number="4.2.1">
 <h3 data-number="4.2.1" class="anchored" data-anchor-id="tokenization-in-natural-language"><span class="header-section-number">4.2.1</span> Tokenization in Natural Language</h3>
@@ -284,7 +301,7 @@ Abstract
 <li>Subwords (“cat” might break into “c”, “at”).</li>
 <li>Even characters (in rare cases).</li>
 </ul>
-<p>Since the number of tokens is so large, <strong>each token is assigned a unique vector embedding — a dense, learnable representation of its “meaning”</strong>. These embeddings are gradually refined during training as the model learns how tokens behave in different contexts.</p>
+<p>Since the number of tokens is so large, <strong>each token is assigned a unique vector embedding — a dense, learnable representation of its “meaning”</strong>. These embedding are gradually refined during training as the model learns how tokens behave in different contexts. The model learns, based on the massive amounts of training data what the word means, what other words have similar or related meanings. This is essential because linguists and those who study language have vast knowledge of word meaning, numerically encoding that knowledge, such that a computational model could process isn’t currently a feasible task. Therefore in a natural (as opposed to biological) large language model word embedding are learned from the data, the data being all the text on the internet.</p>
 </section>
 <section id="the-embedding-process-nlp-bert" class="level3" data-number="4.2.2">
 <h3 data-number="4.2.2" class="anchored" data-anchor-id="the-embedding-process-nlp-bert"><span class="header-section-number">4.2.2</span> The Embedding Process (NLP BERT)</h3>
@@ -304,16 +321,26 @@ Step 3 - Transformer Layers:
 </section>
 <section id="language-evolution-is-decayed" class="level3" data-number="4.2.3">
 <h3 data-number="4.2.3" class="anchored" data-anchor-id="language-evolution-is-decayed"><span class="header-section-number">4.2.3</span> Language Evolution is Decayed</h3>
-<p>The design of these token embeddings reflects a key fact about human languages: <strong>the evolutionary history of words is largely irrelevant to understanding their meaning today</strong>. While linguistic etymology exists, the meaning of “cat” today does not rely on whether the word originated from Latin or Proto-Indo-European. <strong>Context (the words around “cat”) matters far more than distant etymology.</strong></p>
-<hr>
+<p>The design of these token embeddings reflects a key fact about human languages: <strong>the evolutionary history of words might be relevant to understanding their meaning today, but the words context in text is way more informative</strong>. While linguistic etymology exists, the meaning of “cat” today does not rely on whether the word originated from Latin or Proto-Indo-European. Context (the words around “cat”) matters far more than distant etymology. Even if I am unfairly discounting the importance of etymology in linguistics (I am no linguist, don’t take my word for it), the quantity of older texts, relative to the quantity of modern texts, the lack of obvious coding scheme for embedding a word in its etymological history are problematic and would have to be very effecice given how effective “word in textual context” embeddings are. However, biology, and DNA in particular, is different.</p>
 </section>
+<section id="biological-sequences-are-fundamentally-different" class="level3" data-number="4.2.4">
+<h3 data-number="4.2.4" class="anchored" data-anchor-id="biological-sequences-are-fundamentally-different"><span class="header-section-number">4.2.4</span> Biological Sequences are Fundamentally Different</h3>
+<p>The DNA encoding we have been working with (A, T, G, C, -) has 5 tokens, perhaps 20 if we encode all the codes used in genetics to code for ambiguous or missing bases. Protein language models we’ll cover later have ±20 amino-acids commonly found in proteins. If we use longer vocabularies, like k-mer or BPE tokenizer vocabularies its not clear the longer sequences we obtain really are comparable, or interchangeable. The point of embedding is to cluster similar and dissimilarities, in order to predict the next, or a masked, token if the presence of up to 128.000 tokens to chose from some of which have very similar meanings, or could fully alter the meaning of a sentence (by negation, or omission). Ins biology we have a small vocabulary, 5 or 20 or if you wish up to a few hundred tokens. We do however have an incredible understanding of the evolutionary history (<strong>Figure 4.1</strong>) of each base in the genome, we know its place in the genome of other species an can align those to eachother!</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://evogeneao.s3.amazonaws.com/images/tree_of_life/tree-of-life_2000.png" class="img-fluid figure-img"></p>
+<figcaption><strong>Figure 4.1</strong> The Evogeneao Tree of Life diagram all rights reserved Leonard Eisenberg (2008 &amp; 2017) get posters and relevant teaching materials here: <a href="https://www.evogeneao.com/en/learn/tree-of-life" class="uri">https://www.evogeneao.com/en/learn/tree-of-life</a></figcaption>
+</figure>
+</div>
 </section>
-<section id="biological-sequences-are-fundamentally-different" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="biological-sequences-are-fundamentally-different"><span class="header-section-number">4.3</span> 2. Biological Sequences are Fundamentally Different</h2>
-<p>In genomics, this assumption breaks down. Each nucleotide (A, T, G, C, -) has a <strong>fixed biochemical meaning</strong>, but its biological relevance <strong>depends profoundly on its evolutionary history across species</strong>.</p>
-<section id="key-differences-between-language-and-dna" class="level3" data-number="4.3.1">
-<h3 data-number="4.3.1" class="anchored" data-anchor-id="key-differences-between-language-and-dna"><span class="header-section-number">4.3.1</span> Key Differences Between Language and DNA</h3>
+<section id="evolutionary-context-as-an-embedding" class="level3" data-number="4.2.5">
+<h3 data-number="4.2.5" class="anchored" data-anchor-id="evolutionary-context-as-an-embedding"><span class="header-section-number">4.2.5</span> Evolutionary context as an embedding</h3>
+<p>The <strong>evolutionary history of a genomic position — how conserved it is, how it varies across species — directly influences our estimation of its importance and its tolerance to mutation</strong>. A nucleotide in a highly conserved enhancer region requires different level of attention (from the model, or us scientists) then a nucleotide in a rapidly evolving spacer.</p>
+</section>
+<section id="section" class="level3" data-number="4.2.6">
+<h3 data-number="4.2.6" class="anchored" data-anchor-id="section"><span class="header-section-number">4.2.6</span> </h3>
 <table class="caption-top table">
+<caption><strong>Table 4.1</strong> Key Differences Between Language and DNA</caption>
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -345,7 +372,7 @@ Step 3 - Transformer Layers:
 <tr class="even">
 <td>Token Embedding</td>
 <td>Fully learned</td>
-<td>Can be partly predefined (one-hot)</td>
+<td>No unique encoding for each token, but predefined based on token specific evolutionary history</td>
 </tr>
 <tr class="odd">
 <td>Neighboring Context</td>
@@ -354,28 +381,25 @@ Step 3 - Transformer Layers:
 </tr>
 </tbody>
 </table>
-</section>
-<section id="evolution-is-a-rich-context-layer" class="level3" data-number="4.3.2">
-<h3 data-number="4.3.2" class="anchored" data-anchor-id="evolution-is-a-rich-context-layer"><span class="header-section-number">4.3.2</span> Evolution is a Rich Context Layer</h3>
-<p>The <strong>evolutionary history of a genomic position — how conserved it is, how it varies across species — directly influences its biological function</strong>. A nucleotide in a highly conserved enhancer region means something different from a nucleotide in a rapidly evolving spacer.</p>
-<hr>
-</section>
-</section>
-<section id="encoding-genomes-with-evolution-in-mind" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="encoding-genomes-with-evolution-in-mind"><span class="header-section-number">4.4</span> 3. Encoding Genomes with Evolution in Mind</h2>
 <p>To capture this <strong>cross-species evolutionary context</strong>, we need an <strong>embedding strategy that combines:</strong></p>
 <ol type="1">
 <li><strong>The identity of the nucleotide itself (A, T, G, C, -)</strong>.</li>
 <li><strong>The state of this position in aligned species (what bases appear at the same position in other species).</strong></li>
 </ol>
-<p>This evolutionary-aware encoding is at the heart of the <strong>Genomic Pre-trained Network (GPN)</strong> architecture.</p>
-<hr>
+<p>This evolutionary-aware encoding is at the heart of the <strong>Genomic Pre-trained Network (GPN)</strong> architecture an various famous protein language models like AlphaFold<span class="citation" data-cites="Benegas2024 Lupo2022 jumper2021">(<a href="references.html#ref-Benegas2024" role="doc-biblioref">Benegas et al. 2023</a>; <a href="references.html#ref-Lupo2022" role="doc-biblioref">Lupo, Sgarbossa, and Bitbol 2022</a>; <a href="references.html#ref-jumper2021" role="doc-biblioref">Jumper et al. 2021</a>)</span>. in DNA nwetworks we’ll discuss in this chapter the encoding is computed for each base given tis history. So while the model has 5 tokens (G,C,T,A, and - ) these tokens do not map to a fixed embedding, rather the base “A” maps to an encoding (one-hot encoding) for A, but then also for the same base in aligned sequences of 99 non-human species. This fundamentally chances the model architecture, changing it from the a language model applied to DNA as we did in chapter 3 to a DNA language model, or maybe even just a DNA model,</p>
 </section>
-<section id="introducing-gpn-bert" class="level2" data-number="4.5">
-<h2 data-number="4.5" class="anchored" data-anchor-id="introducing-gpn-bert"><span class="header-section-number">4.5</span> 4. Introducing GPN-BERT</h2>
-<p>GPN-BERT (inspired by Benegas et al., 2024) adapts BERT-style masked language modeling (MLM) to DNA sequences, but <strong>incorporates multispecies alignment (MSA) data directly into the model’s input</strong>.</p>
-<section id="key-idea-dynamic-position-embeddings" class="level3" data-number="4.5.1">
-<h3 data-number="4.5.1" class="anchored" data-anchor-id="key-idea-dynamic-position-embeddings"><span class="header-section-number">4.5.1</span> Key Idea: Dynamic Position Embeddings</h3>
+</section>
+<section id="introducing-gpn-msa-bert" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="introducing-gpn-msa-bert"><span class="header-section-number">4.3</span> 4. Introducing GPN-MSA-BERT</h2>
+<p>GPN-MSA-BERT (inspired by <span class="citation" data-cites="Benegas2024">Benegas et al. (<a href="references.html#ref-Benegas2024" role="doc-biblioref">2023</a>)</span>) adapts BERT-style masked language modeling (MLM) to DNA sequences, but <strong>incorporates multispecies alignment (MSA) data directly into the model’s input</strong>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/paste-15.png" class="img-fluid figure-img"></p>
+<figcaption><strong>Figure 4.2</strong> an example multiple sequence alignment (MSA) across 7 sequences (usually species). Source: <a href="https://www.biorender.com/template/multiple-sequence-alignment-dna" class="uri">https://www.biorender.com/template/multiple-sequence-alignment-dna</a> author: <a href="https://app.biorender.com/profile/eunice_huang">Eunice Huang</a></figcaption>
+</figure>
+</div>
+<section id="key-idea-dynamic-position-embeddings" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="key-idea-dynamic-position-embeddings"><span class="header-section-number">4.3.1</span> Key Idea: Dynamic Position Embeddings</h3>
 <p>For each position in the human genome, the model receives:</p>
 <ul>
 <li>The <strong>human base (A, T, G, C, -)</strong> — this is the usual input.</li>
@@ -384,8 +408,8 @@ Step 3 - Transformer Layers:
 </ul>
 <p>This turns a <strong>simple nucleotide (A)</strong> into a <strong>dynamic, position-specific vector</strong> that depends on its <strong>evolutionary context across species</strong>.</p>
 </section>
-<section id="visualization" class="level3" data-number="4.5.2">
-<h3 data-number="4.5.2" class="anchored" data-anchor-id="visualization"><span class="header-section-number">4.5.2</span> Visualization</h3>
+<section id="visualization" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="visualization"><span class="header-section-number">4.3.2</span> Visualization</h3>
 <pre><code>Human Position:     A
 Aligned Species:    A  G  A  (species 1, species 2, species 3)
 
@@ -399,8 +423,8 @@ Embedding:
 </ul>
 <hr>
 </section>
-<section id="practical-implementation---replacing-the-bert-encoder" class="level3" data-number="4.5.3">
-<h3 data-number="4.5.3" class="anchored" data-anchor-id="practical-implementation---replacing-the-bert-encoder"><span class="header-section-number">4.5.3</span> Practical Implementation - Replacing the BERT Encoder</h3>
+<section id="practical-implementation---replacing-the-bert-encoder" class="level3" data-number="4.3.3">
+<h3 data-number="4.3.3" class="anchored" data-anchor-id="practical-implementation---replacing-the-bert-encoder"><span class="header-section-number">4.3.3</span> Practical Implementation - Replacing the BERT Encoder</h3>
 <p>To implement this in practice, we can directly modify a Hugging Face model class (like <code>ModernBertForMaskedLM</code>) to use our custom <strong>GPNEmbedding</strong> layer in place of the standard token embedding layer.</p>
 <p>This requires:</p>
 <ul>
@@ -437,8 +461,8 @@ Embedding:
 <hr>
 </section>
 </section>
-<section id="recap-of-our-approach" class="level2" data-number="4.6">
-<h2 data-number="4.6" class="anchored" data-anchor-id="recap-of-our-approach"><span class="header-section-number">4.6</span> 5. Recap of Our Approach</h2>
+<section id="recap-of-our-approach" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="recap-of-our-approach"><span class="header-section-number">4.4</span> 5. Recap of Our Approach</h2>
 <p>In <strong>Chapter 2</strong>, we trained a vanilla <strong>BERT</strong> on DNA sequences alone — treating DNA as just another language. That model only had access to the <strong>human sequence</strong>, with no evolutionary context.</p>
 <p>In <strong>this chapter</strong>, we’ve reimagined that process. Instead of treating A, T, G, C, - as abstract symbols, we inject <strong>evolutionary history directly into the input encoding</strong>. This allows our model to:</p>
 <ul>
@@ -448,8 +472,8 @@ Embedding:
 </ul>
 <hr>
 </section>
-<section id="preview-of-chapter-5" class="level2" data-number="4.7">
-<h2 data-number="4.7" class="anchored" data-anchor-id="preview-of-chapter-5"><span class="header-section-number">4.7</span> 6. Preview of Chapter 5</h2>
+<section id="preview-of-chapter-5" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="preview-of-chapter-5"><span class="header-section-number">4.5</span> 6. Preview of Chapter 5</h2>
 <p>In <strong>Chapter 5</strong>, we will put these two models — <strong>Vanilla BERT</strong> and <strong>GPN-BERT</strong> — to the test. We will evaluate their performance on:</p>
 <ul>
 <li>Predicting masked bases (MLM accuracy).</li>
@@ -459,14 +483,25 @@ Embedding:
 <p>This head-to-head comparison will highlight the <strong>strengths and weaknesses</strong> of each approach and show the value of embedding <strong>evolutionary context directly into genomic language models</strong>.</p>
 <hr>
 </section>
-<section id="references" class="level2" data-number="4.8">
-<h2 data-number="4.8" class="anchored" data-anchor-id="references"><span class="header-section-number">4.8</span> References</h2>
+<section id="references" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="references"><span class="header-section-number">4.6</span> References</h2>
 <ul>
 <li>Benegas et al., <em>Nature Biotechnology</em>, 2024.<br>
 <a href="https://doi.org/10.1038/s41587-024-02511-w">A DNA language model based on multispecies alignment predicts the effects of genome-wide variants</a></li>
 </ul>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Benegas2024" class="csl-entry" role="listitem">
+Benegas, Gonzalo, Carlos Albors, Alan J. Aw, Chengzhong Ye, and Yun S. Song. 2023. <span>“GPN-MSA: An Alignment-Based DNA Language Model for Genome-Wide Variant Effect Prediction.”</span> <a href="http://dx.doi.org/10.1101/2023.10.10.561776">http://dx.doi.org/10.1101/2023.10.10.561776</a>.
+</div>
+<div id="ref-jumper2021" class="csl-entry" role="listitem">
+Jumper, John, Richard Evans, Alexander Pritzel, Tim Green, Michael Figurnov, Olaf Ronneberger, Kathryn Tunyasuvunakool, et al. 2021. <span>“Highly Accurate Protein Structure Prediction with AlphaFold.”</span> <em>Nature</em> 596 (7873): 583–89. <a href="https://doi.org/10.1038/s41586-021-03819-2">https://doi.org/10.1038/s41586-021-03819-2</a>.
+</div>
+<div id="ref-Lupo2022" class="csl-entry" role="listitem">
+Lupo, Umberto, Damiano Sgarbossa, and Anne-Florence Bitbol. 2022. <span>“Protein Language Models Trained on Multiple Sequence Alignments Learn Phylogenetic Relationships.”</span> <em>Nature Communications</em> 13 (1). <a href="https://doi.org/10.1038/s41467-022-34032-y">https://doi.org/10.1038/s41467-022-34032-y</a>.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->

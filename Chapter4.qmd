@@ -1,23 +1,22 @@
 ---
-title: "Chapter 4 - Evolution-Aware BERT: Designing Encoders for Genomics"
+title: "Evolution-Aware BERT: Designing Encoders for Genomics"
 ---
 
 ::: callout-tip
 ## Abstract
 
-I this chapter we'll evaluate the architecture of natural language models, which we have up to this point uncritically adopted for DNA modeling from our NLP/corporate brethern. We'll discuss how some reseachers have bugun to move on from applying known model architectures to DNA and started to (re)designing model architectures specifically with DNA in mind. These models lean into our very extensive knowledge of the evolutionary history of the Genome.
+In this chapter we'll evaluate the architecture of natural language models, which we have up to this point uncritically adopted for DNA modeling from our NLP/corporate brethren. We'll discuss how some researchers have begun to move on from applying known model architectures to DNA and started to (re)designing model architectures specifically with DNA in mind. These models lean into our very extensive knowledge of the evolutionary history of the Genome.
+
+In this chapter we are forced to confront some fundamental questions, what is prediction? what do we want a model to learn?
 
 All scripts for this chapter are found here: <https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Chapter_4>
 :::
-
 
 ## Introduction
 
 In previous chapters, we introduced the basic principles of **BERT for DNA sequences**. We took inspiration from natural language processing (NLP), treating DNA as a **language**, where sequences of nucleotides (A, T, C, G, -) could be processed using transformers. This approach, while powerful, carries over several assumptions from natural language that do not perfectly align with biological sequences. In this chapter, we will re-examine how we encode genomic data and introduce **a new design paradigm — evolutionary-aware encoding — inspired by the recently proposed GPN (Genomic Pre-trained Network).**
 
----
-
-## 1. Tokenization and Embedding in Language Models
+## Tokenization and Embedding in Language Models
 
 Modern language models, whether **BERT**, **GPT**, or similar architectures, rely heavily on **how input sequences are tokenized and encoded before they ever reach the attention layers**. This initial step — often overlooked — plays a profound role in shaping how the model learns.
 
@@ -25,15 +24,15 @@ Modern language models, whether **BERT**, **GPT**, or similar architectures, rel
 
 In human languages like English or French, the vocabulary is **large**, often comprising tens of thousands of tokens. These tokens could be:
 
-- Whole words ("cat", "sat").
-- Subwords ("cat" might break into "c", "at").
-- Even characters (in rare cases).
+-   Whole words ("cat", "sat").
+-   Subwords ("cat" might break into "c", "at").
+-   Even characters (in rare cases).
 
-Since the number of tokens is so large, **each token is assigned a unique vector embedding — a dense, learnable representation of its "meaning"**. These embeddings are gradually refined during training as the model learns how tokens behave in different contexts.
+Since the number of tokens is so large, **each token is assigned a unique vector embedding — a dense, learnable representation of its "meaning"**. These embedding are gradually refined during training as the model learns how tokens behave in different contexts. The model learns, based on the massive amounts of training data what the word means, what other words have similar or related meanings. This is essential because linguists and those who study language have vast knowledge of word meaning, numerically encoding that knowledge, such that a computational model could process isn't currently a feasible task. Therefore in a natural (as opposed to biological) large language model word embedding are learned from the data, the data being all the text on the internet.
 
 ### The Embedding Process (NLP BERT)
 
-```
+```         
 Input Sentence:  "The cat sat on the mat"
 
 Step 1 - Tokenization:
@@ -51,58 +50,56 @@ Step 3 - Transformer Layers:
 
 ### Language Evolution is Decayed
 
-The design of these token embeddings reflects a key fact about human languages: **the evolutionary history of words is largely irrelevant to understanding their meaning today**. While linguistic etymology exists, the meaning of "cat" today does not rely on whether the word originated from Latin or Proto-Indo-European. **Context (the words around "cat") matters far more than distant etymology.**
+The design of these token embeddings reflects a key fact about human languages: **the evolutionary history of words might be relevant to understanding their meaning today, but the words context in text is way more informative**. While linguistic etymology exists, the meaning of "cat" today does not rely on whether the word originated from Latin or Proto-Indo-European. Context (the words around "cat") matters far more than distant etymology. Even if I am unfairly discounting the importance of etymology in linguistics (I am no linguist, don't take my word for it), the quantity of older texts, relative to the quantity of modern texts, the lack of obvious coding scheme for embedding a word in its etymological history are problematic and would have to be very effecice given how effective "word in textual context" embeddings are. However, biology, and DNA in particular, is different.
 
----
+### Biological Sequences are Fundamentally Different
 
-## 2. Biological Sequences are Fundamentally Different
+The DNA encoding we have been working with (A, T, G, C, -) has 5 tokens, perhaps 20 if we encode all the codes used in genetics to code for ambiguous or missing bases. Protein language models we'll cover later have ±20 amino-acids commonly found in proteins. If we use longer vocabularies, like k-mer or BPE tokenizer vocabularies its not clear the longer sequences we obtain really are comparable, or interchangeable. The point of embedding is to cluster similar and dissimilarities, in order to predict the next, or a masked, token if the presence of up to 128.000 tokens to chose from some of which have very similar meanings, or could fully alter the meaning of a sentence (by negation, or omission). Ins biology we have a small vocabulary, 5 or 20 or if you wish up to a few hundred tokens. We do however have an incredible understanding of the evolutionary history (**Figure 4.1**) of each base in the genome, we know its place in the genome of other species an can align those to eachother!
 
-In genomics, this assumption breaks down. Each nucleotide (A, T, G, C, -) has a **fixed biochemical meaning**, but its biological relevance **depends profoundly on its evolutionary history across species**.
+![**Figure 4.1** The Evogeneao Tree of Life diagram all rights reserved Leonard Eisenberg (2008 & 2017) get posters and relevant teaching materials here: <https://www.evogeneao.com/en/learn/tree-of-life>](https://evogeneao.s3.amazonaws.com/images/tree_of_life/tree-of-life_2000.png){fig-align="center"}
 
-### Key Differences Between Language and DNA
+### Evolutionary context as an embedding
+
+The **evolutionary history of a genomic position — how conserved it is, how it varies across species — directly influences our estimation of its importance and its tolerance to mutation**. A nucleotide in a highly conserved enhancer region requires different level of attention (from the model, or us scientists) then a nucleotide in a rapidly evolving spacer.
+
+### 
 
 | Aspect | Natural Language | Genomics |
-|---|---|---|
-| Number of Tokens | Tens of thousands | ~5 (A, T, G, C, -) |
+|------------------------|------------------------|------------------------|
+| Number of Tokens | Tens of thousands | \~5 (A, T, G, C, -) |
 | Meaning | Flexible, evolves over time | Biochemically fixed |
 | Evolutionary Context | Mostly irrelevant to meaning | Often crucial (conservation, divergence) |
-| Token Embedding | Fully learned | Can be partly predefined (one-hot) |
+| Token Embedding | Fully learned | No unique encoding for each token, but predefined based on token specific evolutionary history |
 | Neighboring Context | Defines meaning | Defines local motifs, but evolutionary context adds extra layer |
 
-### Evolution is a Rich Context Layer
-
-The **evolutionary history of a genomic position — how conserved it is, how it varies across species — directly influences its biological function**. A nucleotide in a highly conserved enhancer region means something different from a nucleotide in a rapidly evolving spacer.
-
----
-
-## 3. Encoding Genomes with Evolution in Mind
+: **Table 4.1** Key Differences Between Language and DNA
 
 To capture this **cross-species evolutionary context**, we need an **embedding strategy that combines:**
 
-1. **The identity of the nucleotide itself (A, T, G, C, -)**.
-2. **The state of this position in aligned species (what bases appear at the same position in other species).**
+1.  **The identity of the nucleotide itself (A, T, G, C, -)**.
+2.  **The state of this position in aligned species (what bases appear at the same position in other species).**
 
-This evolutionary-aware encoding is at the heart of the **Genomic Pre-trained Network (GPN)** architecture.
+This evolutionary-aware encoding is at the heart of the **Genomic Pre-trained Network (GPN)** architecture an various famous protein language models like AlphaFold[@Benegas2024; @Lupo2022; @jumper2021]. in DNA nwetworks we'll discuss in this chapter the encoding is computed for each base given tis history. So while the model has 5 tokens (G,C,T,A, and - ) these tokens do not map to a fixed embedding, rather the base "A" maps to an encoding (one-hot encoding) for A, but then also for the same base in aligned sequences of 99 non-human species. This fundamentally chances the model architecture, changing it from the a language model applied to DNA as we did in chapter 3 to a DNA language model, or maybe even just a DNA model,
 
----
+## 4. Introducing GPN-MSA-BERT
 
-## 4. Introducing GPN-BERT
+GPN-MSA-BERT (inspired by @Benegas2024) adapts BERT-style masked language modeling (MLM) to DNA sequences, but **incorporates multispecies alignment (MSA) data directly into the model's input**.
 
-GPN-BERT (inspired by Benegas et al., 2024) adapts BERT-style masked language modeling (MLM) to DNA sequences, but **incorporates multispecies alignment (MSA) data directly into the model's input**.
+![**Figure 4.2** an example multiple sequence alignment (MSA) across 7 sequences (usually species). Source: <https://www.biorender.com/template/multiple-sequence-alignment-dna> author: [Eunice Huang](https://app.biorender.com/profile/eunice_huang)](images/paste-15.png)
 
 ### Key Idea: Dynamic Position Embeddings
 
 For each position in the human genome, the model receives:
 
-- The **human base (A, T, G, C, -)** — this is the usual input.
-- The **aligned bases from other species** — these are additional features.
-- These aligned bases are **one-hot encoded** and concatenated to the human base's embedding.
+-   The **human base (A, T, G, C, -)** — this is the usual input.
+-   The **aligned bases from other species** — these are additional features.
+-   These aligned bases are **one-hot encoded** and concatenated to the human base's embedding.
 
 This turns a **simple nucleotide (A)** into a **dynamic, position-specific vector** that depends on its **evolutionary context across species**.
 
 ### Visualization
 
-```
+```         
 Human Position:     A
 Aligned Species:    A  G  A  (species 1, species 2, species 3)
 
@@ -112,11 +109,11 @@ Embedding:
 
 This combined vector captures:
 
-- What the human base is.
-- How conserved the site is.
-- Which substitutions are tolerated across species.
+-   What the human base is.
+-   How conserved the site is.
+-   Which substitutions are tolerated across species.
 
----
+------------------------------------------------------------------------
 
 ### Practical Implementation - Replacing the BERT Encoder
 
@@ -124,11 +121,11 @@ To implement this in practice, we can directly modify a Hugging Face model class
 
 This requires:
 
-- Defining a **GPNEmbedding** class that concatenates the one-hot human base with species features.
-- Subclassing `ModernBertForMaskedLM` to replace the embedding layer.
-- Ensuring the `forward` method accepts both `input_ids` and `aux_features`, which are passed into the embedding layer.
+-   Defining a **GPNEmbedding** class that concatenates the one-hot human base with species features.
+-   Subclassing `ModernBertForMaskedLM` to replace the embedding layer.
+-   Ensuring the `forward` method accepts both `input_ids` and `aux_features`, which are passed into the embedding layer.
 
-```python
+``` python
 class GPNEmbedding(nn.Module):
     def __init__(self, config, n_species):
         super().__init__()
@@ -158,8 +155,7 @@ class ModernBertForMaskedLMWithGPN(ModernBertForMaskedLM):
 
 This illustrates how **pre-trained transformers can be adapted for genomics** while preserving compatibility with Hugging Face's `Trainer` ecosystem.
 
----
-
+------------------------------------------------------------------------
 
 ## 5. Recap of Our Approach
 
@@ -167,26 +163,25 @@ In **Chapter 2**, we trained a vanilla **BERT** on DNA sequences alone — treat
 
 In **this chapter**, we’ve reimagined that process. Instead of treating A, T, G, C, - as abstract symbols, we inject **evolutionary history directly into the input encoding**. This allows our model to:
 
-- Use the aligned species data as **a rich evolutionary prior**.
-- Still leverage transformers for learning **sequence motifs**.
-- Predict masked human bases using both **local sequence** and **cross-species evolutionary patterns**.
+-   Use the aligned species data as **a rich evolutionary prior**.
+-   Still leverage transformers for learning **sequence motifs**.
+-   Predict masked human bases using both **local sequence** and **cross-species evolutionary patterns**.
 
----
+------------------------------------------------------------------------
 
 ## 6. Preview of Chapter 5
 
 In **Chapter 5**, we will put these two models — **Vanilla BERT** and **GPN-BERT** — to the test. We will evaluate their performance on:
 
-- Predicting masked bases (MLM accuracy).
-- Identifying regulatory elements.
-- Predicting the functional impact of mutations.
+-   Predicting masked bases (MLM accuracy).
+-   Identifying regulatory elements.
+-   Predicting the functional impact of mutations.
 
 This head-to-head comparison will highlight the **strengths and weaknesses** of each approach and show the value of embedding **evolutionary context directly into genomic language models**.
 
----
+------------------------------------------------------------------------
 
 ## References
 
-- Benegas et al., *Nature Biotechnology*, 2024.  
-  [A DNA language model based on multispecies alignment predicts the effects of genome-wide variants](https://doi.org/10.1038/s41587-024-02511-w)
-
+-   Benegas et al., *Nature Biotechnology*, 2024.\
+    [A DNA language model based on multispecies alignment predicts the effects of genome-wide variants](https://doi.org/10.1038/s41587-024-02511-w)
