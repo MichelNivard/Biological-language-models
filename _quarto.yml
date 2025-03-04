@@ -4,7 +4,7 @@ project:
 
 
 book:
-  title: "Biological language models & Neural Networks"
+  title: "Biological Language Models & Neural Networks"
   reader-mode: true
   author: "Michel Nivard"
   date: "2/27/2025"
@@ -14,11 +14,15 @@ book:
     - index.qmd
     - part: "DNA"
       chapters: 
-        - Chapter1.qmd
-        - Chapter2.qmd
-        - Chapter3.qmd
-        - Chapter4.qmd
-        - Chapter5.qmd
+        - Chapter1_DNA.qmd
+        - Chapter2_DNA.qmd
+        - Chapter3_DNA.qmd
+        - Chapter4_DNA.qmd
+        - Chapter5_DNA.qmd
+        - Chapter6_DNA.qmd
+    - part: "Proteins"
+    - part: "Multi-Modal-Biology"
+        - 
     - summary.qmd
     - references.qmd
 
