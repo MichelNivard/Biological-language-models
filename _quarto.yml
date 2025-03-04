@@ -18,13 +18,21 @@ book:
         - Chapter2.qmd
         - Chapter3.qmd
         - Chapter4.qmd
+        - Chapter5.qmd
     - summary.qmd
     - references.qmd
 
 bibliography: references.bib
 
-format:
+format: 
   html:
+    grid:
+      sidebar-width: 350px
+      body-width: 900px
+      margin-width: 200px
+    comments:
+      utterances:
+         repo: MichelNivard/Biological-language-models
     theme:
       - cosmo
       - style.scss

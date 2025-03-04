@@ -1,5 +1,5 @@
 ---
-title: "Evolution-Aware BERT: Designing Encoders for Genomics"
+title: "Evolution-Aware Encoders"
 ---
 
 ::: callout-tip
@@ -251,13 +251,15 @@ The authors use ablation studies to proof their model learns more then just the 
 
 In **Chapter 2**, we trained a vanilla **BERT** on DNA sequences alone — treating DNA as just another language. That model only had access to the **human sequence**, with no evolutionary context.
 
-In **this chapter**, we’ve reimagined that process. Instead of treating A, T, G, C, - as abstract symbols, we inject **evolutionary history directly into the input encoding**. This allows our model to:
+In **this chapter**, we’ve re-imagined that process. Instead of treating A, T, G, C, - as abstract symbols, leaving the model entirely unsupervised when picking embedding, we inject **evolutionary history directly into the embedding directly**. This allows our model to:
 
 -   Use the aligned species data as **a rich evolutionary prior**.
 -   Still leverage transformers for learning **sequence motifs**.
 -   Predict masked human bases using both **local sequence** and **cross-species evolutionary patterns**.
 
-------------------------------------------------------------------------
+## Emperical ideas to explore
+
+Obviously embedding
 
 ## Preview of Chapter 5
 
@@ -268,10 +270,3 @@ In **Chapter 5**, we will put these two models — **Vanilla BERT** and **GPN-BE
 -   Predicting the functional impact of mutations.
 
 This head-to-head comparison will highlight the **strengths and weaknesses** of each approach and show the value of embedding **evolutionary context directly into genomic language models**.
-
-------------------------------------------------------------------------
-
-## References
-
--   Benegas et al., *Nature Biotechnology*, 2024.\
-    [A DNA language model based on multispecies alignment predicts the effects of genome-wide variants](https://doi.org/10.1038/s41587-024-02511-w)
