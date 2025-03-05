@@ -1,4 +1,4 @@
-# "How to read this book" {.unnumbered}
+# How to read this book {.unnumbered}
 
 
 ## Practicalities
