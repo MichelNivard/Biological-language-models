@@ -5,7 +5,7 @@ format: html
 
 In this book we learn about the current state of the art in ML for biology, with an innitial focus on language models. When doing so its good to resit the temptation to be awed by the models. Some are great, and it can feel magical to see an unsuperviosed model pick up important signals and be very predictive by only munging sequence data! However, the current state of the art in biology, genetics especially is remarkable, we know  a lot about the gneome, about how DNA is trascribed nto RNA and then proteins, which proteins are conserved across evolutions (i.e. essential for all life). So troughout we have to keep in mind that in some domains while it may feel, and actually be, remarkable a language model picks up fundepmental biology just from munging data, it might not be tstae of the art or even close to it. 
 
-## A brief glossary of mML Meel types
+## A brief glossary of ML model types
 
 **Supervised machine learning** is a type of machine learning where a model learns to make predictions based on examples that come with known answers, or "labels." In biology, this could mean training a model to predict whether a DNA sequence comes from a healthy or diseased tissue, or identifying which species a DNA sample belongs to. The model sees many examples where the input (the DNA sequence) is paired with the correct output (the label, like "healthy" or "diseased"), and learns to find patterns that link the two. Supervised learning is very powerful when we have lots of high-quality labeled data, but in biology, obtaining these labels can be expensive, time-consuming, and sometimes even impossible if we don’t know the "right answer" in advance.
 
