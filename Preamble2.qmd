@@ -1,7 +1,5 @@
----
-title: "How to read this book"
-format: html
----
+# "How to read this book" {.unnumbered}
+
 
 ## Practicalities
 
