@@ -5,7 +5,11 @@ title: "Training our first DNA Language Model"
 ::: callout-tip
 ## Abstract
 
-In this chapter we'll train an DNA language model. To do a full training run you'll need newer Macbook (±24 hours), a gaming PC with GPU (10-12 hours) or google colab with the A100 GPU (±6 hours). If you don't have the compute you can download [DNABert](https://huggingface.co/MichelNivard/DNABert-CDS-13Species-v0.1), a model trained based on this code fur use in the next few chapters.
+In this chapter we'll train an DNA language model. To do a full training run you'll need newer Macbook (±24 hours), a gaming PC with GPU (10-12 hours) or google colab with the A100 GPU (±6 hours).
+
+A google colab notebook to train the model in the cloud (for cheap/free) is [available here](https://colab.research.google.com/drive/1tmO8Xe8j2Ivwiec636Jy3624KDL7eMJr?usp=sharing).
+
+If you don't have the compute to run your own training run you can download a trained version of [DNABert](https://huggingface.co/MichelNivard/DNABert-CDS-13Species-v0.1), for use in the next few chapters
 
 All scripts for this chapter are found here: <https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Chapter_2>
 :::
@@ -20,9 +24,9 @@ We will cover the utility and rational behing DNA language models, and the key c
 
 For a full review of the utility of language models you should dig into the literature. I can recommend [@benegas2025] for example. Genomic language models (gLMs) apply AI techniques to DNA sequences, enabling breakthroughs in variant effect prediction, sequence design, and genomic analysis.
 
-Like larger language models like chatGPT DNA language models have "emergent properties:. If you train a gnomic Language models (gLM) on the reference genome sequence of humans, and various other species then the model that emerges is able to detect damaging mutations, without ever being trained on mutations (as mutations are defined as deviations from the reference)[@benegas2023]. To assess functional constraints, a widely used metric is the **log-likelihood ratio (LLR)** between two alleles. This measures the probability of a nucleotide variant appearing in a given context, with lower probabilities indicating potential deleterious effects. This application will be one of the examples I use throughout, simply because my experience in genetics align with it.
+Like larger language models like chatGPT DNA language models (DNA-LM) have "emergent properties". If you train a genomic Language models (gLM, strictly speaking slightly more general class of models then DNA-LMs so also RNA, or protein LMs) on the reference genome sequence of humans, and various other species then the model that emerges is able to detect damaging mutations, without ever being trained on mutations (as mutations are defined as deviations from the reference)[@benegas2023]. To assess functional constraints, a widely used metric is the **log-likelihood ratio (LLR)** between two alleles. This measures the probability of a nucleotide variant appearing in a given context, with lower probabilities indicating potential deleterious effects. This application will be one of the examples I use throughout, simply because my experience in genetics align with it.
 
-Another key application is transfer learning, where pretrained gLMs improve predictions in tasks like gene expression and chromatin accessibility. However, training effective models is difficult due to the vast, complex, and often non-functional nature of genomes. Unlike protein models, gLMs struggle with limited genomic diversity in training data and require more sophisticated benchmarks for evaluation.
+Another key application is transfer learning, where pretrained DNA-LMs improve predictions in tasks like gene expression and chromatin accessibility. However, training effective models is difficult due to the vast, complex, and often non-functional nature of genomes. Unlike protein models, DNA-LMs struggle with limited genomic diversity in training data and require more sophisticated benchmarks for evaluation.
 
 Future advancements will focus on improving long-range genomic interactions, integrating multimodal biological data, and refining sequence design for practical applications. Despite challenges, gLMs hold great promise for revolutionizing genome research, advancing genetic disease understanding, and enabling synthetic biology innovations.
 
@@ -182,30 +186,29 @@ BERT will analyze the remaining words and attempt to predict "fox."
 
 This technique enables BERT to **learn useful representations** without requiring labeled data.
 
-### Understanding Transformer Layers, Attention Heads, and Hidden Size
+### Understanding the model: Transformer Layers, Attention Heads, and Hidden Size
 
-A **transformer layer** consists of self-attention and feed-forward layers that help the model learn relationships between tokens. The number of **transformer layers** determines how deep the model is.
+We'll briefly have to discuss the general architecture of the model, in bold the key elements of the model, in bold and italic parameters we get to set to etermin the size of the model.
 
-An **attention head** is a component of the self-attention mechanism that learns different types of relationships within the data. Having **multiple attention heads** allows the model to capture various dependencies between tokens.
+A transformer model, like those used for DNA, RNA, or protein sequences, starts with an **embedding layer**, which plays a critical role in converting raw tokens — such as individual nucleotides (A, T, C, G) or amino acids — into numerical **vectors** that the model can process. Each token is mapped to a high-dimensional vector that captures some initial information about its identity and, in more advanced models, even its biochemical properties. This embedding layer acts as the interface between the raw sequence data and the deeper transformer layers, ensuring that the model works with continuous mathematical representations rather than raw symbolic letters.
 
-Returning to our example:
+::: callout-important
+The embedding layers design is intimately related to the nature of the data, here we simply use a standard BERT embedding layer but in Chapter 4 & 5 we'll dive deep into researchers efforts to design embedding layers for DNA specifically.
+:::
 
--   One attention head might focus on subject-verb relationships, recognizing that "fox" is the subject of "jumps."
--   Another head might capture adjective-noun relationships, linking "brown" to "fox."
+A **transformer layer** consists of two key components: a **self-attention mechanism** and a **feed-forward neural network**. The self-attention mechanism allows the model to dynamically weigh the importance of every other token in the sequence when processing a given token, helping it learn relationships across different parts of the sequence — whether those are between neighboring amino acids or between distant regulatory elements in a long DNA strand. After the self-attention step, the **feed-forward neural network** processes each token’s representation independently, applying a small multi-layer perceptron (MLP) to transform the token’s internal representation. This helps the model refine and enrich the learned features, capturing nonlinear combinations of the attention-derived information. While self-attention captures interactions across the sequence, the feed-forward layer focuses on how to represent each token itself in a biologically meaningful way, helping the model identify local biochemical properties, sequence motifs, or structural preferences. The ***number of transformer layers*** (**`num_hidden_layers`**) determines how deep the model is, with more layers giving the model more capacity to learn complex biological relationships, but also increasing training time and data requirements.
 
-The **hidden size** defines the dimensionality of the model’s internal representations. A larger hidden size enables the model to capture more complex patterns, but also increases computational cost.
+Within each transformer layer, there are multiple ***attention heads*** (**`num_attention_heads`**), each focusing on different types of relationships within the data. In a natural language example, one attention head might capture subject-verb relationships, while another tracks adjective-noun pairs. In biological sequences, one attention head might learn to link binding motifs in promoters to transcription start sites, while another might focus on co-evolving residues in proteins that contribute to structural stability. The ***hidden size*** (**`hidden_size`**) refers to the **dimensionality of these internal vector representations**, defining how much information the model can store at each position. Larger hidden sizes allow the model to capture richer biological context, but they also increase computational cost. By combining deep transformer stacks, multiple attention heads, and flexible embeddings, biological language models can develop a powerful and nuanced understanding of biological sequences, helping researchers uncover new regulatory elements, predict protein folding, or study the effects of mutations.Defining the BERT Model for DNA Sequences
 
-By stacking multiple transformer layers and attention heads, BERT gains a deep understanding of sentence structures.
+While the "quick brown fox" example helps us understand how BERT processes natural language, our goal is to apply the same principles to DNA sequences. Instead of predicting missing words in a sentence, we want our model to learn biological patterns and genomic structure by predicting masked nucleotides within DNA sequences.
 
-## Defining the BERT Model for DNA Sequences
+In DNA modeling, understanding sequence context is just as critical as in language modeling. Just as BERT learns that "fox" fits within a given sentence structure, our model should learn that specific nucleotide sequences appear in biologically meaningful patterns. This could involve recognizing gene coding regions, regulatory motifs, or conserved sequence elements across different genomes.
 
-While the "quick brown fox" example helps us understand how BERT processes natural language, our goal is to apply the same principles to **DNA sequences**. Instead of predicting missing words in a sentence, we want our model to learn **biological patterns** and **genomic structure** by predicting masked nucleotides within DNA sequences.
+To accomplish this, we define a custom BERT model designed specifically for processing DNA sequences. Unlike traditional text-based models, our DNA BERT model uses a character-level vocabulary of nucleotides (A, T, C, G) and special tokens to represent sequence structure. By leveraging **masked language modeling (MLM)**, the model will learn to predict missing nucleotides based on surrounding context, allowing it to capture meaningful genomic features.
 
-In **DNA modeling**, understanding sequence context is just as critical as in language modeling. Just as BERT learns that "fox" fits within a given sentence structure, our model should learn that **specific nucleotide sequences appear in biologically meaningful patterns**. This could involve recognizing **gene coding regions, regulatory motifs, or conserved sequence elements** across different genomes.
+The **`max_position_embeddings`** defines the longest sequence the model can process at once, which is crucial for biological sequences like genomes or proteins that can vary widely in length. To help the model understand where each token appears in the sequence, position embeddings are added to the token embeddings, giving the model a sense of order and distance, which is especially important when analyzing long-range interactions, like regulatory elements controlling distant genes.
 
-To accomplish this, we define a **custom BERT model** designed specifically for processing DNA sequences. Unlike traditional text-based models, our DNA BERT model uses a **character-level vocabulary** of nucleotides (A, T, C, G) and special tokens to represent sequence structure. By leveraging **masked language modeling (MLM)**, the model will learn to predict missing nucleotides based on surrounding context, allowing it to capture meaningful genomic features.
-
-With this in mind, let's move forward and define our BERT architecture for DNA sequences.
+With this in mind, let's move forward and define a standard BERT architecture, which we'll apply to DNA sequences. Because we'll train a standard model we can basically get away with defining the dimensions of certain aspects of the model.
 
 **Python Code:**
 
@@ -225,24 +228,26 @@ config.pad_token_id = dna_vocab["[PAD]"]
 model = ModernBertForMaskedLM(config)
 ```
 
+The keenly eyed among you see a lot of powers of 2, 8 is 2^3^, 256, 512 are also powers of two etc. Computer memory encodes in bits and bytes, and is designed around powers of two. Buiding matrices that are powers of 2,16,32,64 etc makes them fit in memory more efficient and this can have serious consequences for training efficiency (see **Figure 2.1**).
+
+![**Figure 2.1** the power of powers of two.](images/paste-19.png){fig-align="center"}
+
 ### Configuring Training for DNA BERT
 
 Now that we have defined our BERT model for DNA sequences, we need to set up the **training process**. This involves specifying various **training hyperparameters**, handling **masked language modeling (MLM)** data, and preparing for efficient learning.
 
-Unlike traditional NLP tasks where models are trained on massive text corpora, training on DNA sequences presents unique challenges. The structure of genomic data, sequence length, and biological patterns all influence how the model learns. Our configuration ensures that the training process is efficient while maintaining biological relevance.
-
-------------------------------------------------------------------------
+Unlike traditional NLP tasks where models are trained on massive text corpora, training on DNA sequences presents unique challenges. The structure of genomic data, sequence length, and biological patterns all influence how the model learns. Our configuration is again rathr general and not yet tuned to DNA or biological data. If you would scale this model, you'd likely have to drop the learning rate down for example. In "production" hyper parameter optimization becomes super important when you train a large model on all your data each run might be costly and setting optimal hpyper parameters can lead to serious gains in training results.
 
 ### Setting Training Parameters
 
 To train our DNA BERT model, we use the **Hugging Face `TrainingArguments` class**, which allows us to define key training settings. These include:
 
--   **Batch size:** We set a batch size of `16` for both training and evaluation. This determines how many sequences are processed at once.
--   **Logging & Saving:** We log loss every `50` steps and save model checkpoints every `100` steps to monitor training progress.
--   **Learning Rate:** We use a learning rate of `5e-5`, a common choice for transformer models that balances learning speed and stability.
--   **Weight Decay:** A value of `0.01` is used to prevent overfitting by applying **L2 regularization** to model weights.
--   **Training Steps:** The model is trained for `4000` steps. This ensures sufficient learning without excessive computation.
--   **Model Saving:** The model checkpoints are stored in `./bert-dna`, allowing us to resume training if needed.
+-   **Batch size:** We set a batch size (**`per_device_train_batch_size`**) of `16` for both training and evaluation. This determines how many sequences are processed at once.
+-   **Logging & Saving:** We log loss every `50` steps (**`logging_steps`**) and save model checkpoints every `100` steps to monitor training progress.
+-   **Learning Rate:** We use a learning rate of `5e-5` **`(learning_rate)`**, a common choice for transformer models that balances learning speed and stability.
+-   **Weight Decay:** A value of `0.01` is used to prevent overfitting by applying L2 regularization to model weights.
+-   **Training Steps:** The model is trained for `4000` steps (`max_steps`), though on the google cloab code I ran in the cloud I trained for 2 whole epochs over all data (**`num_train_epochs = 2`**) which is a more precise qay to ensure the model sees all the data twice.
+-   **Model Saving:** The model checkpoints are stored in `./bert-dna`, allowing us to resume training from a checkpoint if needed (after a computer crash, or after the model going of the rails etc).
 
 **Python Code:**
 
@@ -259,21 +264,21 @@ training_args = TrainingArguments(
     learning_rate=5e-5,
     weight_decay=0.01,
     push_to_hub=False,
-    report_to="none",  # Disables wandb logging
+    report_to="none",  # Disables wandb logging, can enable if you have a wandb account so you can track your training
 )
 ```
 
-------------------------------------------------------------------------
+While I have enabled it here I can recommend tacking your training runs on wandb. you go to [wandb.ai](www.wandb.ai) (w and b meaning weights and biases, the core parameters in AI models) to make a free account. Now to some extend this is like strava but for AI, and there is a risk of obsessing over the training meta data. But if you find yourself with a limited amount of compute, or expensive compute paid per minute, it makes a lot of sense to track big training runs in real time so you can intervene. If the run crashes, you can restart, or abort the node so you aren't paying for an expensive GPU node tats no longer training.
 
 ### Preparing for Masked Language Modeling (MLM)
 
-Since we are training our DNA BERT model using **masked language modeling (MLM)**, we need to handle **masked tokens** properly. This is done using the **`DataCollatorForLanguageModeling`**, which:
+Since we are training our DNA BERT model using **masked language modeling (MLM)**, we need to handle instriducing masked tokens properly. This is done using the **`DataCollatorForLanguageModeling`**, which:
 
 -   **Randomly masks nucleotides** in the training sequences.
 -   **Creates `labels` automatically**, meaning the model learns by trying to predict these masked tokens.
--   **Uses a masking probability of 5%**, ensuring that a small but meaningful portion of the sequence is masked during training.
+-   **Uses a masking probability of 5%-15%**, ensuring that a small but meaningful portion of the sequence is masked during training.
 
-By applying MLM, we allow the model to **generalize nucleotide relationships** and capture **sequence dependencies**, just like how BERT learns relationships between words in text.
+By applying MLM, we allow the model to generalize nucleotide relationships and capture sequence dependencies, just like how BERT learns relationships between words in text.
 
 **Python Code:**
 
@@ -285,17 +290,15 @@ data_collator = DataCollatorForLanguageModeling(
 )
 ```
 
-------------------------------------------------------------------------
-
 ### Training the DNA BERT Model
 
-With our configuration and data collator in place, we now **train the model**. We use the **Hugging Face `Trainer` API**, which simplifies the training process by handling:
+With our configuration and data collator in place, we now **train the model**. We use the Hugging Face **`Trainer`** API, which simplifies the training process by handling:
 
 -   **Dataset iteration:** Automatically loads and batches training sequences.
 -   **Gradient updates:** Adjusts model weights based on training loss.
 -   **Logging & saving:** Tracks training progress and stores checkpoints.
 
-Once training begins, the model will gradually **learn nucleotide dependencies** and improve its ability to predict missing DNA bases.
+Once training begins, the model will gradually learn nucleotide dependencies and improve its ability to predict missing DNA bases.
 
 **Python Code:**
 
@@ -311,7 +314,7 @@ trainer = Trainer(
 trainer.train()
 ```
 
-you set up free wandb logging (go to <https://wandb.ai/site> for more info) you can track your training runs online, wherever they are running. You then get a dashboard full of pretty loss vs progress plots like the one below which I screencapped about ± 30 minutes into training on my macbook.
+If you have set up free wandb account you can track your training runs, wherever they are running, on a central dashboard. You then get a dashboard full of pretty loss vs progress plots like the one below which I screencapped about ± 30 minutes into training a tiny version of the model on my macbook.
 
 ![](images/paste-4.png)
 
@@ -334,13 +337,22 @@ hf_tokenizer.save_pretrained("./bert-dna")
 print("🎉 Training complete! Model saved to ./bert-dna")
 ```
 
+If you intend to use, and re-use your model repeatedly, on different machines, or share it with others it's very convenient to save it to huggingface. If you have an account you can do so for free using their internal tools. You'll need to include an API token, I have omitted mine, and so should you when sharing code, because the API token lets people write you your account!
+
+``` python
+model.push_to_hub(repo_id="MichelNivard/DNABert-CDS-13Species-v0.1",use_auth_token="")
+hf_tokenizer.push_to_hub(repo_id="MichelNivard/DNABert-CDS-13Species-v0.1",use_auth_token="")
+```
+
+Because we used a standard Bert model (**`BertModern`**), its super easy for others to pull the model weights from the hub into a model configured for use on their machine, using the Hugginface **`Transformers`** library.
+
 ### Summary
 
 In this section, we:
 
--   Defined **training hyperparameters** such as batch size, learning rate, and training steps.
--   Used **masked language modeling (MLM)** to train the model on DNA sequences.
--   Leveraged the **Hugging Face `Trainer` API** to automate model training.
--   Saved the **final trained model and tokenizer** for future use.
+-   Defined training hyperparameters such as batch size, learning rate, and training steps.
+-   Used masked language modeling (MLM) to train the model to pedict gaps in DNA sequences.
+-   Leveraged the Hugging Face **`Trainer`** API to automate model training.
+-   Saved the final trained model and tokenizer for future use.
 
-With this trained model, we can now **fine-tune or apply it to various genomic tasks**, such as predicting genetic variations or classifying functional DNA sequences. In the next chapter, we will explore **how to fine-tune our DNA BERT model for specific applications**.
+With this trained model, we can now fine-tune or apply it to various genomic tasks, such as predicting genetic variations or classifying functional DNA sequences. In the next chapter, we will explore how to fine-tune our DNA BERT model for specific applications.
