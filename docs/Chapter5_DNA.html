@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>9&nbsp; Summary – Biological Language Models &amp; Neural Networks</title>
+<title>7&nbsp; Weaving Together Models – Biological Language Models &amp; Neural Networks</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,8 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./references.html" rel="next">
-<link href="./Chapter6_DNA.html" rel="prev">
+<link href="./Chapter6_DNA.html" rel="next">
+<link href="./Chapter4_DNA.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -98,7 +98,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./summary.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Summary</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_DNA.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter5_DNA.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Weaving Together Models</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -163,7 +163,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./Chapter5_DNA.html" class="sidebar-item-text sidebar-link">
+  <a href="./Chapter5_DNA.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Weaving Together Models</span></span></a>
   </div>
 </li>
@@ -185,7 +185,7 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./summary.html" class="sidebar-item-text sidebar-link active">
+  <a href="./summary.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
   </div>
 </li>
@@ -206,9 +206,9 @@ ul.task-list li input[type="checkbox"] {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_DNA.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter5_DNA.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Weaving Together Models</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Summary</span></h1>
+<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Weaving Together Models</span></h1>
 </div>
 
 
@@ -225,7 +225,26 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>In summary, this book has no content whatsoever.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Abstract
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In Chapter 5, we will put these two models — Vanilla BERT and GPN-MSA-BERT — to the test. We will evaluate their performance on:</p>
+<ul>
+<li><p>Predicting masked bases (MLM accuracy).</p></li>
+<li><p>Identifying regulatory elements.</p></li>
+<li><p>Predicting the functional impact of mutations.</p></li>
+</ul>
+<p>This head-to-head comparison will highlight the strengths and weaknesses of each approach. Finally <strong>we’ll build a hybrid model</strong>, in which the DNA sequence is model is trained in evolutionary context and in its sequence context and the results are blended, a model architecture that is a little like alphafold, the Nobel winning protein language model developed at google deepmind.</p>
+<p>All scripts for this chapter are found here: <a href="https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Chapter_4" class="uri">https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Chapter_4</a></p>
+</div>
+</div>
 
 
 
@@ -651,13 +670,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./Chapter6_DNA.html" class="pagination-link" aria-label="A review of current DNA language models">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">A review of current DNA language models</span></span>
+      <a href="./Chapter4_DNA.html" class="pagination-link" aria-label="Evolution-Aware Encoders">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Evolution-Aware Encoders</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./references.html" class="pagination-link" aria-label="References">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./Chapter6_DNA.html" class="pagination-link" aria-label="A review of current DNA language models">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">A review of current DNA language models</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
