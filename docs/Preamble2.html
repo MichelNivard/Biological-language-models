@@ -215,6 +215,9 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#structure" id="toc-structure" class="nav-link" data-scroll-target="#structure">Structure</a>
   <ul class="collapse">
   <li><a href="#dna-language-models" id="toc-dna-language-models" class="nav-link" data-scroll-target="#dna-language-models">DNA Language Models</a></li>
+  </ul></li>
+  <li><a href="#scaling-training" id="toc-scaling-training" class="nav-link" data-scroll-target="#scaling-training">Scaling Training</a>
+  <ul class="collapse">
   <li><a href="#protein-language-models" id="toc-protein-language-models" class="nav-link" data-scroll-target="#protein-language-models">Protein Language Models</a></li>
   <li><a href="#multi-modal-models-dna-meets-proteins" id="toc-multi-modal-models-dna-meets-proteins" class="nav-link" data-scroll-target="#multi-modal-models-dna-meets-proteins">Multi-modal Models (DNA Meets Proteins)</a></li>
   </ul></li>
@@ -255,8 +258,12 @@ ul.task-list li input[type="checkbox"] {
 <p>The book is divided into sections that deal with a specific biological modality or data type. The last chapter in each section is a review of current models. It’s more common to begin a chapter reviewing what’s available out there, but given the novelty of these models, it makes sense to learn how they work before reading a review of what’s out there. There is a risk of the reader attributing insights to me simply because I describe it to you first. I’ll always cite my sources as if this is a peer-reviewed article, and you should assume most models we build together are directly, or indirectly, influenced by the literature. I also ask you do not cite this book other than for novel content, or to refer to it as teaching material—please, for models, architectures, and insights, cite the underlying empirical literature.</p>
 <section id="dna-language-models" class="level3">
 <h3 class="anchored" data-anchor-id="dna-language-models">DNA Language Models</h3>
-<p><strong>Chapter 1 covers</strong> downloading and processing (DNA) sequence data from Ensembl and uploading it to Hugging Face. <strong>Chapter 2 covers</strong> training a first small DNA sequence language model; the model is a bog-standard language model meant for natural languages, simply applied to DNA. In <strong>Chapter 3</strong>, we explore how you’d evaluate whether a DNA model is any good—is our model learning anything at all? Then in <strong>Chapter 4</strong>, we explore evolutionary-aware encoders and how they relate to DNA language models.</p>
+<p><strong>Chapter 1 covers</strong> downloading and processing (DNA) sequence data from Ensembl and uploading it to Hugging Face. <strong>Chapter 2 covers</strong> training a first small DNA sequence language model; the model is a bog-standard language model meant for natural languages, simply applied to DNA. In <strong>Chapter 3</strong>, we explore how you’d evaluate whether a DNA model is any good—is our model learning anything at all? Then in <strong>Chapter 4</strong>, we explore evolutionary-aware encoders and how they relate to DNA language models. In <strong>Chapter 5</strong> we compare the two model we trained on a number of tasks, getting a feel for comparatie evaluation. If you stuck with it and get to <strong>Chapter 6</strong> you are ready for a brief review of existing DNA language models.</p>
 </section>
+</section>
+<section id="scaling-training" class="level2">
+<h2 class="anchored" data-anchor-id="scaling-training">Scaling Training</h2>
+<p>After the book section on DNA models, we step back and consider scaling up model training. To train a full “production” model you’d need to scale from running things interactively on a MacBook, to a GPU in the cloud to 8 GPUs in a server. Conditional on me getting some funds and/or arranging HPC compute access I might even write about/run training on a whole rack of servers, each with 1-8 GPUs. When scaling we are confronted with a whole host of new issues around training stability and parallel compute.</p>
 <section id="protein-language-models" class="level3">
 <h3 class="anchored" data-anchor-id="protein-language-models">Protein Language Models</h3>
 </section>

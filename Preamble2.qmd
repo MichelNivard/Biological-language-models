@@ -4,7 +4,7 @@
 
 The book is accompanied by scripts in both the R and Python programming languages. I had to make some choices—some of the biological data repositories have great integrated Perl and R packages. I wouldn't want to force people into Perl (especially not myself!). I am more comfortable wrangling the initial data in R than in Python, so here we are.
 
-If you want to code along, rest assured you can run most of this on a MacBook. Maybe you'll need to run a training run overnight a few times. If you want a bit more performance, or not have your MacBook turn into a space heater for 24 hours, you can use Google Colab for access to A100 GPUs. Training the DNABERT model we outline in Chapter 2 on 500k coding sequences from 13 species took ±6 hours on an A100 on Colab, which means that cost me ±$4 in Colab credit.
+If you want to code along, rest assured you can run most of this on a MacBook. Maybe you'll need to run a training run overnight a few times. If you want a bit more performance, or not have your MacBook turn into a space heater for 24 hours, you can use Google Colab for access to A100 GPUs. Training the DNABERT model we outline in Chapter 2 on 500k coding sequences from 13 species took ±6 hours on an A100 on Colab, which means that cost me ±\$4 in Colab credit.
 
 The GitHub repo that hosts the book will be populated with all the scripts I discuss and use. The data used to train the models, and some of the models themselves, will be hosted on Hugging Face (a repository of ML training data). I will try to make Jupyter notebooks available, though given my R background, I usually run Python in a REPL because that is what R people do...
 
@@ -16,7 +16,11 @@ The book is divided into sections that deal with a specific biological modality 
 
 ### DNA Language Models
 
-**Chapter 1 covers** downloading and processing (DNA) sequence data from Ensembl and uploading it to Hugging Face. **Chapter 2 covers** training a first small DNA sequence language model; the model is a bog-standard language model meant for natural languages, simply applied to DNA. In **Chapter 3**, we explore how you'd evaluate whether a DNA model is any good—is our model learning anything at all? Then in **Chapter 4**, we explore evolutionary-aware encoders and how they relate to DNA language models.
+**Chapter 1 covers** downloading and processing (DNA) sequence data from Ensembl and uploading it to Hugging Face. **Chapter 2 covers** training a first small DNA sequence language model; the model is a bog-standard language model meant for natural languages, simply applied to DNA. In **Chapter 3**, we explore how you'd evaluate whether a DNA model is any good—is our model learning anything at all? Then in **Chapter 4**, we explore evolutionary-aware encoders and how they relate to DNA language models. In **Chapter 5** we compare the two model we trained on a number of tasks, getting a feel for comparatie evaluation. If you stuck with it and get to **Chapter 6** you are ready for a brief review of existing DNA language models.
+
+## Scaling Training
+
+After the book section on DNA models, we step back and consider scaling up model training. To train a full "production" model you'd need to scale from running things interactively on a MacBook, to a GPU in the cloud to 8 GPUs in a server. Conditional on me getting some funds and/or arranging HPC compute access I might even write about/run training on a whole rack of servers, each with 1-8 GPUs. When scaling we are confronted with a whole host of new issues around training stability and parallel compute.
 
 ### Protein Language Models
 
