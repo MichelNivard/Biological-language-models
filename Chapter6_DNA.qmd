@@ -5,14 +5,14 @@ format: html
 
 This is not an academic review, those are obviously far more comprehensive, see @benegas2025 for a review I really liked.
 
-**1. Modeling Paradigm:**\
+##  Modeling Paradigms
+
 As we leared in the first 5 chapters, gLMs (genomic Language Models) borrow from natural language processing by treating DNA sequences as “text” composed of four characters (A, C, G, T). Early models used k-mer tokenization (e.g., DNABERT), but newer approaches experiment with both nucleotide‐level and subword tokenizations (such as 3-mer or 6-mer) to better capture biological semantics.
 
-**2. Architectural Innovations:**
+## Architectural Innovations
 
-There are two specific architectural innovations, the first is GPA-MSA, a model we discussed in Chapter 4 where the embedding layer is adjusted to reflect the evolutionary history of the genome at a give base.
+There are two specific architectural innovations in DNA langage models worth discussing, the first is GPA-MSA, the core idea behind a model we discussed in Chapter 4. In this model the trainable embedding layer is replaced with a biologically informed deterministic embeding, that reflects the evolutionary history of the genome at a given base.
 
-\
 A second innovation was necessitated by the need to model logn range dependence in DNA (changes to DNA can have effect over thousands of bases "downstream"). While transformer-based models initially dominated the field, their quadratic scaling with sequence length has prompted the development of more efficient architectures. Models such as HyenaDNA extend context lengths up to 1 million tokens at single-nucleotide resolution, and hybrid architectures like HybriDNA combine transformers with selective state-space models (Mamba2) to process sequences up to 131 kilobases. Omni-DNA and GENERator further illustrate the trend toward unified, cross-modal genomic foundation models capable of multitask learning.
 
 Below is a summary table of several prominent DNA language models eith innovative architectures, along with links to their corresponding paper and GitHub (or related resource) repositories:
@@ -30,10 +30,8 @@ Below is a summary table of several prominent DNA language models eith innovativ
 
 This table highlights each model’s core featurs and provides direct access to the publication and code repository (or resource page) where available.
 
-**3. Applications:**\
+## Applications
 These models have demonstrated state-of-the-art performance across multiple downstream tasks including: - **Variant Effect Prediction:** Unsupervised approaches can predict deleterious mutations by modeling the “grammar” of the genome. - **Regulatory Element Identification:** By learning long-range interactions, gLMs help detect promoters, enhancers, and other regulatory motifs. - **Sequence Generation and Protein Tasks:** Some models generate synthetic regulatory sequences or transform coding DNA into meaningful protein representations, bridging genomics and proteomics.
 
-**4. Challenges and Future Directions:**\
+## Challenges and Future Directions
 Despite impressive progress, challenges remain in tokenization choices, computational efficiency, and interpretability of learned representations. Future work is likely to focus on integrating multimodal data (e.g., epigenomic signals), enhancing model scalability, and further bridging the gap between genomic sequences and cellular function—paving the way toward a “virtual cell.”
-
-In summary, the field is rapidly evolving as researchers refine architectures and training strategies to capture the intricate, long-range dependencies inherent to the genome, promising to revolutionize our understanding of biological function and disease.

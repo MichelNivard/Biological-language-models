@@ -226,8 +226,17 @@ div.csl-indent {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#modeling-paradigms" id="toc-modeling-paradigms" class="nav-link active" data-scroll-target="#modeling-paradigms"><span class="header-section-number">6.1</span> Modeling Paradigms</a></li>
+  <li><a href="#architectural-innovations" id="toc-architectural-innovations" class="nav-link" data-scroll-target="#architectural-innovations"><span class="header-section-number">6.2</span> Architectural Innovations</a></li>
+  <li><a href="#applications" id="toc-applications" class="nav-link" data-scroll-target="#applications"><span class="header-section-number">6.3</span> Applications</a></li>
+  <li><a href="#challenges-and-future-directions" id="toc-challenges-and-future-directions" class="nav-link" data-scroll-target="#challenges-and-future-directions"><span class="header-section-number">6.4</span> Challenges and Future Directions</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -252,12 +261,14 @@ div.csl-indent {
 
 
 <p>This is not an academic review, those are obviously far more comprehensive, see <span class="citation" data-cites="benegas2025">Benegas et al. (<a href="references.html#ref-benegas2025" role="doc-biblioref">2025</a>)</span> for a review I really liked.</p>
-<p><strong>1. Modeling Paradigm:</strong><br>
-As we leared in the first 5 chapters, gLMs (genomic Language Models) borrow from natural language processing by treating DNA sequences as “text” composed of four characters (A, C, G, T). Early models used k-mer tokenization (e.g., DNABERT), but newer approaches experiment with both nucleotide‐level and subword tokenizations (such as 3-mer or 6-mer) to better capture biological semantics.</p>
-<p><strong>2. Architectural Innovations:</strong></p>
-<p>There are two specific architectural innovations, the first is GPA-MSA, a model we discussed in Chapter 4 where the embedding layer is adjusted to reflect the evolutionary history of the genome at a give base.</p>
-<p><br>
-A second innovation was necessitated by the need to model logn range dependence in DNA (changes to DNA can have effect over thousands of bases “downstream”). While transformer-based models initially dominated the field, their quadratic scaling with sequence length has prompted the development of more efficient architectures. Models such as HyenaDNA extend context lengths up to 1 million tokens at single-nucleotide resolution, and hybrid architectures like HybriDNA combine transformers with selective state-space models (Mamba2) to process sequences up to 131 kilobases. Omni-DNA and GENERator further illustrate the trend toward unified, cross-modal genomic foundation models capable of multitask learning.</p>
+<section id="modeling-paradigms" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="modeling-paradigms"><span class="header-section-number">6.1</span> Modeling Paradigms</h2>
+<p>As we leared in the first 5 chapters, gLMs (genomic Language Models) borrow from natural language processing by treating DNA sequences as “text” composed of four characters (A, C, G, T). Early models used k-mer tokenization (e.g., DNABERT), but newer approaches experiment with both nucleotide‐level and subword tokenizations (such as 3-mer or 6-mer) to better capture biological semantics.</p>
+</section>
+<section id="architectural-innovations" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="architectural-innovations"><span class="header-section-number">6.2</span> Architectural Innovations</h2>
+<p>There are two specific architectural innovations in DNA langage models worth discussing, the first is GPA-MSA, the core idea behind a model we discussed in Chapter 4. In this model the trainable embedding layer is replaced with a biologically informed deterministic embeding, that reflects the evolutionary history of the genome at a given base.</p>
+<p>A second innovation was necessitated by the need to model logn range dependence in DNA (changes to DNA can have effect over thousands of bases “downstream”). While transformer-based models initially dominated the field, their quadratic scaling with sequence length has prompted the development of more efficient architectures. Models such as HyenaDNA extend context lengths up to 1 million tokens at single-nucleotide resolution, and hybrid architectures like HybriDNA combine transformers with selective state-space models (Mamba2) to process sequences up to 131 kilobases. Omni-DNA and GENERator further illustrate the trend toward unified, cross-modal genomic foundation models capable of multitask learning.</p>
 <p>Below is a summary table of several prominent DNA language models eith innovative architectures, along with links to their corresponding paper and GitHub (or related resource) repositories:</p>
 <table class="caption-top table">
 <thead>
@@ -320,11 +331,14 @@ A second innovation was necessitated by the need to model logn range dependence 
 </tbody>
 </table>
 <p>This table highlights each model’s core featurs and provides direct access to the publication and code repository (or resource page) where available.</p>
-<p><strong>3. Applications:</strong><br>
-These models have demonstrated state-of-the-art performance across multiple downstream tasks including: - <strong>Variant Effect Prediction:</strong> Unsupervised approaches can predict deleterious mutations by modeling the “grammar” of the genome. - <strong>Regulatory Element Identification:</strong> By learning long-range interactions, gLMs help detect promoters, enhancers, and other regulatory motifs. - <strong>Sequence Generation and Protein Tasks:</strong> Some models generate synthetic regulatory sequences or transform coding DNA into meaningful protein representations, bridging genomics and proteomics.</p>
-<p><strong>4. Challenges and Future Directions:</strong><br>
-Despite impressive progress, challenges remain in tokenization choices, computational efficiency, and interpretability of learned representations. Future work is likely to focus on integrating multimodal data (e.g., epigenomic signals), enhancing model scalability, and further bridging the gap between genomic sequences and cellular function—paving the way toward a “virtual cell.”</p>
-<p>In summary, the field is rapidly evolving as researchers refine architectures and training strategies to capture the intricate, long-range dependencies inherent to the genome, promising to revolutionize our understanding of biological function and disease.</p>
+</section>
+<section id="applications" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="applications"><span class="header-section-number">6.3</span> Applications</h2>
+<p>These models have demonstrated state-of-the-art performance across multiple downstream tasks including: - <strong>Variant Effect Prediction:</strong> Unsupervised approaches can predict deleterious mutations by modeling the “grammar” of the genome. - <strong>Regulatory Element Identification:</strong> By learning long-range interactions, gLMs help detect promoters, enhancers, and other regulatory motifs. - <strong>Sequence Generation and Protein Tasks:</strong> Some models generate synthetic regulatory sequences or transform coding DNA into meaningful protein representations, bridging genomics and proteomics.</p>
+</section>
+<section id="challenges-and-future-directions" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="challenges-and-future-directions"><span class="header-section-number">6.4</span> Challenges and Future Directions</h2>
+<p>Despite impressive progress, challenges remain in tokenization choices, computational efficiency, and interpretability of learned representations. Future work is likely to focus on integrating multimodal data (e.g., epigenomic signals), enhancing model scalability, and further bridging the gap between genomic sequences and cellular function—paving the way toward a “virtual cell.”</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
@@ -332,6 +346,7 @@ Despite impressive progress, challenges remain in tokenization choices, computat
 Benegas, Gonzalo, Chengzhong Ye, Carlos Albors, Jianan Canal Li, and Yun S. Song. 2025. <span>“Genomic Language Models: Opportunities and Challenges.”</span> <em>Trends in Genetics</em>, January. <a href="https://doi.org/10.1016/j.tig.2024.11.013">https://doi.org/10.1016/j.tig.2024.11.013</a>.
 </div>
 </div>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
