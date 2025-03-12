@@ -1,7 +1,7 @@
 # What is this book about? {.unnumbered}
 
 
-In this book we learn about the current state of the art in ML for biology, with an innitial focus on language models. When doing so its good to resit the temptation to be awed by the models. Some are great, and it can feel magical to see an unsuperviosed model pick up important signals and be very predictive by only munging sequence data! However, the current state of the art in biology, genetics especially is remarkable, we know  a lot about the gneome, about how DNA is trascribed nto RNA and then proteins, which proteins are conserved across evolutions (i.e. essential for all life). So troughout we have to keep in mind that in some domains while it may feel, and actually be, remarkable a language model picks up fundepmental biology just from munging data, it might not be tstae of the art or even close to it. 
+THis book is me trying to keep up with the current state of the art in ML for biology, with an innitial focus on language models. When studying the latest hyped tools its good to resist the temptation to be awed by the models. Some are great, and it can feel magical to see an unsuperviosed model pick up important biological signals and be very predictive by only munging sequence data! However, the current state of the art in biology, genetics especially is remarkable, we know a lot about the gneome, about how DNA is trascribed nto RNA and then proteins, which proteins are conserved across evolutions (i.e. essential for all life). So troughout we have to keep in mind that in some domains while it may feel, and actually be, remarkable a language model picks up fundepmental biology just from munging data, it might not be tstae of the art or even close to it. 
 
 ## A brief glossary of ML model types
 
