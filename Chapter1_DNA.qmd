@@ -8,7 +8,7 @@ format: html
 
 In this chapter we'll learn how to create a high fidelity DNA datasets. Two datasets I have created are available on Huggingface: [the human CDS](https://huggingface.co/datasets/MichelNivard/Human-genome-CDS-GRCh38) and [the CDS of 13 vertebrae species](https://huggingface.co/datasets/MichelNivard/Coding_Sequences_13_Species).
 
-Scripts for this chapter are found here: <https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Chapter_1>
+Scripts for this chapter are found here: <https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/DNA/Chapter_1>
 :::
 
 ## Garbage in garbage out

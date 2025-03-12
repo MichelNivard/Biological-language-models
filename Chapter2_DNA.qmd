@@ -11,7 +11,7 @@ A google colab notebook to train the model in the cloud (for cheap/free) is [ava
 
 If you don't have the compute to run your own training run you can download a trained version of [DNABert](https://huggingface.co/MichelNivard/DNABert-CDS-13Species-v0.1), for use in the next few chapters
 
-All scripts for this chapter are found here: <https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Chapter_2>
+All scripts for this chapter are found here: <https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/DNA/Chapter_2>
 :::
 
 ## Introduction

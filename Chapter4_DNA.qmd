@@ -9,7 +9,7 @@ In this chapter we'll evaluate the architecture of natural language models, whic
 
 In this chapter we are forced to confront some fundamental questions, what is prediction? what do we want a model to learn?
 
-All scripts for this chapter are found here: <https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Chapter_4>
+All scripts for this chapter are found here: <https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/DNA/Chapter_4>
 :::
 
 ## Introduction
@@ -91,11 +91,11 @@ GPN-MSA-BERT (inspired by @Benegas2024) adapts BERT-style masked language modeli
 
 For each position in the human genome, the model receives:
 
--   The **human base (A, T, G, C, -)** — this is the usual input.
--   The **aligned bases from other species** — these are additional features.
--   These aligned bases are **one-hot encoded** and concatenated to the human base's embedding.
+-   The human base (A, T, G, C, -) — this is the usual input.
+-   The aligned bases from other species — these are additional features.
+-   These aligned bases are one-hot encoded and concatenated to the human base's embedding.
 
-This turns a **simple nucleotide (A)** into a **dynamic, position-specific vector** that depends on its **evolutionary context across species**.
+This turns a simple nucleotide embedding, fr any given nucleotide into a dynamic, position-specific vector that depends on its evolutionary context across species.
 
 ### Visualization
 
