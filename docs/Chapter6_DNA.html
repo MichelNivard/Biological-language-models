@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>6&nbsp; A review of current DNA language models – Biological Language Models &amp; Neural Networks</title>
+<title>6&nbsp; A Review of Current DNA Language Models – Biological Language Models &amp; Neural Networks</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -98,7 +98,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_DNA.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter6_DNA.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A review of current DNA language models</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_DNA.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter6_DNA.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -119,13 +119,13 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Preamble1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">What is this book about?</span></a>
+ <span class="menu-text">What is this Book About?</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Preamble2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">How to read this book</span></a>
+ <span class="menu-text">How to Read this Book</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -170,7 +170,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter6_DNA.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A review of current DNA language models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></span></a>
   </div>
 </li>
       </ul>
@@ -206,21 +206,15 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#the-state-of-the-art" id="toc-the-state-of-the-art" class="nav-link active" data-scroll-target="#the-state-of-the-art"><span class="header-section-number">6.1</span> The state of the art</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_DNA.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter6_DNA.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A review of current DNA language models</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_DNA.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter6_DNA.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A review of current DNA language models</span></h1>
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></h1>
 </div>
 
 
@@ -237,11 +231,74 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="the-state-of-the-art" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="the-state-of-the-art"><span class="header-section-number">6.1</span> The state of the art</h2>
+<p>Recent advances in genomic language models (gLMs) have transformed our ability to analyze DNA as if it were a natural language, unlocking insights into regulatory mechanisms, variant effects, and even protein function. Here’s an overview of the state‐of‐the‐art:</p>
+<p><strong>1. Modeling Paradigm:</strong><br>
+gLMs borrow from natural language processing by treating DNA sequences as “text” composed of four characters (A, C, G, T). Early models used k-mer tokenization (e.g., DNABERT), but newer approaches experiment with both nucleotide‐level and subword tokenizations (such as 3-mer or 6-mer) to better capture biological semantics.</p>
+<p><strong>2. Architectural Innovations:</strong><br>
+While transformer-based models initially dominated the field, their quadratic scaling with sequence length has prompted the development of more efficient architectures. Models such as HyenaDNA extend context lengths up to 1 million tokens at single-nucleotide resolution, and hybrid architectures like HybriDNA combine transformers with selective state-space models (Mamba2) to process sequences up to 131 kilobases. Omni-DNA and GENERator further illustrate the trend toward unified, cross-modal genomic foundation models capable of multitask learning.</p>
+<p>Below is a summary table of several prominent genomic language models along with links to their corresponding paper and GitHub (or related resource) repositories:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Description</th>
+<th>Paper Link</th>
+<th>GitHub / Resource Link</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>DNABERT</strong></td>
+<td>A transformer-based model that learns bidirectional representations from DNA sequences using k-mer tokenization.</td>
+<td><a href="https://doi.org/10.1093/bioinformatics/btab083">DNABERT Paper</a></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Nucleotide Transformer (NT‑v2)</strong></td>
+<td>A large transformer pretrained on massive human genomic data to learn robust DNA representations for various downstream tasks.</td>
+<td><a href="https://doi.org/10.1038/s41592-024-02523-z">Nucleotide Transformer v2</a></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>GPN</strong></td>
+<td>The Genomic Pre-trained Network that leverages unsupervised DNA language modeling to predict genome-wide variant effects.</td>
+<td><a href="https://doi.org/10.1073/pnas.2311219120">GPN Paper (PNAS 2023)</a></td>
+<td><a href="https://github.com/songlab-cal/gpn">GitHub</a></td>
+</tr>
+<tr class="even">
+<td><strong>HyenaDNA</strong></td>
+<td>A long-range genomic language model operating at single-nucleotide resolution using Hyena’s implicit convolutional approach to overcome transformer scaling issues.</td>
+<td><a href="https://arxiv.org/abs/2306.15794">HyenaDNA (arXiv)</a></td>
+<td><a href="https://github.com/HazyResearch/hyena-dna">GitHub</a></td>
+</tr>
+<tr class="odd">
+<td><strong>HybriDNA</strong></td>
+<td>A hybrid model combining Transformer and Mamba2 (state-space) architectures for efficient long-range DNA modeling.</td>
+<td><a href="https://arxiv.org/abs/2502.10807">HybriDNA (arXiv)</a></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Omni‑DNA</strong></td>
+<td>A unified genomic foundation model that supports cross‑modal and multi‑task learning across a wide range of genomic applications.</td>
+<td><a href="https://arxiv.org/abs/2502.03499">Omni‑DNA (arXiv)</a></td>
+<td><a href="https://huggingface.co/collections/zehui127">Hugging Face Collection</a></td>
+</tr>
+<tr class="odd">
+<td><strong>GENERator</strong></td>
+<td>A long-context generative genomic foundation model designed for sequence generation and optimization tasks with a context length of up to 98k bp.</td>
+<td><a href="https://arxiv.org/abs/2502.07272">GENERator (arXiv)</a></td>
+<td><a href="https://github.com/GenerTeam/GENERator">GitHub</a></td>
+</tr>
+</tbody>
+</table>
+<p>This table highlights each model’s core featurs and provides direct access to the publication and code repository (or resource page) where available.</p>
+<p><strong>3. Applications:</strong><br>
+These models have demonstrated state-of-the-art performance across multiple downstream tasks including: - <strong>Variant Effect Prediction:</strong> Unsupervised approaches can predict deleterious mutations by modeling the “grammar” of the genome. - <strong>Regulatory Element Identification:</strong> By learning long-range interactions, gLMs help detect promoters, enhancers, and other regulatory motifs. - <strong>Sequence Generation and Protein Tasks:</strong> Some models generate synthetic regulatory sequences or transform coding DNA into meaningful protein representations, bridging genomics and proteomics.</p>
+<p><strong>4. Challenges and Future Directions:</strong><br>
+Despite impressive progress, challenges remain in tokenization choices, computational efficiency, and interpretability of learned representations. Future work is likely to focus on integrating multimodal data (e.g., epigenomic signals), enhancing model scalability, and further bridging the gap between genomic sequences and cellular function—paving the way toward a “virtual cell.”</p>
+<p>In summary, the field is rapidly evolving as researchers refine architectures and training strategies to capture the intricate, long-range dependencies inherent to the genome, promising to revolutionize our understanding of biological function and disease.</p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

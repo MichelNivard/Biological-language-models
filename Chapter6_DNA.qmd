@@ -1,8 +1,34 @@
 ---
-title: "A review of current DNA language models"
+title: "A Review of Current DNA Language Models"
 format: html
 ---
 
-## The state of the art
+Recent advances in genomic language models (gLMs) have transformed our ability to analyze DNA as if it were a natural language, unlocking insights into regulatory mechanisms, variant effects, and even protein function. Here’s an overview of the state‐of‐the‐art:
 
+**1. Modeling Paradigm:**\
+gLMs borrow from natural language processing by treating DNA sequences as “text” composed of four characters (A, C, G, T). Early models used k-mer tokenization (e.g., DNABERT), but newer approaches experiment with both nucleotide‐level and subword tokenizations (such as 3-mer or 6-mer) to better capture biological semantics.
 
+**2. Architectural Innovations:**\
+While transformer-based models initially dominated the field, their quadratic scaling with sequence length has prompted the development of more efficient architectures. Models such as HyenaDNA extend context lengths up to 1 million tokens at single-nucleotide resolution, and hybrid architectures like HybriDNA combine transformers with selective state-space models (Mamba2) to process sequences up to 131 kilobases. Omni-DNA and GENERator further illustrate the trend toward unified, cross-modal genomic foundation models capable of multitask learning.
+
+Below is a summary table of several prominent genomic language models along with links to their corresponding paper and GitHub (or related resource) repositories:
+
+| Model | Description | Paper Link | GitHub / Resource Link |
+|---------------|------------------------|-----------------|----------------|
+| **DNABERT** | A transformer-based model that learns bidirectional representations from DNA sequences using k-mer tokenization. | [DNABERT Paper](https://doi.org/10.1093/bioinformatics/btab083) |  |
+| **Nucleotide Transformer (NT‑v2)** | A large transformer pretrained on massive human genomic data to learn robust DNA representations for various downstream tasks. | [Nucleotide Transformer v2](https://doi.org/10.1038/s41592-024-02523-z) |  |
+| **GPN** | The Genomic Pre-trained Network that leverages unsupervised DNA language modeling to predict genome-wide variant effects. | [GPN Paper (PNAS 2023)](https://doi.org/10.1073/pnas.2311219120) | [GitHub](https://github.com/songlab-cal/gpn) |
+| **HyenaDNA** | A long-range genomic language model operating at single-nucleotide resolution using Hyena’s implicit convolutional approach to overcome transformer scaling issues. | [HyenaDNA (arXiv)](https://arxiv.org/abs/2306.15794) | [GitHub](https://github.com/HazyResearch/hyena-dna) |
+| **HybriDNA** | A hybrid model combining Transformer and Mamba2 (state-space) architectures for efficient long-range DNA modeling. | [HybriDNA (arXiv)](https://arxiv.org/abs/2502.10807) |  |
+| **Omni‑DNA** | A unified genomic foundation model that supports cross‑modal and multi‑task learning across a wide range of genomic applications. | [Omni‑DNA (arXiv)](https://arxiv.org/abs/2502.03499) | [Hugging Face Collection](https://huggingface.co/collections/zehui127) |
+| **GENERator** | A long-context generative genomic foundation model designed for sequence generation and optimization tasks with a context length of up to 98k bp. | [GENERator (arXiv)](https://arxiv.org/abs/2502.07272) | [GitHub](https://github.com/GenerTeam/GENERator) |
+
+This table highlights each model’s core featurs and provides direct access to the publication and code repository (or resource page) where available.
+
+**3. Applications:**\
+These models have demonstrated state-of-the-art performance across multiple downstream tasks including: - **Variant Effect Prediction:** Unsupervised approaches can predict deleterious mutations by modeling the “grammar” of the genome. - **Regulatory Element Identification:** By learning long-range interactions, gLMs help detect promoters, enhancers, and other regulatory motifs. - **Sequence Generation and Protein Tasks:** Some models generate synthetic regulatory sequences or transform coding DNA into meaningful protein representations, bridging genomics and proteomics.
+
+**4. Challenges and Future Directions:**\
+Despite impressive progress, challenges remain in tokenization choices, computational efficiency, and interpretability of learned representations. Future work is likely to focus on integrating multimodal data (e.g., epigenomic signals), enhancing model scalability, and further bridging the gap between genomic sequences and cellular function—paving the way toward a “virtual cell.”
+
+In summary, the field is rapidly evolving as researchers refine architectures and training strategies to capture the intricate, long-range dependencies inherent to the genome, promising to revolutionize our understanding of biological function and disease.

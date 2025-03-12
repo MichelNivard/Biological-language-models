@@ -139,13 +139,13 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Preamble1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">What is this book about?</span></a>
+ <span class="menu-text">What is this Book About?</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Preamble2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">How to read this book</span></a>
+ <span class="menu-text">How to Read this Book</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -190,7 +190,7 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter6_DNA.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A review of current DNA language models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></span></a>
   </div>
 </li>
       </ul>
@@ -231,10 +231,10 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#dont-try-to-win-the-compute-race" id="toc-dont-try-to-win-the-compute-race" class="nav-link active" data-scroll-target="#dont-try-to-win-the-compute-race">Don’t try to win the compute race</a></li>
-  <li><a href="#smart-architectures" id="toc-smart-architectures" class="nav-link" data-scroll-target="#smart-architectures">Smart architectures</a></li>
-  <li><a href="#optimize-optimize-optimize" id="toc-optimize-optimize-optimize" class="nav-link" data-scroll-target="#optimize-optimize-optimize">Optimize optimize optimize</a></li>
-  <li><a href="#paralllel-training" id="toc-paralllel-training" class="nav-link" data-scroll-target="#paralllel-training">Paralllel training</a></li>
+  <li><a href="#dont-try-to-win-the-compute-race" id="toc-dont-try-to-win-the-compute-race" class="nav-link active" data-scroll-target="#dont-try-to-win-the-compute-race">Don’t Try to Win the Compute Race</a></li>
+  <li><a href="#smart-architectures" id="toc-smart-architectures" class="nav-link" data-scroll-target="#smart-architectures">Smart Architectures</a></li>
+  <li><a href="#optimize-optimize-optimize" id="toc-optimize-optimize-optimize" class="nav-link" data-scroll-target="#optimize-optimize-optimize">Optimize, Optimize, Optimize</a></li>
+  <li><a href="#parallel-training" id="toc-parallel-training" class="nav-link" data-scroll-target="#parallel-training">Parallel Training</a></li>
   </ul>
 </nav>
     </div>
@@ -260,21 +260,21 @@ div.csl-indent {
 </header>
 
 
-<p>This chapter isnt a part of the “DNA” section of the book, because the lessons are really quite general, but it coems afer because we needed a little bit of experience with language model training before even considering training a serious model. This is also a somewhat akward chapter for me to write, especially for the part of the readership that has a background in ML. See I am a psychologist by training (though I have worked in genetic epidemiology for years and years), and while a lot of my academic work is fairly computational, I am no expext in language model scaling by any means! Remember, the pre-ambble to the book explains this book is an account of me learning about Biological language models and taking others along for the ride, not an authoritative text!</p>
+<p>This chapter isn’t a part of the “DNA” section of the book, because the lessons are really quite general, but it comes after because we needed a little bit of experience with language model training before even considering training a serious model. This is also a somewhat awkward chapter for me to write, especially for the part of the readership that has a background in ML. See, I am a psychologist by training (though I have worked in genetic epidemiology for years and years), and while a lot of my academic work is fairly computational, I am no expert in language model scaling by any means! Remember, the preamble to the book explains this book is an account of me learning about biological language models and taking others along for the ride, not an authoritative text!</p>
 <section id="dont-try-to-win-the-compute-race" class="level2">
-<h2 class="anchored" data-anchor-id="dont-try-to-win-the-compute-race">Don’t try to win the compute race</h2>
-<p>Among the DNA models I could find on huggingface are 7B parameter model like <a href="https://huggingface.co/genbio-ai/AIDO.DNA-7B" class="uri">https://huggingface.co/genbio-ai/AIDO.DNA-7B</a>. AIDO i trained on “256 H100 GPUs” in “8 days”. The training data consisted of 10.6 Billion bases. Thats not even a particularly large model in the grant scheme of things, but if you consider a cost of ±$2 per hour per H100 you are going to spend $100k. Obviously there are academic compute resources you can get access to by appointment or based on fair use at your institute, university or trough collaborative national infrastructure but even those are finite.</p>
-<p>TOday (MArch 2025) the Dutch national computer cluster for research (snellius at surfsara) has 88 nodes with 4 H100 GPUs and 72 nodes with 4 A100 GPUs. TAC the University of Texas at Austin compute provider has ±80 A100 nodes (each with 3 GPUs) THose are robust HPC providers for academic work. In my experience you could get time reserved for your research at steep discounts, and these systems are likely large enough to train that 7B model I linked to. Peraps even at larger national research clusters, like <a href="https://www.bristol.ac.uk/news/2023/november/supercomputer-announcement.html">Isambard-ai</a> (being build in Bristol right now, a motivation for me to write this) which ha 5000 H200 GPUs. In general it is likely you are going to be compute constrained. Don’t be discouraged though, most breakthroughs are not going to be compute based and there are immense efficiency gains to be made that will level the playing field.</p>
+<h2 class="anchored" data-anchor-id="dont-try-to-win-the-compute-race">Don’t Try to Win the Compute Race</h2>
+<p>Among the DNA models I could find on Hugging Face is a 7B parameter model like <a href="https://huggingface.co/genbio-ai/AIDO.DNA-7B" class="uri">https://huggingface.co/genbio-ai/AIDO.DNA-7B</a>. AIDO is trained on “256 H100 GPUs” in “8 days”. The training data consisted of 10.6 billion bases. That’s not even a particularly large model in the grand scheme of things, but if you consider a cost of ±$2 per hour per H100, you are going to spend $100k. Obviously, there are academic compute resources you can get access to by appointment or based on fair use at your institute, university, or through collaborative national infrastructure, but even those are finite.</p>
+<p>You have to consider feasibility. Today (March 2025), the Dutch national computer cluster for research (Snellius at SURF Sara) has 88 nodes with 4 H100 GPUs and 72 nodes with 4 A100 GPUs. TACC, the University of Texas at Austin compute provider, has ±80 A100 nodes (each with 3 GPUs). Those are two examples of reasonably well-funded HPC providers in academia. In my experience, you could get time reserved for your research at your local academic HPC provider at steep discounts, and these systems are likely large enough to train that 7B model I linked to. However, note how on either TACC or Snellius, 256 GPUs for 8 days would block the entire system for over a week. Perhaps you could apply for access to larger national research clusters, like <a href="https://www.bristol.ac.uk/news/2023/november/supercomputer-announcement.html">Isambard-AI</a> in the UK (being built in Bristol right now, a motivation for me to write this) which has 5,000 H200 GPUs. However, in general, it is likely you are going to be relatively compute constrained. Don’t be discouraged though—most breakthroughs are not going to be compute-based, and there are immense efficiency gains to be made that will level the playing field.</p>
 </section>
 <section id="smart-architectures" class="level2">
-<h2 class="anchored" data-anchor-id="smart-architectures">Smart architectures</h2>
-<p>In Chapter 4 we studied smarter, DNA specific model architectures. The GPN model inspired by <span class="citation" data-cites="Benegas2024">Benegas et al. (<a href="references.html#ref-Benegas2024" role="doc-biblioref">2023</a>)</span> we intrudiced can blow away a standard Bert in a hour of training on my 2022 macbook air (the Bert we trained and compared to our GPN bert trained for ±8 hous on a strong GPU). THe massive efficiency gain may mean you can beat the 7B bert like model we took as an example of compute costs with a fraction of the compute! Other reseachers have designed alternatives for the transformer module at the core of these models with DNA in mind, and expanded its context window up to 1 million bases with far less compute <span class="citation" data-cites="nguyen2023">(<a href="references.html#ref-nguyen2023" role="doc-biblioref">Nguyen et al. 2023</a>)</span></p>
+<h2 class="anchored" data-anchor-id="smart-architectures">Smart Architectures</h2>
+<p>In Chapter 4, we studied smarter, DNA-specific model architectures. The GPN model inspired by <span class="citation" data-cites="Benegas2024">Benegas et al. (<a href="references.html#ref-Benegas2024" role="doc-biblioref">2023</a>)</span> we introduced can blow away a standard BERT in an hour of training on my 2022 MacBook Air (the BERT we trained and compared to our GPN-BERT trained for ±8 hours on a strong GPU). The massive efficiency gain may mean you can beat the 7B BERT-like model we took as an example of compute costs with a fraction of the compute! Other researchers have designed alternatives for the transformer module at the core of these models with DNA in mind and expanded its context window up to 1 million bases with far less compute <span class="citation" data-cites="nguyen2023">(<a href="references.html#ref-nguyen2023" role="doc-biblioref">Nguyen et al. 2023</a>)</span>. These models can be mixed and matched for further gains.</p>
 </section>
 <section id="optimize-optimize-optimize" class="level2">
-<h2 class="anchored" data-anchor-id="optimize-optimize-optimize">Optimize optimize optimize</h2>
+<h2 class="anchored" data-anchor-id="optimize-optimize-optimize">Optimize, Optimize, Optimize</h2>
 </section>
-<section id="paralllel-training" class="level2">
-<h2 class="anchored" data-anchor-id="paralllel-training">Paralllel training</h2>
+<section id="parallel-training" class="level2">
+<h2 class="anchored" data-anchor-id="parallel-training">Parallel Training</h2>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
@@ -709,8 +709,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./Chapter6_DNA.html" class="pagination-link" aria-label="A review of current DNA language models">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A review of current DNA language models</span></span>
+      <a href="./Chapter6_DNA.html" class="pagination-link" aria-label="A Review of Current DNA Language Models">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

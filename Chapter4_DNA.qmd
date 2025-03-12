@@ -5,9 +5,9 @@ title: "Evolution-Aware Encoders"
 ::: callout-tip
 ## Abstract
 
-In this chapter we'll evaluate the architecture of natural language models, which we have up to this point uncritically adopted for DNA modeling from our NLP/corporate brethren. We'll discuss how some researchers have begun to move on from applying known model architectures to DNA and started to (re)designing model architectures specifically with DNA in mind. These models lean into our very extensive knowledge of the evolutionary history of the Genome.
+In this chapter, we'll evaluate the architecture of natural language models, which we have up to this point uncritically adopted for DNA modeling from our NLP/corporate brethren. We'll discuss how some researchers have begun to move on from applying known model architectures to DNA and started to (re)designing model architectures specifically with DNA in mind. These models lean into our very extensive knowledge of the evolutionary history of the Genome.
 
-In this chapter we are forced to confront some fundamental questions, what is prediction? what do we want a model to learn?
+In this chapter, we are forced to confront some fundamental questions: what is prediction? What do we want a model to learn?
 
 All scripts for this chapter are found here: <https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/DNA/Chapter_4>
 :::
@@ -28,7 +28,7 @@ In human languages like English or French, the vocabulary is **large**, often co
 -   Subwords ("cat" might break into "c", "at").
 -   Even characters (in rare cases).
 
-Since the number of tokens is so large, **each token is assigned a unique vector embedding — a dense, learnable representation of its "meaning"**. These embedding are gradually refined during training as the model learns how tokens behave in different contexts. The model learns, based on the massive amounts of training data what the word means, what other words have similar or related meanings. This is essential because linguists and those who study language have vast knowledge of word meaning, numerically encoding that knowledge, such that a computational model could process isn't currently a feasible task. Therefore in a natural (as opposed to biological) large language model word embedding are learned from the data, the data being all the text on the internet.
+Since the number of tokens is so large, **each token is assigned a unique vector embedding — a dense, learnable representation of its "meaning"**. These embeddings are gradually refined during training as the model learns how tokens behave in different contexts. The model learns, based on the massive amounts of training data, what the word means, what other words have similar or related meanings. This is essential because linguists and those who study language have vast knowledge of word meaning, numerically encoding that knowledge so that a computational model could process isn't currently a feasible task. Therefore, in a natural (as opposed to biological) large language model, word embeddings are learned from the data, the data being all the text on the internet.
 
 ### The Embedding Process (NLP BERT)
 
@@ -50,17 +50,17 @@ Step 3 - Transformer Layers:
 
 ### Language Evolution is Decayed
 
-The design of these token embeddings reflects a key fact about human languages: **the evolutionary history of words might be relevant to understanding their meaning today, but the words context in text is way more informative**. While linguistic etymology exists, the meaning of "cat" today does not rely on whether the word originated from Latin or Proto-Indo-European. Context (the words around "cat") matters far more than distant etymology. Even if I am unfairly discounting the importance of etymology in linguistics (I am no linguist, don't take my word for it), the quantity of older texts, relative to the quantity of modern texts, the lack of obvious coding scheme for embedding a word in its etymological history are problematic and would have to be very effecice given how effective "word in textual context" embeddings are. However, biology, and DNA in particular, is different.
+The design of these token embeddings reflects a key fact about human languages: **the evolutionary history of words might be relevant to understanding their meaning today, but the words' context in text is way more informative**. While linguistic etymology exists, the meaning of "cat" today does not rely on whether the word originated from Latin or Proto-Indo-European. Context (the words around "cat") matters far more than distant etymology. Even if I am unfairly discounting the importance of etymology in linguistics (I am no linguist, don't take my word for it), the quantity of older texts, relative to the quantity of modern texts, the lack of an obvious coding scheme for embedding a word in its etymological history are problematic and would have to be very effective given how effective "word in textual context" embeddings are. However, biology, and DNA in particular, is different.
 
 ### Biological Sequences are Fundamentally Different
 
-The DNA encoding we have been working with (A, T, G, C, -) has 5 tokens, perhaps 20 if we encode all the codes used in genetics to code for ambiguous or missing bases. Protein language models we'll cover later have ±20 amino-acids commonly found in proteins. If we use longer vocabularies, like k-mer or BPE tokenizer vocabularies its not clear the longer sequences we obtain really are comparable, or interchangeable. The point of embedding is to cluster similar and dissimilarities, in order to predict the next, or a masked, token if the presence of up to 128.000 tokens to chose from some of which have very similar meanings, or could fully alter the meaning of a sentence (by negation, or omission). Ins biology we have a small vocabulary, 5 or 20 or if you wish up to a few hundred tokens. We do however have an incredible understanding of the evolutionary history (**Figure 4.1**) of each base in the genome, we know its place in the genome of other species an can align those to eachother!
+The DNA encoding we have been working with (A, T, G, C, -) has 5 tokens, perhaps 20 if we encode all the codes used in genetics to code for ambiguous or missing bases. Protein language models we'll cover later have ±20 amino-acids commonly found in proteins. If we use longer vocabularies, like k-mer or BPE tokenizer vocabularies, it's not clear the longer sequences we obtain really are comparable or interchangeable. The point of embedding is to cluster similar and dissimilarities, in order to predict the next or a masked token if the presence of up to 128,000 tokens to choose from, some of which have very similar meanings or could fully alter the meaning of a sentence (by negation or omission). In biology, we have a small vocabulary, 5 or 20, or if you wish up to a few hundred tokens. We do, however, have an incredible understanding of the evolutionary history (**Figure 4.1**) of each base in the genome, we know its place in the genome of other species and can align those to each other!
 
-![**Figure 4.1** The Evogeneao Tree of Life diagram all rights reserved Leonard Eisenberg (2008 & 2017) get posters and relevant teaching materials here: <https://www.evogeneao.com/en/learn/tree-of-life>](https://evogeneao.s3.amazonaws.com/images/tree_of_life/tree-of-life_2000.png){fig-align="center"}
+![**Figure 4.1** The Evogeneao Tree of Life diagram, all rights reserved Leonard Eisenberg (2008 & 2017). Get posters and relevant teaching materials here: <https://www.evogeneao.com/en/learn/tree-of-life>](https://evogeneao.s3.amazonaws.com/images/tree_of_life/tree-of-life_2000.png){fig-align="center"}
 
-### Evolutionary context as an embedding
+### Evolutionary Context as an Embedding
 
-The **evolutionary history of a genomic position — how conserved it is, how it varies across species — directly influences our estimation of its importance and its tolerance to mutation**. A nucleotide in a highly conserved enhancer region requires different level of attention (from the model, or us scientists) then a nucleotide in a rapidly evolving spacer.
+The **evolutionary history of a genomic position — how conserved it is, how it varies across species — directly influences our estimation of its importance and its tolerance to mutation**. A nucleotide in a highly conserved enhancer region requires different levels of attention (from the model or us scientists) than a nucleotide in a rapidly evolving spacer.
 
 ### 
 
@@ -69,7 +69,7 @@ The **evolutionary history of a genomic position — how conserved it is, how it
 | Number of Tokens | Tens of thousands | \~5 (A, T, G, C, -) |
 | Meaning | Flexible, evolves over time | Biochemically fixed |
 | Evolutionary Context | Mostly irrelevant to meaning | Often crucial (conservation, divergence) |
-| Token Embedding | Fully learned | No unique encoding for each token, but predefined based on token specific evolutionary history |
+| Token Embedding | Fully learned | No unique encoding for each token, but predefined based on token-specific evolutionary history |
 | Neighboring Context | Defines meaning | Defines local motifs, but evolutionary context adds extra layer |
 
 : **Table 4.1** Key Differences Between Language and DNA
@@ -79,13 +79,13 @@ To capture this **cross-species evolutionary context**, we need an **embedding s
 1.  **The identity of the nucleotide itself (A, T, G, C, -)**.
 2.  **The state of this position in aligned species (what bases appear at the same position in other species).**
 
-This evolutionary-aware encoding is at the heart of the **Genomic Pre-trained Network (GPN)** architecture an various famous protein language models like AlphaFold[@Benegas2024; @Lupo2022; @jumper2021]. in DNA nwetworks we'll discuss in this chapter the encoding is computed for each base given tis history. So while the model has 5 tokens (G,C,T,A, and - ) these tokens do not map to a fixed embedding, rather the base "A" maps to an encoding (one-hot encoding) for A, but then also for the same base in aligned sequences of 99 non-human species. This fundamentally chances the model architecture, changing it from the a language model applied to DNA as we did in chapter 3 to a DNA language model, or maybe even just a DNA model,
+This evolutionary-aware encoding is at the heart of the **Genomic Pre-trained Network (GPN)** architecture and various famous protein language models like AlphaFold[@Benegas2024; @Lupo2022; @jumper2021]. In DNA networks, we'll discuss in this chapter, the encoding is computed for each base given its history. So while the model has 5 tokens (G, C, T, A, and -), these tokens do not map to a fixed embedding; rather, the base "A" maps to an encoding (one-hot encoding) for A, but then also for the same base in aligned sequences of 99 non-human species. This fundamentally changes the model architecture, changing it from a language model applied to DNA as we did in Chapter 3 to a DNA language model, or maybe even just a DNA model.
 
 ## 4. Introducing GPN-MSA-BERT
 
 GPN-MSA-BERT (inspired by @Benegas2024) adapts BERT-style masked language modeling (MLM) to DNA sequences, but **incorporates multispecies alignment (MSA) data directly into the model's input**.
 
-![**Figure 4.2** an example multiple sequence alignment (MSA) across 7 sequences (usually species). Source: <https://www.biorender.com/template/multiple-sequence-alignment-dna> author: [Eunice Huang](https://app.biorender.com/profile/eunice_huang)](images/paste-15.png)
+![**Figure 4.2** An example multiple sequence alignment (MSA) across 7 sequences (usually species). Source: <https://www.biorender.com/template/multiple-sequence-alignment-dna> author: [Eunice Huang](https://app.biorender.com/profile/eunice_huang)](images/paste-15.png)
 
 ### Key Idea: Dynamic Position Embeddings
 
@@ -95,7 +95,7 @@ For each position in the human genome, the model receives:
 -   The aligned bases from other species — these are additional features.
 -   These aligned bases are one-hot encoded and concatenated to the human base's embedding.
 
-This turns a simple nucleotide embedding, fr any given nucleotide into a dynamic, position-specific vector that depends on its evolutionary context across species.
+This turns a simple nucleotide embedding, for any given nucleotide, into a dynamic, position-specific vector that depends on its evolutionary context across species.
 
 ### Visualization
 
@@ -119,17 +119,17 @@ To implement this in practice, we can directly modify a Hugging Face model class
 
 This requires:
 
--   Defining a tokenizer that toekenizes each base, and aligned bases in other species into the structure expected by the embedding
+-   Defining a tokenizer that tokenizes each base and aligned bases in other species into the structure expected by the embedding.
 -   Defining a **GPNEmbedding** class that can handle one-hot human base with species features and builds the embedding for each base.
--   requires we replace `ModernBertForMaskedLM` with a custom `GPNBBERTMaskedLM` class
+-   Replacing `ModernBertForMaskedLM` with a custom `GPNBERTMaskedLM` class.
 -   Ensuring all `forward` methods accept both `input_ids` and `aux_features`, which are passed into the embedding layer.
--   We additionally define our own tokenizer, and data collator (not show here but available in the full script)
+-   We additionally define our own tokenizer and data collator (not shown here but available in the full script).
 
-THe code below takes a human sequence, encodes it in a one hot encoding (so A: 10000, T: 01000, G: 00100, C: 00010, -: 00001 for example), does the same for any auxiliary aligned sequences from other species. Then the embedding function combines both into one.
+The code below takes a human sequence, encodes it in a one-hot encoding (so A: 10000, T: 01000, G: 00100, C: 00010, -: 00001 for example), does the same for any auxiliary aligned sequences from other species. Then the embedding function combines both into one.
 
-``` python
+```python
 # --------------------------------
-# 5. Encode Humand and auxillary species sequnces in 
+# 5. Encode Human and Auxiliary Species Sequences in 
 # --------------------------------
 
 def one_hot_encode_base(base):
@@ -177,7 +177,7 @@ class GPNEmbedding(nn.Module):
         self.config = config
         self.n_species = n_species
         self.vocab_size = 5  # A, T, G, C, -
-        self.species_feature_size = self.n_species * self.vocab_size
+        self.species_feature_size = n_species * self.vocab_size
 
     def forward(self, input_ids, aux_features):
         one_hot = F.one_hot(input_ids, num_classes=self.config.vocab_size).float()
@@ -192,9 +192,9 @@ class GPNEmbedding(nn.Module):
         return combined
 ```
 
-From here on out things are fairly standard, a transformer model (here bert but could be anything really) is initialized to learn the relationship between adjacent tokens using a masked language model training regime. In the code below the custom embedding are introduced into the masked language model (ModernBert in this case) while the encoder part of the model (the core part of the model that learns the relation between adjacent tokens) remain unchanged.
+From here on out, things are fairly standard. A transformer model (here BERT but could be anything really) is initialized to learn the relationship between adjacent tokens using a masked language model training regime. In the code below, the custom embeddings are introduced into the masked language model (ModernBert in this case) while the encoder part of the model (the core part of the model that learns the relation between adjacent tokens) remains unchanged.
 
-``` python
+```python
 # --------------------------------
 # 6. GPNBERTMaskedLM
 # --------------------------------
@@ -237,17 +237,17 @@ class GPNBERTMaskedLM(nn.Module):
 
 ## What are we masking?
 
-I promised dwe'd have to deeply consider what we count as prediction, and that's going to have to happen right now. In Chapter 2 we trained a DNA language model, and in Chapter 3 we saw how well idt did, and did not predict specific features. In **Figure 3.3 you saw the model predicts the true bases in the DRD2 gene with about 40%.** What if I told you I can predict the bases in the human reference genome with \> 95% probability with a "model" or based on. supervised model. TO do so I'd just pick the consensus base across other species! Humand DNA and chimpanzee DNA are \> 90% identical, so are human and mouse genomes are remarkably similar (85% I think). In **Figure 4.3** (from [@initial2002]) we see the human sequences that are preserved well in the mouse genome, and they cover a staggering portion of it. This means we can "beat" base predictions made by our previous model by a mile, simply by piking the base the is most frequent across evolutionary history.
+I promised we'd have to deeply consider what we count as prediction, and that's going to have to happen right now. In Chapter 2, we trained a DNA language model, and in Chapter 3, we saw how well it did and did not predict specific features. In **Figure 3.3**, you saw the model predicts the true bases in the DRD2 gene with about 40%. What if I told you I can predict the bases in the human reference genome with > 95% probability with a "model" based on a supervised model? To do so, I'd just pick the consensus base across other species! Human DNA and chimpanzee DNA are > 90% identical, and human and mouse genomes are remarkably similar (85%, I think). In **Figure 4.3** (from [@initial2002]), we see the human sequences that are preserved well in the mouse genome, and they cover a staggering portion of it. This means we can "beat" base predictions made by our previous model by a mile, simply by picking the base that is most frequent across evolutionary history.
 
-![**Figure 4.3** The mouse genome, with in it sections of the human genome (color codes) that are largely preserved across evolution (figure 3 in [@initial2002])](images/paste-18.png){fig-align="center"}
+![**Figure 4.3** The mouse genome, with sections of the human genome (color-coded) that are largely preserved across evolution (Figure 3 in [@initial2002])](images/paste-18.png){fig-align="center"}
 
-In training our GPNBert model with auxiliary sequences we train by **masking the human base only** (following [@Benegas2024]). This very obviously, and dramatically, improves base prediction, and does so very quickly. after a few hundred iterations (trained on about 5000 genes) the model learns that it should just assign the base most often found in other species. But as the evaluations the authors of the original GNP-MSA paper make clear, eventually the model learns more than that. The model outperforms just picking the consensus base across species. They are able to show fairly convisingly that the predicted probabilities are a better predictor of the allele frequency in humans then just picking the allele frequency across species (Figure 2 B in @Benegas2024) as an estimate of the allele frequency within human. Furthermoe their model is able to pick off deleterious mutations better then CADD scores, based on supervised machine learning ([@rentzsch2021]) or than sophistical evolutionary constraint scores ([@sullivan2023]).
+In training our GPNBert model with auxiliary sequences, we train by **masking the human base only** (following [@Benegas2024]). This very obviously and dramatically improves base prediction, and does so very quickly. After a few hundred iterations (trained on about 5,000 genes), the model learns that it should just assign the base most often found in other species. But as the evaluations in the original GPN-MSA paper make clear, eventually the model learns more than that. The model outperforms just picking the consensus base across species. They are able to show fairly convincingly that the predicted probabilities are a better predictor of the allele frequency in humans than just picking the allele frequency across species (Figure 2B in @Benegas2024) as an estimate of the allele frequency within humans. Furthermore, their model is able to identify deleterious mutations better than CADD scores, based on supervised machine learning ([@rentzsch2021]), or than sophisticated evolutionary constraint scores ([@sullivan2023]).
 
 ## Recap of Our Approach
 
 In Chapter 2, we trained a vanilla BERT on DNA sequences alone — treating DNA as just another language. That model only had access to the human sequence, with no evolutionary context.
 
-In this chapter, we’ve re-imagined that process. Instead of treating A, T, G, C, - as abstract symbols, leaving the model entirely unsupervised when picking embedding, we inject evolutionary history directly into the embedding directly. This allows our model to:
+In this chapter, we've re-imagined that process. Instead of treating A, T, G, C, - as abstract symbols, leaving the model entirely unsupervised when picking embeddings, we inject evolutionary history directly into the embedding. This allows our model to:
 
 -   Use the aligned species data as a rich evolutionary prior.
 -   Still leverage transformers for learning sequence motifs.

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>How to read this book – Biological Language Models &amp; Neural Networks</title>
+<title>How to Read this Book – Biological Language Models &amp; Neural Networks</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -98,7 +98,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Preamble2.html">How to read this book</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Preamble2.html">How to Read this Book</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -119,13 +119,13 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Preamble1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">What is this book about?</span></a>
+ <span class="menu-text">What is this Book About?</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Preamble2.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">How to read this book</span></a>
+ <span class="menu-text">How to Read this Book</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -170,7 +170,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter6_DNA.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A review of current DNA language models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></span></a>
   </div>
 </li>
       </ul>
@@ -214,9 +214,9 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#practicalities" id="toc-practicalities" class="nav-link active" data-scroll-target="#practicalities">Practicalities</a></li>
   <li><a href="#structure" id="toc-structure" class="nav-link" data-scroll-target="#structure">Structure</a>
   <ul class="collapse">
-  <li><a href="#dna-language-models" id="toc-dna-language-models" class="nav-link" data-scroll-target="#dna-language-models">DNA language models</a></li>
-  <li><a href="#protein-language-models" id="toc-protein-language-models" class="nav-link" data-scroll-target="#protein-language-models">Protein language models</a></li>
-  <li><a href="#multi-modal-models-dna-meets-proteins" id="toc-multi-modal-models-dna-meets-proteins" class="nav-link" data-scroll-target="#multi-modal-models-dna-meets-proteins">Multi-modal models (DNA meets proteins)</a></li>
+  <li><a href="#dna-language-models" id="toc-dna-language-models" class="nav-link" data-scroll-target="#dna-language-models">DNA Language Models</a></li>
+  <li><a href="#protein-language-models" id="toc-protein-language-models" class="nav-link" data-scroll-target="#protein-language-models">Protein Language Models</a></li>
+  <li><a href="#multi-modal-models-dna-meets-proteins" id="toc-multi-modal-models-dna-meets-proteins" class="nav-link" data-scroll-target="#multi-modal-models-dna-meets-proteins">Multi-modal Models (DNA Meets Proteins)</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -226,7 +226,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">How to read this book</h1>
+<h1 class="title">How to Read this Book</h1>
 </div>
 
 
@@ -245,23 +245,23 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="practicalities" class="level2">
 <h2 class="anchored" data-anchor-id="practicalities">Practicalities</h2>
-<p>The book is accompanied by scripts in both the R and Python programming languages. I had to make some choices, some of the biological data repositories have great integrated perl and R packages, I wouldn’t want to force people into perl (especially not myself!), I am more comfortable wrangling the initial data in R then in Python so here we are.</p>
-<p>If you want to code along, rest assured you can run most of this on a macbook. Maybe you’ll need to run a training run overnight a few times. If you want a bit more performance, or not have your MAckbook turn into a space heater for 24 hours you can use google colab for access to A100 GPUs. Training the DNABert model we outline in Chapter 2 on 500k coding sequences from 13 species took ±6 hours on an A100 on Colab, which means that cost me ±4$ in colab credit.</p>
-<p>The Gihub repo that hosts the book will be populated with all the scripts I discuss and use. The data used to train the models, and some of the models themselves, will be hosted on Huggingface (a repository of ML training data). I will try to make jupyter notebooks available though given my R background I usually run Puython in a REPL because that is what R people do…</p>
-<p>If you come at this from an R background, and Python isn’t your native language, I can highly recommend using <a href="https://positron.posit.co">positron</a> as an IDE when following along with this book, its a vscode derivative developed by Posit, the company that developed RStudio. Positron has tooling integrated for data science in both python and R and I can switch between python and R sessions instantly!</p>
+<p>The book is accompanied by scripts in both the R and Python programming languages. I had to make some choices—some of the biological data repositories have great integrated Perl and R packages. I wouldn’t want to force people into Perl (especially not myself!). I am more comfortable wrangling the initial data in R than in Python, so here we are.</p>
+<p>If you want to code along, rest assured you can run most of this on a MacBook. Maybe you’ll need to run a training run overnight a few times. If you want a bit more performance, or not have your MacBook turn into a space heater for 24 hours, you can use Google Colab for access to A100 GPUs. Training the DNABERT model we outline in Chapter 2 on 500k coding sequences from 13 species took ±6 hours on an A100 on Colab, which means that cost me ±$4 in Colab credit.</p>
+<p>The GitHub repo that hosts the book will be populated with all the scripts I discuss and use. The data used to train the models, and some of the models themselves, will be hosted on Hugging Face (a repository of ML training data). I will try to make Jupyter notebooks available, though given my R background, I usually run Python in a REPL because that is what R people do…</p>
+<p>If you come at this from an R background, and Python isn’t your native language, I can highly recommend using <a href="https://positron.posit.co">Positron</a> as an IDE when following along with this book. It’s a VSCode derivative developed by Posit, the company that developed RStudio. Positron has tooling integrated for data science in both Python and R, and I can switch between Python and R sessions instantly!</p>
 </section>
 <section id="structure" class="level2">
 <h2 class="anchored" data-anchor-id="structure">Structure</h2>
-<p>The book is divided up into sections that deal with a specific biological modality or data type. the last chapter in each section is a review of current models. Its more common to begin a chapter reviewing whats available out there, but given the novelty of these models it makes sense to learn how they work before reading a review of what’s out there. There is risk of the reader attributing insights to me, simply because I describe it to you first. I’ll always cite my sources as if this is a peer reviewed article, and you should assume most models we build together are directly, or indirectly, influenced by the literature. I also ask you do not cite this book other then for novel content, or to refer to it as teaching material, please for models, architectures, insights cite the underlying empirical literature.</p>
+<p>The book is divided into sections that deal with a specific biological modality or data type. The last chapter in each section is a review of current models. It’s more common to begin a chapter reviewing what’s available out there, but given the novelty of these models, it makes sense to learn how they work before reading a review of what’s out there. There is a risk of the reader attributing insights to me simply because I describe it to you first. I’ll always cite my sources as if this is a peer-reviewed article, and you should assume most models we build together are directly, or indirectly, influenced by the literature. I also ask you do not cite this book other than for novel content, or to refer to it as teaching material—please, for models, architectures, and insights, cite the underlying empirical literature.</p>
 <section id="dna-language-models" class="level3">
-<h3 class="anchored" data-anchor-id="dna-language-models">DNA language models</h3>
-<p><strong>Chapter 1 covers</strong> downloading, and pocessing (DNA) sequences data from ensembl and uploading it to Huggingface. <strong>Chapter 2 covers</strong> training a first small DNA sequence language mode, the model is a bog standard language model, meant for natural languages simply applied to DNA. in <strong>Chapter 3</strong> we explore how you’d evaluate whether a DNA model is any good, is our model learning anything at all? Then in <strong>Chapter 4</strong></p>
+<h3 class="anchored" data-anchor-id="dna-language-models">DNA Language Models</h3>
+<p><strong>Chapter 1 covers</strong> downloading and processing (DNA) sequence data from Ensembl and uploading it to Hugging Face. <strong>Chapter 2 covers</strong> training a first small DNA sequence language model; the model is a bog-standard language model meant for natural languages, simply applied to DNA. In <strong>Chapter 3</strong>, we explore how you’d evaluate whether a DNA model is any good—is our model learning anything at all? Then in <strong>Chapter 4</strong>, we explore evolutionary-aware encoders and how they relate to DNA language models.</p>
 </section>
 <section id="protein-language-models" class="level3">
-<h3 class="anchored" data-anchor-id="protein-language-models">Protein language models</h3>
+<h3 class="anchored" data-anchor-id="protein-language-models">Protein Language Models</h3>
 </section>
 <section id="multi-modal-models-dna-meets-proteins" class="level3">
-<h3 class="anchored" data-anchor-id="multi-modal-models-dna-meets-proteins">Multi-modal models (DNA meets proteins)</h3>
+<h3 class="anchored" data-anchor-id="multi-modal-models-dna-meets-proteins">Multi-modal Models (DNA Meets Proteins)</h3>
 
 
 </section>
@@ -689,8 +689,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./Preamble1.html" class="pagination-link" aria-label="What is this book about?">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">What is this book about?</span>
+      <a href="./Preamble1.html" class="pagination-link" aria-label="What is this Book About?">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">What is this Book About?</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

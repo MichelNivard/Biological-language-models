@@ -8,23 +8,23 @@ format: html
 
 In Chapter 5, we will put these two models — Vanilla BERT and GPN-MSA-BERT — to the test. We will evaluate their performance on:
 
--   Predicting masked bases (MLM accuracy).
--   Predicting the functional impact of mutations.
+-   Predicting masked bases (MLM accuracy)
+-   Predicting the functional impact of mutations
 
-This head-to-head comparison will highlight the strengths and weaknesses of each approach. Finally **we'll build a hybrid model**, in which the DNA sequence is model is trained in evolutionary context and in its sequence context and the results are blended, a model architecture that is a little like alphafold, the Nobel winning protein language model developed at google deepmind.
+This head-to-head comparison will highlight the strengths and weaknesses of each approach. Finally, **we'll build a hybrid model**, in which the DNA sequence model is trained in both evolutionary context and sequence context, and the results are blended—a model architecture similar to AlphaFold, the Nobel-winning protein language model developed at Google DeepMind.
 
 All scripts for this chapter are found here: <https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/DNA/Chapter_5>
 :::
 
-So we have trained two models. Admittedly with very different architectures, and goals. We can now go can compare these models (though It remains to be seen whether we can do so fairly). The comparisons we'll make first is whether the two model accurately predict the human base. This is an entirely unfair comparison, the deck is stacked massively towards the GPN Bert model we trained in Chapter 4, as for that model we hard code evolutionary history in the embedding, and when masking we only mask the human base. So we'll do a few things to level the playing field. First we trained the GPN model with access to only 12 out of 100 auxiliary species. As you might recall the DNABert model developed and trained in Chapter 2, a version of which is available on huggingface ([MichelNivard/DNABert-CDS-13Species-v0.1](https://huggingface.co/MichelNivard/DNABert-CDS-13Species-v0.1)) was trained on Human coding sequences and those of 12 further species. At a very minimum the two models saw approximately the same amount of genomics content during training (though the content is used in different ways). Then we also evaluate the GPN model while masking the aux sequences (by setting all aux species bases for the focal base to "-"). This scenario is comparable to inferences on a patients genome where the patient has a genomic feature (a small inversion, insertion, deletion or duplication etc ) that doesnt align to other species give it is novel, but we still want to infer the potential deleteriousness. **Our first hypotheses is** that without the help of the auxiliary sequences the GPN model's accuracy takes a dive. **Our second hypothesis i**s that for bases where the human base differs from the most frequently observed ancestral base, the GPN model accuracy will take a dive, but DNABert might not. One of these hypothesis will proof true...
+We have trained two models with very different architectures and goals. We can now compare these models (though it remains to be seen whether we can do so fairly). The first comparison we'll make is whether the two models accurately predict the human base. This is an entirely unfair comparison—the deck is stacked massively towards the GPN-BERT model we trained in Chapter 4, as for that model we hard-code evolutionary history in the embedding, and when masking, we only mask the human base. So we'll do a few things to level the playing field. First, we trained the GPN model with access to only 12 out of 100 auxiliary species. As you might recall, the DNABERT model developed and trained in Chapter 2, a version of which is available on Hugging Face ([MichelNivard/DNABert-CDS-13Species-v0.1](https://huggingface.co/MichelNivard/DNABert-CDS-13Species-v0.1)), was trained on human coding sequences and those of 12 further species. At a minimum, the two models saw approximately the same amount of genomic content during training (though the content is used in different ways). Then we also evaluate the GPN model while masking the auxiliary sequences (by setting all auxiliary species bases for the focal base to "-"). This scenario is comparable to inferences on a patient's genome where the patient has a genomic feature (a small inversion, insertion, deletion, or duplication, etc.) that doesn't align to other species since it is novel, but we still want to infer its potential deleteriousness. **Our first hypothesis is** that without the help of the auxiliary sequences, the GPN model's accuracy takes a dive. **Our second hypothesis is** that for bases where the human base differs from the most frequently observed ancestral base, the GPN model accuracy will take a dive, but DNABERT might not. One of these hypotheses will prove true...
 
 ## Evaluating Model accuracy (code)
 
-Below is a minimal code example where we 1. load the two models and write a helper function (`get_predictions`) that evaluates the likelihood of a given base in both models. This function can the repetitive be apply to generate all kinds of comparisons. the full; (and somewhat verbose) code for those evaluations is found in the script`Chapter5_competative_eval.py` available on GitHub: <https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/DNA/Chapter_5>
+Below is a minimal code example where we 1. load the two models and write a helper function (`get_predictions`) that evaluates the likelihood of a given base in both models. This function can then be repeatedly applied to generate all kinds of comparisons. The full (and somewhat verbose) code for those evaluations is found in the script `Chapter5_competative_eval.py` available on GitHub: <https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/DNA/Chapter_5>
 
-The important skill we learn here is to laod two models, both trained on slightly different datasets, with slightly different DNA tokenizers, and apply them both to a single dataset, so we csn make a direct comparison.
+The important skill we learn here is to load two models, both trained on slightly different datasets, with slightly different DNA tokenizers, and apply them both to a single dataset, so we can make a direct comparison.
 
-``` python
+```python
 # --------------------------------
 # 1. Competative evaluations!!
 # --------------------------------
@@ -48,7 +48,7 @@ id_to_token_gpn = {v: k for k, v in tokenizer_gpn.get_vocab().items()}
 id_to_token_dnabert = {v: k for k, v in tokenizer_dnabert.get_vocab().items()}
 
 
-# Helper function to get predictions of the same base for both models it requires all the modle specific elements, tthe models themselves, attention masks, tokenizers, tokenized inputs, for both models.
+# Helper function to get predictions of the same base for both models it requires all the model-specific elements, the models themselves, attention masks, tokenizers, tokenized inputs, for both models.
 
 def get_predictions(pos, input_ids_gpn, attention_mask_gpn, aux_features,
                    input_ids_dnabert, attention_mask_dnabert,
@@ -93,9 +93,9 @@ def get_predictions(pos, input_ids_gpn, attention_mask_gpn, aux_features,
 
 ## Evaluating Model accuracy (results)
 
-When evaluating up to 500 bases (first 500) for the first 30 genes, and all bases where the human base doesn't match the most frequently observed ancestral base across 100 species we can generate model accuracy stats. Here we use the mean \# bases correctly called by the model (where called means the model assigns the true human references base the highest probability when predicting it.). As expected the GPN based Bert model we trained, which has access to the evolutionary history of the base, blows vanilla DNA Bert out of the water. This isn't unexpected though, very large portions of the coding sequences are conserved across species, and training on human species and 12 allingned species, where those other species are available at inferences time just makes prediction VERY easy. However as per out first hypothesis the GPN model doesn not do well if we mask the bases evolutionary history. In those cases its bested by DNA Bert, which is trained to predict sequences without explicit evolutionary history and so does do a reasonable job at it.
+When evaluating up to 500 bases (first 500) for the first 30 genes, and all bases where the human base doesn't match the most frequently observed ancestral base across 100 species we can generate model accuracy stats. Here we use the mean # bases correctly called by the model (where called means the model assigns the true human references base the highest probability when predicting it.). As expected the GPN based Bert model we trained, which has access to the evolutionary history of the base, blows vanilla DNA Bert out of the water. This isn't unexpected though, very large portions of the coding sequences are conserved across species, and training on human species and 12 aligned species, where those other species are available at inference time just makes prediction VERY easy. However as per our first hypothesis the GPN model doesn't do well if we mask the bases evolutionary history. In those cases, it's bested by DNA Bert, which is trained to predict sequences without explicit evolutionary history and so does a reasonable job at it.
 
-``` python
+```python
 # 1. Overall Accuracy Bar Plot
 plt.figure(figsize=(10, 6))
 accuracies = {
@@ -113,15 +113,15 @@ plt.tight_layout()
 plt.show()
 ```
 
-![**Figure 1**: Model prediction accuracy compared across a common set of coding sequences of 30 genes (up to ±15k bases). GPN (no species) are predictions by the GPN moel but with other species base masked (changed to "-" , the missing/sequences gap token) during prediction. ](images/paste-20.png)
+![**Figure 1**: Model prediction accuracy compared across a common set of coding sequences of 30 genes (up to ±15k bases). GPN (no species) are predictions by the GPN model but with other species base masked (changed to "-" , the missing/sequences gap token) during prediction. ](images/paste-20.png)
 
-I had expected that if considering bases where the human references base differs fro the majority of the other species bases, and the base is highly conserved (\> 75%) then GPN models might be thrown off, and perhaps DNA Bert would not? It appears though (See **Figure 2**) that all models drop in accuracy, but DNA BErt drops more than the GPN model! So are second hypothesis wasn't confirmed. Now this is a textbook like document, these models are under trained, we only evaluated the first 500 bases in 30 genes, within them there are only a few hundred bases where the human and dominant ancestral base differ, so please don't generalize any of these concussions!
+I had expected that if considering bases where the human references base differs from the majority of the other species bases, and the base is highly conserved (> 75%) then GPN models might be thrown off, and perhaps DNA Bert would not? It appears though (See **Figure 2**) that all models drop in accuracy, but DNA Bert drops more than the GPN model! So our second hypothesis wasn't confirmed. Now this is a textbook-like document, these models are under-trained, we only evaluated the first 500 bases in 30 genes, within them there are only a few hundred bases where the human and dominant ancestral base differ, so please don't generalize any of these conclusions!
 
 ![**Figure 2:** The model prediction accuracy for bases where the human base differs from the base most frequently observed in other species.](images/paste-21.png)
 
-Finally we can plot model accuracy as a function of "conservation score" which is an ad-hoc measure of the % of valid bases (so A, T, C, G) across species that is the dominant most frequent) base. You could argue a more comprehensive conservation score might account for the number of species where the part of the sequences could not be aligned (e.g. the percentage of "-" bases), and that might be a great excersize for you!
+Finally, we can plot model accuracy as a function of "conservation score" which is an ad-hoc measure of the % of valid bases (so A, T, C, G) across species that is the dominant most frequent) base. You could argue a more comprehensive conservation score might account for the number of species where the part of the sequences could not be aligned (e.g. the percentage of "-" bases), and that might be a great exercise for you!
 
-``` Python
+```python
 # 4. Conservation Score vs Accuracy
 plt.figure(figsize=(12, 6))
 conservation_bins = np.linspace(0, 1, 11)
@@ -142,3 +142,34 @@ plt.show()
 ```
 
 ![](images/paste-22.png)
+
+## Discussion of Results
+
+Our comparative analysis of the GPN-BERT and DNABERT models reveals several key insights:
+
+1. **Base Prediction Performance**:
+   - GPN-BERT with evolutionary context significantly outperforms DNABERT in standard conditions
+   - When evolutionary information is masked, GPN-BERT's performance drops below DNABERT
+   - Both models show reduced accuracy when predicting bases that differ from the ancestral consensus
+
+2. **Conservation Score Impact**:
+   - Higher conservation scores correlate with better prediction accuracy across all models
+   - The relationship between conservation and accuracy appears to be non-linear
+   - GPN-BERT maintains a performance advantage even at lower conservation levels
+
+3. **Model Architecture Trade-offs**:
+   - GPN-BERT's superior performance comes at the cost of requiring cross-species alignment data
+   - DNABERT shows more robust performance when evolutionary context is unavailable
+   - The results suggest potential benefits in combining both approaches
+
+These findings align with our project's focus on comparing these two DNA language models, particularly in their ability to handle positions where human sequences differ from ancestral sequences. The analysis of prediction ranks and base-by-base accuracy provides valuable insights into each model's strengths and limitations.
+
+## Next Steps
+
+In the upcoming chapters, we will:
+1. Explore hybrid architectures that combine the strengths of both models
+2. Evaluate performance on specific mutation types
+3. Investigate the relationship between conservation patterns and prediction accuracy
+4. Consider practical applications in genomic research and clinical settings
+
+The code and detailed analysis for all experiments are available in the project repository, allowing for reproduction and extension of these results.

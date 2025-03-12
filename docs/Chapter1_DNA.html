@@ -153,13 +153,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Preamble1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">What is this book about?</span></a>
+ <span class="menu-text">What is this Book About?</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Preamble2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">How to read this book</span></a>
+ <span class="menu-text">How to Read this Book</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -204,7 +204,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter6_DNA.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A review of current DNA language models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></span></a>
   </div>
 </li>
       </ul>
@@ -289,32 +289,32 @@ Abstract
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>In this chapter we’ll learn how to create a high fidelity DNA datasets. Two datasets I have created are available on Huggingface: <a href="https://huggingface.co/datasets/MichelNivard/Human-genome-CDS-GRCh38">the human CDS</a> and <a href="https://huggingface.co/datasets/MichelNivard/Coding_Sequences_13_Species">the CDS of 13 vertebrae species</a>.</p>
+<p>In this chapter, we’ll learn how to create high-fidelity DNA datasets. Two datasets I have created are available on Huggingface: <a href="https://huggingface.co/datasets/MichelNivard/Human-genome-CDS-GRCh38">the human CDS</a> and <a href="https://huggingface.co/datasets/MichelNivard/Coding_Sequences_13_Species">the CDS of 13 vertebrate species</a>.</p>
 <p>Scripts for this chapter are found here: <a href="https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/DNA/Chapter_1" class="uri">https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/DNA/Chapter_1</a></p>
 </div>
 </div>
 <section id="garbage-in-garbage-out" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="garbage-in-garbage-out"><span class="header-section-number">1.1</span> Garbage in garbage out</h2>
-<p>High-quality data is essential for training effective machine learning models. In natural language processing (NLP), researchers invest significant effort in curating clean datasets from raw internet text. For example a dataset like ‘fineweb-edu’ contains English text that is of very high quality. Models trained on fineweb-edu (and similar high quality datasets) will improve MUCH faster then the equivalent model trained on other less carefully processed and evaluated datasets.</p>
+<p>High-quality data is essential for training effective machine learning models. In natural language processing (NLP), researchers invest significant effort in curating clean datasets from raw internet text. For example, a dataset like ‘fineweb-edu’ contains English text that is of very high quality. Models trained on fineweb-edu (and similar high-quality datasets) will improve much faster than the equivalent model trained on other less carefully processed and evaluated datasets.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://cdn-uploads.huggingface.co/production/uploads/61c141342aac764ce1654e43/QqXOM8h_ZjjhuCv71xmV7.png" class="img-fluid figure-img"></p>
-<figcaption>Relative training efficiency using a high quality dataset like fineweb-edu and other massive datasets of English language texts. Image obtained from: https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu</figcaption>
+<figcaption>Relative training efficiency using a high-quality dataset like fineweb-edu and other massive datasets of English language texts. Image obtained from: https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu</figcaption>
 </figure>
 </div>
-<p>Those with experience with <strong>genetics</strong> will know most of what I am about to explain when it comes to the sources of genetic data and the file formats these come in. Those with an <strong>ML</strong> background will be very familiar with Huggingface and the amazing data/model/training integration their libraries offer. Assembing high quality genomics datasets for language modeling requires familiarity with both. When working with DNA, RNA, and protein sequences, the authoritative sources of data are specialized databases and infrastructures rather than data scraped from the internet. If you want to learn to train DNA/RNA/Protein-based language model, we must learn how, and where, to retrieve data and convert it into a structured format.</p>
+<p>Those with experience in <strong>genetics</strong> will know most of what I am about to explain when it comes to the sources of genetic data and the file formats these come in. Those with an <strong>ML</strong> background will be very familiar with Huggingface and the amazing data/model/training integration their libraries offer. Assembling high-quality genomics datasets for language modeling requires familiarity with both. When working with DNA, RNA, and protein sequences, the authoritative sources of data are specialized databases and infrastructures rather than data scraped from the internet. If you want to learn to train DNA/RNA/Protein-based language models, we must learn how, and where, to retrieve data and convert it into a structured format.</p>
 <p>In this tutorial, we will begin by collecting coding DNA sequences (CDS) from the human genome using the Ensembl database via BioMart. The goal is to store these sequences in a format suitable for training a DNA-based language model. We will then upload the processed data to <a href="https://huggingface.co">Huggingface</a>, a platform for hosting datasets and models for machine learning tasks.</p>
 <p>This chapter will introduce key biological and computational concepts, ensuring that both biology newcomers and those unfamiliar with language modeling tools can follow along.</p>
 </section>
 <section id="understanding-ensembl-and-biomart" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="understanding-ensembl-and-biomart"><span class="header-section-number">1.2</span> Understanding Ensembl and BioMart</h2>
-<p>Fortunately for us, there is decades of work cleaning up genomic data and we can just go and get it from US government funded websites, where it is deposited by the global scientific community. <strong>Ensembl</strong> is a genomic database that provides extensive annotations for various species, including humans. It offers access to gene sequences, transcript annotations, and protein-coding information. One of its most powerful tools is <strong>BioMart</strong>, a flexible data retrieval system that allows users to download specific genomic datasets easily.</p>
-<p>If we want t work with the data in a language model its efficient to store it in a format that is tailored for machine learning libraries. Unlike text-based NLP datasets, genomic data is structured differently and must be properly formatted before use in a model.</p>
+<p>Fortunately for us, there is decades of work cleaning up genomic data, and we can just go and get it from US government-funded websites, where it is deposited by the global scientific community. <strong>Ensembl</strong> is a genomic database that provides extensive annotations for various species, including humans. It offers access to gene sequences, transcript annotations, and protein-coding information. One of its most powerful tools is <strong>BioMart</strong>, a flexible data retrieval system that allows users to download specific genomic datasets easily.</p>
+<p>If we want to work with the data in a language model, it’s efficient to store it in a format that is tailored for machine learning libraries. Unlike text-based NLP datasets, genomic data is structured differently and must be properly formatted before use in a model.</p>
 <section id="what-are-fasta-files" class="level3" data-number="1.2.1">
 <h3 data-number="1.2.1" class="anchored" data-anchor-id="what-are-fasta-files"><span class="header-section-number">1.2.1</span> What Are FASTA Files?</h3>
 <p>A <strong>FASTA file</strong> is a simple text-based format used for storing biological sequences. Each entry in a FASTA file consists of: 1. A <strong>header line</strong> (starting with <code>&gt;</code>), which contains metadata such as gene IDs and chromosome locations. 2. A <strong>sequence</strong> line, which contains the nucleotide or protein sequence.</p>
 <p>There is a very comprehensive Wikipedia entry on the FASTA format.</p>
-<p>“Sequences may be&nbsp;protein sequences&nbsp;or&nbsp;nucleic acid&nbsp;sequences, and they can contain gaps or alignment characters (see&nbsp;sequence alignment). Sequences are expected to be represented in the standard IUB/IUPAC&nbsp;amino acid&nbsp;and&nbsp;nucleic acid&nbsp;codes, with these exceptions: lower-case letters are accepted and are mapped into upper-case; a single hyphen or dash can be used to represent a gap character; and in amino acid sequences, U and * are acceptable letters (see below). Numerical digits are not allowed but are used in some databases to indicate the position in the sequence.” ((source: <a href="https://en.wikipedia.org/wiki/FASTA_format" class="uri">https://en.wikipedia.org/wiki/FASTA_format</a>))</p>
+<p>“Sequences may be protein sequences or nucleic acid sequences, and they can contain gaps or alignment characters (see sequence alignment). Sequences are expected to be represented in the standard IUB/IUPAC amino acid and nucleic acid codes, with these exceptions: lower-case letters are accepted and are mapped into upper-case; a single hyphen or dash can be used to represent a gap character; and in amino acid sequences, U and * are acceptable letters (see below). Numerical digits are not allowed but are used in some databases to indicate the position in the sequence.” ((source: <a href="https://en.wikipedia.org/wiki/FASTA_format" class="uri">https://en.wikipedia.org/wiki/FASTA_format</a>))</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -352,7 +352,7 @@ Abstract
 <tr class="even">
 <td style="text-align: center;">(i)</td>
 <td style="text-align: center;">i</td>
-<td style="text-align: center;"><a href="https://en.wikipedia.org/wiki/Inosine" title="Inosine"><strong>i</strong>nosine</a>&nbsp;(non-standard)</td>
+<td style="text-align: center;"><a href="https://en.wikipedia.org/wiki/Inosine" title="Inosine"><strong>i</strong>nosine</a> (non-standard)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">R</td>
@@ -367,12 +367,12 @@ Abstract
 <tr class="odd">
 <td style="text-align: center;">K</td>
 <td style="text-align: center;">G, T or U</td>
-<td style="text-align: center;">bases which are&nbsp;<a href="https://en.wikipedia.org/wiki/Ketone" title="Ketone"><strong>K</strong>etones</a></td>
+<td style="text-align: center;">bases which are <a href="https://en.wikipedia.org/wiki/Ketone" title="Ketone"><strong>K</strong>etones</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">M</td>
 <td style="text-align: center;">A or C</td>
-<td style="text-align: center;">bases with&nbsp;<a href="https://en.wikipedia.org/wiki/Amino" title="Amino">a<strong>M</strong>ino groups</a></td>
+<td style="text-align: center;">bases with <a href="https://en.wikipedia.org/wiki/Amino" title="Amino">a<strong>M</strong>ino groups</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">S</td>
@@ -387,22 +387,22 @@ Abstract
 <tr class="odd">
 <td style="text-align: center;">B</td>
 <td style="text-align: center;">not A (i.e.&nbsp;C, G, T or U)</td>
-<td style="text-align: center;"><strong>B</strong>&nbsp;comes after A</td>
+<td style="text-align: center;"><strong>B</strong> comes after A</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">D</td>
 <td style="text-align: center;">not C (i.e.&nbsp;A, G, T or U)</td>
-<td style="text-align: center;"><strong>D</strong>&nbsp;comes after C</td>
+<td style="text-align: center;"><strong>D</strong> comes after C</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">H</td>
 <td style="text-align: center;">not G (i.e., A, C, T or U)</td>
-<td style="text-align: center;"><strong>H</strong>&nbsp;comes after G</td>
+<td style="text-align: center;"><strong>H</strong> comes after G</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">V</td>
 <td style="text-align: center;">neither T nor U (i.e.&nbsp;A, C or G)</td>
-<td style="text-align: center;"><strong>V</strong>&nbsp;comes after U</td>
+<td style="text-align: center;"><strong>V</strong> comes after U</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">N</td>
@@ -431,7 +431,7 @@ Abstract
 </tr>
 <tr class="even">
 <td style="text-align: center;">B</td>
-<td style="text-align: center;"><a href="https://en.wikipedia.org/wiki/Aspartic_acid" title="Aspartic acid">Aspartic acid</a>&nbsp;(D) or&nbsp;<a href="https://en.wikipedia.org/wiki/Asparagine" title="Asparagine">Asparagine</a>&nbsp;(N)</td>
+<td style="text-align: center;"><a href="https://en.wikipedia.org/wiki/Aspartic_acid" title="Aspartic acid">Aspartic acid</a> (D) or <a href="https://en.wikipedia.org/wiki/Asparagine" title="Asparagine">Asparagine</a> (N)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">C</td>
@@ -463,7 +463,7 @@ Abstract
 </tr>
 <tr class="even">
 <td style="text-align: center;">J</td>
-<td style="text-align: center;"><a href="https://en.wikipedia.org/wiki/Leucine" title="Leucine">Leucine</a>&nbsp;(L) or&nbsp;<a href="https://en.wikipedia.org/wiki/Isoleucine" title="Isoleucine">Isoleucine</a>&nbsp;(I)</td>
+<td style="text-align: center;"><a href="https://en.wikipedia.org/wiki/Leucine" title="Leucine">Leucine</a> (L) or <a href="https://en.wikipedia.org/wiki/Isoleucine" title="Isoleucine">Isoleucine</a> (I)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">K</td>
@@ -483,7 +483,7 @@ Abstract
 </tr>
 <tr class="odd">
 <td style="text-align: center;">O</td>
-<td style="text-align: center;"><a href="https://en.wikipedia.org/wiki/Pyrrolysine" title="Pyrrolysine">Pyrrolysine</a>&nbsp;(rare)</td>
+<td style="text-align: center;"><a href="https://en.wikipedia.org/wiki/Pyrrolysine" title="Pyrrolysine">Pyrrolysine</a> (rare)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">P</td>
@@ -507,7 +507,7 @@ Abstract
 </tr>
 <tr class="odd">
 <td style="text-align: center;">U</td>
-<td style="text-align: center;"><a href="https://en.wikipedia.org/wiki/Selenocysteine" title="Selenocysteine">Selenocysteine</a>&nbsp;(rare)</td>
+<td style="text-align: center;"><a href="https://en.wikipedia.org/wiki/Selenocysteine" title="Selenocysteine">Selenocysteine</a> (rare)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">V</td>
@@ -523,7 +523,7 @@ Abstract
 </tr>
 <tr class="odd">
 <td style="text-align: center;">Z</td>
-<td style="text-align: center;"><a href="https://en.wikipedia.org/wiki/Glutamic_acid" title="Glutamic acid">Glutamic acid</a>&nbsp;(E) or&nbsp;<a href="https://en.wikipedia.org/wiki/Glutamine" title="Glutamine">Glutamine</a>&nbsp;(Q)</td>
+<td style="text-align: center;"><a href="https://en.wikipedia.org/wiki/Glutamic_acid" title="Glutamic acid">Glutamic acid</a> (E) or <a href="https://en.wikipedia.org/wiki/Glutamine" title="Glutamine">Glutamine</a> (Q)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">X</td>
@@ -539,16 +539,16 @@ Abstract
 </tr>
 </tbody>
 </table>
-<p>You’ll notice the FASTA format has a well defined structure, and it could be leveraged to build a complete tokenizer, for now though our 4 character (+6 special characters) tokenizer will have to do.</p>
+<p>You’ll notice the FASTA format has a well-defined structure, and it could be leveraged to build a complete tokenizer. For now, though, our 4-character (+6 special characters) tokenizer will have to do.</p>
 </section>
 <section id="why-focus-on-coding-dna-sequences-cds" class="level3" data-number="1.2.2">
 <h3 data-number="1.2.2" class="anchored" data-anchor-id="why-focus-on-coding-dna-sequences-cds"><span class="header-section-number">1.2.2</span> Why Focus on Coding DNA Sequences (CDS)?</h3>
 <p>In the example, we retrieve the <strong>human coding DNA sequences (CDS)</strong>, which represent the DNA sequence of protein-coding regions of genes.</p>
-<p>While our ultimate goal is to model the entire human genome—and potentially multiple genomes across species or individuals—such tasks require significant computational resources. The tutorials in this book are designed to be accessible, running efficiently on a MacBook or Google Colab. Therefore, we focus on <strong>CDS</strong>, which are highly structured DNA sequences within genes, that directly transcribed into RNA which is in turn translate into proteins. the Table below contains the direct translation from 3 letter DNA sequence to amino-acid (which are the building blocks of proteins).</p>
+<p>While our ultimate goal is to model the entire human genome—and potentially multiple genomes across species or individuals—such tasks require significant computational resources. The tutorials in this book are designed to be accessible, running efficiently on a MacBook or Google Colab. Therefore, we focus on <strong>CDS</strong>, which are highly structured DNA sequences within genes, that are directly transcribed into RNA which is in turn translated into proteins. The table below contains the direct translation from 3-letter DNA sequences to amino acids (which are the building blocks of proteins).</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/paste-3.png" class="img-fluid figure-img"></p>
-<figcaption>The Genetic code to translate codins (3 leter DNA sequences) to amino-acids that are in turn the building blocks of proteins (source: https://a-little-book-of-r-for-bioinformatics.readthedocs.io/en/latest/_images/P7_image1.png)</figcaption>
+<figcaption>The Genetic code to translate codins (3-letter DNA sequences) to amino-acids that are in turn the building blocks of proteins (source: https://a-little-book-of-r-for-bioinformatics.readthedocs.io/en/latest/_images/P7_image1.png)</figcaption>
 </figure>
 </div>
 <p>In contrast, much of the rest of the genome consists of regulatory regions, which are more complex and less structured. CDS sequences provide a strong foundation for a small DNA-based language model because they contain well-defined biological structure, making them a logical starting point before expanding to more complex genomic elements.</p>
@@ -561,7 +561,7 @@ Abstract
 </section>
 <section id="the-script-downloading-and-formatting-human-cds-data" class="level2" data-number="1.4">
 <h2 data-number="1.4" class="anchored" data-anchor-id="the-script-downloading-and-formatting-human-cds-data"><span class="header-section-number">1.4</span> The Script: Downloading and Formatting Human CDS Data</h2>
-<p>Below is the R script that downloads human CDS from Ensembl using BioMart, extracts metadata, and saves the processed data into a CSV file. the package we use, <code>biomartr</code> isn’t the official R package but its a great option! it has very extensive documentation, so if you want to download other sequences in the future make sure to start here: <a href="https://docs.ropensci.org/biomartr/" class="uri">https://docs.ropensci.org/biomartr/</a></p>
+<p>Below is the R script that downloads human CDS from Ensembl using BioMart, extracts metadata, and saves the processed data into a CSV file. The package we use, <code>biomartr</code>, isn’t the official R package, but it’s a great option! It has very extensive documentation, so if you want to download other sequences in the future, make sure to start here: <a href="https://docs.ropensci.org/biomartr/" class="uri">https://docs.ropensci.org/biomartr/</a></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install necessary packages</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"biomartr"</span>, <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"BiocManager"</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
@@ -619,7 +619,7 @@ Abstract
 <span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="co"># Print sample data</span></span>
 <span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(metadata_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>You can run the script yourself, but I have also gone ahead and uploaded it to huggingface: <a href="https://huggingface.co/datasets/MichelNivard/Human-genome-CDS-GRCh38" class="uri">https://huggingface.co/datasets/MichelNivard/Human-genome-CDS-GRCh38</a></p>
+<p>You can run the script yourself, but I have also gone ahead and uploaded it to Huggingface: <a href="https://huggingface.co/datasets/MichelNivard/Human-genome-CDS-GRCh38" class="uri">https://huggingface.co/datasets/MichelNivard/Human-genome-CDS-GRCh38</a></p>
 </section>
 <section id="summary" class="level2" data-number="1.5">
 <h2 data-number="1.5" class="anchored" data-anchor-id="summary"><span class="header-section-number">1.5</span> Summary</h2>
@@ -1051,8 +1051,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./Preamble2.html" class="pagination-link" aria-label="How to read this book">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">How to read this book</span>
+      <a href="./Preamble2.html" class="pagination-link" aria-label="How to Read this Book">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">How to Read this Book</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
