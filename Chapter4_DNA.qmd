@@ -241,32 +241,23 @@ I promised dwe'd have to deeply consider what we count as prediction, and that's
 
 ![**Figure 4.3** The mouse genome, with in it sections of the human genome (color codes) that are largely preserved across evolution (figure 3 in [@initial2002])](images/paste-18.png){fig-align="center"}
 
-In training our GPNBert model with auxiliary sequences we train by **masking the human base only** (following [@Benegas2024]). This very obviously, and dramatically, improves base prediction, and does so very quickly. after a few hundred iterations (trained on about 5000 genes) the model learns that it should just assign the base most often found in other species. But as the evaluations the authors of the original GNP-MSA paper make clear, eventually the model learns more than that. The model outperforms just picking the consensus base across species. It is a better predictor of the allele frequency in humans then just picking the allele frequency across species ans an estimate of the allele frequency within human.
-
-### Ablation studies
-
-The authors use ablation studies to proof their model learns more then just the base history, and still learns from the base in its sequence. Anyone who wants to train language models should come to understand ablation studies so this is a good a point as any to discuss theirs and run our own!
+In training our GPNBert model with auxiliary sequences we train by **masking the human base only** (following [@Benegas2024]). This very obviously, and dramatically, improves base prediction, and does so very quickly. after a few hundred iterations (trained on about 5000 genes) the model learns that it should just assign the base most often found in other species. But as the evaluations the authors of the original GNP-MSA paper make clear, eventually the model learns more than that. The model outperforms just picking the consensus base across species. They are able to show fairly convisingly that the predicted probabilities are a better predictor of the allele frequency in humans then just picking the allele frequency across species (Figure 2 B in @Benegas2024) as an estimate of the allele frequency within human. Furthermoe their model is able to pick off deleterious mutations better then CADD scores, based on supervised machine learning ([@rentzsch2021]) or than sophistical evolutionary constraint scores ([@sullivan2023]).
 
 ## Recap of Our Approach
 
-In **Chapter 2**, we trained a vanilla **BERT** on DNA sequences alone — treating DNA as just another language. That model only had access to the **human sequence**, with no evolutionary context.
+In Chapter 2, we trained a vanilla BERT on DNA sequences alone — treating DNA as just another language. That model only had access to the human sequence, with no evolutionary context.
 
-In **this chapter**, we’ve re-imagined that process. Instead of treating A, T, G, C, - as abstract symbols, leaving the model entirely unsupervised when picking embedding, we inject **evolutionary history directly into the embedding directly**. This allows our model to:
+In this chapter, we’ve re-imagined that process. Instead of treating A, T, G, C, - as abstract symbols, leaving the model entirely unsupervised when picking embedding, we inject evolutionary history directly into the embedding directly. This allows our model to:
 
--   Use the aligned species data as **a rich evolutionary prior**.
--   Still leverage transformers for learning **sequence motifs**.
--   Predict masked human bases using both **local sequence** and **cross-species evolutionary patterns**.
-
-## Emperical ideas to explore
-
-Obviously embedding
+-   Use the aligned species data as a rich evolutionary prior.
+-   Still leverage transformers for learning sequence motifs.
+-   Predict masked human bases using both local sequence and cross-species evolutionary patterns.
 
 ## Preview of Chapter 5
 
 In **Chapter 5**, we will put these two models — **Vanilla BERT** and **GPN-BERT** — to the test. We will evaluate their performance on:
 
 -   Predicting masked bases (MLM accuracy).
--   Identifying regulatory elements.
 -   Predicting the functional impact of mutations.
 
 This head-to-head comparison will highlight the **strengths and weaknesses** of each approach and show the value of embedding **evolutionary context directly into genomic language models**.

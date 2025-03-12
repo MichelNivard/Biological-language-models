@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -200,8 +234,15 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#evaluating-model-accuracy-code" id="toc-evaluating-model-accuracy-code" class="nav-link active" data-scroll-target="#evaluating-model-accuracy-code"><span class="header-section-number">5.1</span> Evaluating Model accuracy (code)</a></li>
+  <li><a href="#evaluating-model-accuracy-results" id="toc-evaluating-model-accuracy-results" class="nav-link" data-scroll-target="#evaluating-model-accuracy-results"><span class="header-section-number">5.2</span> Evaluating Model accuracy (results)</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -237,16 +278,136 @@ Abstract
 <div class="callout-body-container callout-body">
 <p>In Chapter 5, we will put these two models — Vanilla BERT and GPN-MSA-BERT — to the test. We will evaluate their performance on:</p>
 <ul>
-<li><p>Predicting masked bases (MLM accuracy).</p></li>
-<li><p>Identifying regulatory elements.</p></li>
-<li><p>Predicting the functional impact of mutations.</p></li>
+<li>Predicting masked bases (MLM accuracy).</li>
+<li>Predicting the functional impact of mutations.</li>
 </ul>
 <p>This head-to-head comparison will highlight the strengths and weaknesses of each approach. Finally <strong>we’ll build a hybrid model</strong>, in which the DNA sequence is model is trained in evolutionary context and in its sequence context and the results are blended, a model architecture that is a little like alphafold, the Nobel winning protein language model developed at google deepmind.</p>
-<p>All scripts for this chapter are found here: <a href="https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Chapter_4" class="uri">https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Chapter_4</a></p>
+<p>All scripts for this chapter are found here: <a href="https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/DNA/Chapter_5" class="uri">https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/DNA/Chapter_5</a></p>
 </div>
 </div>
+<p>So we have trained two models. Admittedly with very different architectures, and goals. We can now go can compare these models (though It remains to be seen whether we can do so fairly). The comparisons we’ll make first is whether the two model accurately predict the human base. This is an entirely unfair comparison, the deck is stacked massively towards the GPN Bert model we trained in Chapter 4, as for that model we hard code evolutionary history in the embedding, and when masking we only mask the human base. So we’ll do a few things to level the playing field. First we trained the GPN model with access to only 12 out of 100 auxiliary species. As you might recall the DNABert model developed and trained in Chapter 2, a version of which is available on huggingface (<a href="https://huggingface.co/MichelNivard/DNABert-CDS-13Species-v0.1">MichelNivard/DNABert-CDS-13Species-v0.1</a>) was trained on Human coding sequences and those of 12 further species. At a very minimum the two models saw approximately the same amount of genomics content during training (though the content is used in different ways). Then we also evaluate the GPN model while masking the aux sequences (by setting all aux species bases for the focal base to “-”). This scenario is comparable to inferences on a patients genome where the patient has a genomic feature (a small inversion, insertion, deletion or duplication etc ) that doesnt align to other species give it is novel, but we still want to infer the potential deleteriousness. <strong>Our first hypotheses is</strong> that without the help of the auxiliary sequences the GPN model’s accuracy takes a dive. <strong>Our second hypothesis i</strong>s that for bases where the human base differs from the most frequently observed ancestral base, the GPN model accuracy will take a dive, but DNABert might not. One of these hypothesis will proof true…</p>
+<section id="evaluating-model-accuracy-code" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="evaluating-model-accuracy-code"><span class="header-section-number">5.1</span> Evaluating Model accuracy (code)</h2>
+<p>Below is a minimal code example where we 1. load the two models and write a helper function (<code>get_predictions</code>) that evaluates the likelihood of a given base in both models. This function can the repetitive be apply to generate all kinds of comparisons. the full; (and somewhat verbose) code for those evaluations is found in the script<code>Chapter5_competative_eval.py</code> available on GitHub: <a href="https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/DNA/Chapter_5" class="uri">https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/DNA/Chapter_5</a></p>
+<p>The important skill we learn here is to laod two models, both trained on slightly different datasets, with slightly different DNA tokenizers, and apply them both to a single dataset, so we csn make a direct comparison.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Competative evaluations!!</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Load GPN-enhanced ModernBERT (your custom model)</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> torch.device(<span class="st">"mps"</span> <span class="cf">if</span> torch.backends.mps.is_available() <span class="cf">else</span> <span class="st">"cpu"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>model_gpn <span class="op">=</span> torch.load(<span class="st">"./bert-dna-gpn/gpn_bert_model.pt"</span>) <span class="co"># Assuming it's already trained and loaded</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>tokenizer_gpn <span class="op">=</span> AutoTokenizer.from_pretrained(<span class="st">"./bert-dna-gpn"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the full model</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>model_gpn.<span class="bu">eval</span>()</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Load DNABert-CDS-13Species</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>model_name_dnabert <span class="op">=</span> <span class="st">"MichelNivard/DNABert-CDS-13Species-v0.1"</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>tokenizer_dnabert <span class="op">=</span> AutoTokenizer.from_pretrained(model_name_dnabert)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>model_dnabert <span class="op">=</span> AutoModelForMaskedLM.from_pretrained(model_name_dnabert).to(device)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>model_dnabert.<span class="bu">eval</span>()</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Helper to get vocab mapping</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>id_to_token_gpn <span class="op">=</span> {v: k <span class="cf">for</span> k, v <span class="kw">in</span> tokenizer_gpn.get_vocab().items()}</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>id_to_token_dnabert <span class="op">=</span> {v: k <span class="cf">for</span> k, v <span class="kw">in</span> tokenizer_dnabert.get_vocab().items()}</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Helper function to get predictions of the same base for both models it requires all the modle specific elements, tthe models themselves, attention masks, tokenizers, tokenized inputs, for both models.</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_predictions(pos, input_ids_gpn, attention_mask_gpn, aux_features,</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>                   input_ids_dnabert, attention_mask_dnabert,</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>                   model_gpn, model_dnabert, tokenizer_gpn, tokenizer_dnabert,</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>                   device):</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Helper function to get predictions from both models for a specific position"""</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Mask the position in both models</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    masked_input_ids_gpn <span class="op">=</span> input_ids_gpn.clone()</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    masked_input_ids_gpn[<span class="dv">0</span>, pos] <span class="op">=</span> tokenizer_gpn.mask_token_id</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    masked_input_ids_dnabert <span class="op">=</span> input_ids_dnabert.clone()</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    masked_input_ids_dnabert[<span class="dv">0</span>, pos] <span class="op">=</span> tokenizer_dnabert.mask_token_id</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get predictions from GPN</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>        output_gpn <span class="op">=</span> model_gpn(</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>            input_ids<span class="op">=</span>masked_input_ids_gpn,</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>            attention_mask<span class="op">=</span>attention_mask_gpn,</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>            aux_features<span class="op">=</span>aux_features</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>        logits_gpn <span class="op">=</span> output_gpn.logits</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>        log_probs_gpn <span class="op">=</span> torch.log_softmax(logits_gpn[<span class="dv">0</span>, pos], dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Get predictions from DNABERT</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>        output_dnabert <span class="op">=</span> model_dnabert(</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>            masked_input_ids_dnabert,</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>            attention_mask<span class="op">=</span>attention_mask_dnabert</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>        logits_dnabert <span class="op">=</span> output_dnabert.logits</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>        log_probs_dnabert <span class="op">=</span> torch.log_softmax(logits_dnabert[<span class="dv">0</span>, pos], dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get top predictions</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>    top_preds_gpn <span class="op">=</span> torch.topk(log_probs_gpn, k<span class="op">=</span><span class="dv">4</span>)</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>    top_preds_dnabert <span class="op">=</span> torch.topk(log_probs_dnabert, k<span class="op">=</span><span class="dv">4</span>)</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>        <span class="st">'gpn_probs'</span>: top_preds_gpn,</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>        <span class="st">'dnabert_probs'</span>: top_preds_dnabert</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>    }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="evaluating-model-accuracy-results" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="evaluating-model-accuracy-results"><span class="header-section-number">5.2</span> Evaluating Model accuracy (results)</h2>
+<p>When evaluating up to 500 bases (first 500) for the first 30 genes, and all bases where the human base doesn’t match the most frequently observed ancestral base across 100 species we can generate model accuracy stats. Here we use the mean # bases correctly called by the model (where called means the model assigns the true human references base the highest probability when predicting it.). As expected the GPN based Bert model we trained, which has access to the evolutionary history of the base, blows vanilla DNA Bert out of the water. This isn’t unexpected though, very large portions of the coding sequences are conserved across species, and training on human species and 12 allingned species, where those other species are available at inferences time just makes prediction VERY easy. However as per out first hypothesis the GPN model doesn not do well if we mask the bases evolutionary history. In those cases its bested by DNA Bert, which is trained to predict sequences without explicit evolutionary history and so does do a reasonable job at it.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Overall Accuracy Bar Plot</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>accuracies <span class="op">=</span> {</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'GPN (normal)'</span>: df[<span class="st">'gpn_normal_correct'</span>].mean(),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'DNABERT'</span>: df[<span class="st">'dnabert_normal_correct'</span>].mean(),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'GPN (no species)'</span>: df[<span class="st">'gpn_missing_correct'</span>].mean()</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>plt.bar(accuracies.keys(), accuracies.values(), color<span class="op">=</span>[<span class="st">'blue'</span>, <span class="st">'green'</span>, <span class="st">'red'</span>])</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Model Accuracy Comparison'</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Accuracy'</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>plt.ylim(<span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>plt.grid(axis<span class="op">=</span><span class="st">'y'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/paste-20.png" class="img-fluid figure-img"></p>
+<figcaption><strong>Figure 1</strong>: Model prediction accuracy compared across a common set of coding sequences of 30 genes (up to ±15k bases). GPN (no species) are predictions by the GPN moel but with other species base masked (changed to “-” , the missing/sequences gap token) during prediction.</figcaption>
+</figure>
+</div>
+<p>I had expected that if considering bases where the human references base differs fro the majority of the other species bases, and the base is highly conserved (&gt; 75%) then GPN models might be thrown off, and perhaps DNA Bert would not? It appears though (See <strong>Figure 2</strong>) that all models drop in accuracy, but DNA BErt drops more than the GPN model! So are second hypothesis wasn’t confirmed. Now this is a textbook like document, these models are under trained, we only evaluated the first 500 bases in 30 genes, within them there are only a few hundred bases where the human and dominant ancestral base differ, so please don’t generalize any of these concussions!</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/paste-21.png" class="img-fluid figure-img"></p>
+<figcaption><strong>Figure 2:</strong> The model prediction accuracy for bases where the human base differs from the base most frequently observed in other species.</figcaption>
+</figure>
+</div>
+<p>Finally we can plot model accuracy as a function of “conservation score” which is an ad-hoc measure of the % of valid bases (so A, T, C, G) across species that is the dominant most frequent) base. You could argue a more comprehensive conservation score might account for the number of species where the part of the sequences could not be aligned (e.g.&nbsp;the percentage of “-” bases), and that might be a great excersize for you!</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Conservation Score vs Accuracy</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>conservation_bins <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">11</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'conservation_bin'</span>] <span class="op">=</span> pd.cut(df[<span class="st">'conservation_score'</span>], bins<span class="op">=</span>conservation_bins)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> model, color <span class="kw">in</span> <span class="bu">zip</span>([<span class="st">'gpn_normal'</span>, <span class="st">'dnabert_normal'</span>, <span class="st">'gpn_missing'</span>], [<span class="st">'blue'</span>, <span class="st">'green'</span>, <span class="st">'red'</span>]):</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    accuracy_by_conservation <span class="op">=</span> df.groupby(<span class="st">'conservation_bin'</span>)[<span class="ss">f'</span><span class="sc">{</span>model<span class="sc">}</span><span class="ss">_correct'</span>].mean()</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    plt.plot(conservation_bins[:<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> <span class="fl">0.05</span>, accuracy_by_conservation, </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>            marker<span class="op">=</span><span class="st">'o'</span>, label<span class="op">=</span>model.replace(<span class="st">'_'</span>, <span class="st">' '</span>).title(), color<span class="op">=</span>color)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Model Accuracy vs Conservation Score'</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Conservation Score'</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Accuracy'</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="images/paste-22.png" class="img-fluid"></p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

@@ -275,13 +275,9 @@ div.csl-indent {
   <li><a href="#visualization" id="toc-visualization" class="nav-link" data-scroll-target="#visualization"><span class="header-section-number">4.3.2</span> Visualization</a></li>
   <li><a href="#practical-implementation---replacing-the-bert-encoder" id="toc-practical-implementation---replacing-the-bert-encoder" class="nav-link" data-scroll-target="#practical-implementation---replacing-the-bert-encoder"><span class="header-section-number">4.3.3</span> Practical Implementation - Replacing the BERT Encoder</a></li>
   </ul></li>
-  <li><a href="#what-are-we-masking" id="toc-what-are-we-masking" class="nav-link" data-scroll-target="#what-are-we-masking"><span class="header-section-number">4.4</span> What are we masking?</a>
-  <ul class="collapse">
-  <li><a href="#ablation-studies" id="toc-ablation-studies" class="nav-link" data-scroll-target="#ablation-studies"><span class="header-section-number">4.4.1</span> Ablation studies</a></li>
-  </ul></li>
+  <li><a href="#what-are-we-masking" id="toc-what-are-we-masking" class="nav-link" data-scroll-target="#what-are-we-masking"><span class="header-section-number">4.4</span> What are we masking?</a></li>
   <li><a href="#recap-of-our-approach" id="toc-recap-of-our-approach" class="nav-link" data-scroll-target="#recap-of-our-approach"><span class="header-section-number">4.5</span> Recap of Our Approach</a></li>
-  <li><a href="#emperical-ideas-to-explore" id="toc-emperical-ideas-to-explore" class="nav-link" data-scroll-target="#emperical-ideas-to-explore"><span class="header-section-number">4.6</span> Emperical ideas to explore</a></li>
-  <li><a href="#preview-of-chapter-5" id="toc-preview-of-chapter-5" class="nav-link" data-scroll-target="#preview-of-chapter-5"><span class="header-section-number">4.7</span> Preview of Chapter 5</a></li>
+  <li><a href="#preview-of-chapter-5" id="toc-preview-of-chapter-5" class="nav-link" data-scroll-target="#preview-of-chapter-5"><span class="header-section-number">4.6</span> Preview of Chapter 5</a></li>
   </ul>
 </nav>
     </div>
@@ -319,7 +315,7 @@ Abstract
 <div class="callout-body-container callout-body">
 <p>In this chapter we’ll evaluate the architecture of natural language models, which we have up to this point uncritically adopted for DNA modeling from our NLP/corporate brethren. We’ll discuss how some researchers have begun to move on from applying known model architectures to DNA and started to (re)designing model architectures specifically with DNA in mind. These models lean into our very extensive knowledge of the evolutionary history of the Genome.</p>
 <p>In this chapter we are forced to confront some fundamental questions, what is prediction? what do we want a model to learn?</p>
-<p>All scripts for this chapter are found here: <a href="https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Chapter_4" class="uri">https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Chapter_4</a></p>
+<p>All scripts for this chapter are found here: <a href="https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/DNA/Chapter_4" class="uri">https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/DNA/Chapter_4</a></p>
 </div>
 </div>
 <section id="introduction" class="level2" data-number="4.1">
@@ -438,11 +434,11 @@ Step 3 - Transformer Layers:
 <h3 data-number="4.3.1" class="anchored" data-anchor-id="key-idea-dynamic-position-embeddings"><span class="header-section-number">4.3.1</span> Key Idea: Dynamic Position Embeddings</h3>
 <p>For each position in the human genome, the model receives:</p>
 <ul>
-<li>The <strong>human base (A, T, G, C, -)</strong> — this is the usual input.</li>
-<li>The <strong>aligned bases from other species</strong> — these are additional features.</li>
-<li>These aligned bases are <strong>one-hot encoded</strong> and concatenated to the human base’s embedding.</li>
+<li>The human base (A, T, G, C, -) — this is the usual input.</li>
+<li>The aligned bases from other species — these are additional features.</li>
+<li>These aligned bases are one-hot encoded and concatenated to the human base’s embedding.</li>
 </ul>
-<p>This turns a <strong>simple nucleotide (A)</strong> into a <strong>dynamic, position-specific vector</strong> that depends on its <strong>evolutionary context across species</strong>.</p>
+<p>This turns a simple nucleotide embedding, fr any given nucleotide into a dynamic, position-specific vector that depends on its evolutionary context across species.</p>
 </section>
 <section id="visualization" class="level3" data-number="4.3.2">
 <h3 data-number="4.3.2" class="anchored" data-anchor-id="visualization"><span class="header-section-number">4.3.2</span> Visualization</h3>
@@ -582,32 +578,23 @@ Embedding:
 <figcaption><strong>Figure 4.3</strong> The mouse genome, with in it sections of the human genome (color codes) that are largely preserved across evolution (figure 3 in <span class="citation" data-cites="initial2002">(<a href="references.html#ref-initial2002" role="doc-biblioref"><span>“Initial Sequencing and Comparative Analysis of the Mouse Genome”</span> 2002</a>)</span>)</figcaption>
 </figure>
 </div>
-<p>In training our GPNBert model with auxiliary sequences we train by <strong>masking the human base only</strong> (following <span class="citation" data-cites="Benegas2024">(<a href="references.html#ref-Benegas2024" role="doc-biblioref">Benegas et al. 2023</a>)</span>). This very obviously, and dramatically, improves base prediction, and does so very quickly. after a few hundred iterations (trained on about 5000 genes) the model learns that it should just assign the base most often found in other species. But as the evaluations the authors of the original GNP-MSA paper make clear, eventually the model learns more than that. The model outperforms just picking the consensus base across species. It is a better predictor of the allele frequency in humans then just picking the allele frequency across species ans an estimate of the allele frequency within human.</p>
-<section id="ablation-studies" class="level3" data-number="4.4.1">
-<h3 data-number="4.4.1" class="anchored" data-anchor-id="ablation-studies"><span class="header-section-number">4.4.1</span> Ablation studies</h3>
-<p>The authors use ablation studies to proof their model learns more then just the base history, and still learns from the base in its sequence. Anyone who wants to train language models should come to understand ablation studies so this is a good a point as any to discuss theirs and run our own!</p>
-</section>
+<p>In training our GPNBert model with auxiliary sequences we train by <strong>masking the human base only</strong> (following <span class="citation" data-cites="Benegas2024">(<a href="references.html#ref-Benegas2024" role="doc-biblioref">Benegas et al. 2023</a>)</span>). This very obviously, and dramatically, improves base prediction, and does so very quickly. after a few hundred iterations (trained on about 5000 genes) the model learns that it should just assign the base most often found in other species. But as the evaluations the authors of the original GNP-MSA paper make clear, eventually the model learns more than that. The model outperforms just picking the consensus base across species. They are able to show fairly convisingly that the predicted probabilities are a better predictor of the allele frequency in humans then just picking the allele frequency across species (Figure 2 B in <span class="citation" data-cites="Benegas2024">Benegas et al. (<a href="references.html#ref-Benegas2024" role="doc-biblioref">2023</a>)</span>) as an estimate of the allele frequency within human. Furthermoe their model is able to pick off deleterious mutations better then CADD scores, based on supervised machine learning (<span class="citation" data-cites="rentzsch2021">(<a href="references.html#ref-rentzsch2021" role="doc-biblioref">Rentzsch et al. 2021</a>)</span>) or than sophistical evolutionary constraint scores (<span class="citation" data-cites="sullivan2023">(<a href="references.html#ref-sullivan2023" role="doc-biblioref">Sullivan et al. 2023</a>)</span>).</p>
 </section>
 <section id="recap-of-our-approach" class="level2" data-number="4.5">
 <h2 data-number="4.5" class="anchored" data-anchor-id="recap-of-our-approach"><span class="header-section-number">4.5</span> Recap of Our Approach</h2>
-<p>In <strong>Chapter 2</strong>, we trained a vanilla <strong>BERT</strong> on DNA sequences alone — treating DNA as just another language. That model only had access to the <strong>human sequence</strong>, with no evolutionary context.</p>
-<p>In <strong>this chapter</strong>, we’ve re-imagined that process. Instead of treating A, T, G, C, - as abstract symbols, leaving the model entirely unsupervised when picking embedding, we inject <strong>evolutionary history directly into the embedding directly</strong>. This allows our model to:</p>
+<p>In Chapter 2, we trained a vanilla BERT on DNA sequences alone — treating DNA as just another language. That model only had access to the human sequence, with no evolutionary context.</p>
+<p>In this chapter, we’ve re-imagined that process. Instead of treating A, T, G, C, - as abstract symbols, leaving the model entirely unsupervised when picking embedding, we inject evolutionary history directly into the embedding directly. This allows our model to:</p>
 <ul>
-<li>Use the aligned species data as <strong>a rich evolutionary prior</strong>.</li>
-<li>Still leverage transformers for learning <strong>sequence motifs</strong>.</li>
-<li>Predict masked human bases using both <strong>local sequence</strong> and <strong>cross-species evolutionary patterns</strong>.</li>
+<li>Use the aligned species data as a rich evolutionary prior.</li>
+<li>Still leverage transformers for learning sequence motifs.</li>
+<li>Predict masked human bases using both local sequence and cross-species evolutionary patterns.</li>
 </ul>
 </section>
-<section id="emperical-ideas-to-explore" class="level2" data-number="4.6">
-<h2 data-number="4.6" class="anchored" data-anchor-id="emperical-ideas-to-explore"><span class="header-section-number">4.6</span> Emperical ideas to explore</h2>
-<p>Obviously embedding</p>
-</section>
-<section id="preview-of-chapter-5" class="level2" data-number="4.7">
-<h2 data-number="4.7" class="anchored" data-anchor-id="preview-of-chapter-5"><span class="header-section-number">4.7</span> Preview of Chapter 5</h2>
+<section id="preview-of-chapter-5" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="preview-of-chapter-5"><span class="header-section-number">4.6</span> Preview of Chapter 5</h2>
 <p>In <strong>Chapter 5</strong>, we will put these two models — <strong>Vanilla BERT</strong> and <strong>GPN-BERT</strong> — to the test. We will evaluate their performance on:</p>
 <ul>
 <li>Predicting masked bases (MLM accuracy).</li>
-<li>Identifying regulatory elements.</li>
 <li>Predicting the functional impact of mutations.</li>
 </ul>
 <p>This head-to-head comparison will highlight the <strong>strengths and weaknesses</strong> of each approach and show the value of embedding <strong>evolutionary context directly into genomic language models</strong>.</p>
@@ -625,6 +612,12 @@ Jumper, John, Richard Evans, Alexander Pritzel, Tim Green, Michael Figurnov, Ola
 </div>
 <div id="ref-Lupo2022" class="csl-entry" role="listitem">
 Lupo, Umberto, Damiano Sgarbossa, and Anne-Florence Bitbol. 2022. <span>“Protein Language Models Trained on Multiple Sequence Alignments Learn Phylogenetic Relationships.”</span> <em>Nature Communications</em> 13 (1). <a href="https://doi.org/10.1038/s41467-022-34032-y">https://doi.org/10.1038/s41467-022-34032-y</a>.
+</div>
+<div id="ref-rentzsch2021" class="csl-entry" role="listitem">
+Rentzsch, Philipp, Max Schubach, Jay Shendure, and Martin Kircher. 2021. <span>“CADD-Splice<span></span>improving Genome-Wide Variant Effect Prediction Using Deep Learning-Derived Splice Scores.”</span> <em>Genome Medicine</em> 13 (1). <a href="https://doi.org/10.1186/s13073-021-00835-9">https://doi.org/10.1186/s13073-021-00835-9</a>.
+</div>
+<div id="ref-sullivan2023" class="csl-entry" role="listitem">
+Sullivan, Patrick F., Jennifer R. S. Meadows, Steven Gazal, BaDoi N. Phan, Xue Li, Diane P. Genereux, Michael X. Dong, et al. 2023. <span>“Leveraging Base-Pair Mammalian Constraint to Understand Genetic Variation and Human Disease.”</span> <em>Science</em> 380 (6643). <a href="https://doi.org/10.1126/science.abn2937">https://doi.org/10.1126/science.abn2937</a>.
 </div>
 </div>
 </section>
