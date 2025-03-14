@@ -1,0 +1,39 @@
+---
+title: "Proteins: from sequence to structure"
+format: html
+---
+
+
+Proteins are the fundamental building blocks of biological systems, and understanding their structure is crucial for deciphering their function. The journey from a one-dimensional (1D) amino acid sequence to a two-dimensional (2D) contact map and finally to a three-dimensional (3D) structure has been one of the grand challenges in computational biology. In this chapter, we explore how protein models based on attention/transformer-like modules, like Alphafold v1 and Alphafold V2 revolutionized this space. 
+
+
+### Traditional Approaches to Protein Structure Prediction
+
+Before the advent of language models and sophisticated deep learning architectures, protein structure prediction relied heavily on physics-based models and evolutionary information encoded in multiple sequence alignments (MSAs). Homology modeling, one of the earliest techniques, used the structures of similar, evolutionarily related proteins to infer the structure of a target protein. Threading methods aligned sequences against known structures to find the best possible fold.
+
+Ab initio modeling, in contrast, attempted to predict protein structure from first principles, using physical energy functions to simulate the folding process. These methods often struggled with accuracy and required extensive computational resources, making them impractical for many real-world applications.
+
+MSA-based models, like those used in the early iterations of AlphaFold and Rosetta, made significant strides by leveraging evolutionary couplings between residues. These statistical relationships, inferred from aligned sequences across species, provided powerful constraints on the possible 3D structures. Coupling information was used to construct 2D contact maps — matrices indicating which amino acid pairs were likely to be spatially close in the folded protein.
+
+### The Leap to Protein Language Models
+
+The success of AlphaFold2 marked a watershed moment for protein structure prediction. By integrating attention-based neural networks and using MSAs to predict 3D structures directly from sequence information, AF2 achieved unprecedented accuracy. Yet, the reliance on MSAs introduced limitations — the need for evolutionary data and the computational cost of alignment.
+
+Protein language models (PLMs) emerged as an exciting alternative. Inspired by natural language processing, these models treat protein sequences like sentences, learning the grammar and semantics of biological sequences from massive unlabeled datasets. By pretraining on vast protein databases, PLMs capture contextual information about amino acids and their interactions without needing MSAs.
+
+Models like ESM (Evolutionary Scale Modeling) and ProtTrans demonstrated the potential of PLMs to predict secondary and tertiary structures directly from sequence data. By encoding the relationships between residues through attention mechanisms, these models implicitly learn structural and functional properties, generating accurate 2D contact maps and even 3D coordinates in some cases.
+
+### From 1D Sequences to 3D Structures
+
+The process of moving from a linear amino acid sequence to a folded protein structure involves multiple steps:
+
+1. **1D Sequence Representation:** The raw sequence of amino acids, analogous to a string of text in natural language.
+2. **2D Contact Map Prediction:** A matrix representation showing which pairs of residues are likely to be spatially close, providing key insights into the folding topology.
+3. **3D Structure Construction:** Using the contact map and learned residue interactions to predict the final three-dimensional arrangement of atoms.
+
+Language models streamline this pipeline by learning the underlying biophysical principles directly from sequence data, bypassing the need for explicit evolutionary information. This approach not only accelerates structure prediction but also opens new possibilities for modeling orphan proteins and de novo sequence design.
+
+### Conclusion
+
+Protein language models represent a paradigm shift in structural biology. By harnessing the power of large-scale unsupervised learning, these models unlock new capabilities for understanding protein folding and function. As we continue to refine these techniques and integrate them with experimental data, the promise of truly universal protein structure prediction draws closer.
+
