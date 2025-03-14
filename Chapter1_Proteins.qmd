@@ -5,11 +5,11 @@ format: html
 
 Proteins are the fundamental building blocks of biological systems, and understanding their structure is crucial for deciphering their function. The journey from a one-dimensional (1D) amino acid sequence to a two-dimensional (2D) contact map/distance map and finally to a three-dimensional (3D) structure has been one of the grand challenges in computational biology. In this chapter, we explore how protein models based on attention/transformer-like modules, like AlphaFold and AlphaFold 2, revolutionized this space.
 
-### Traditional Approaches to Protein Structure Prediction
+## Traditional Approaches to Protein Structure Prediction
 
 Before the advent of language models and sophisticated deep learning architectures, protein structure prediction relied heavily on physics-based models and evolutionary information encoded in multiple sequence alignments (MSAs). Homology modeling, one of the earliest techniques, used the structures of similar, evolutionarily related proteins to infer the structure of a target protein. Threading methods aligned sequences against known structures to find the best possible fold. Ab initio modeling, in contrast, attempted to predict protein structure from first principles, using physical energy functions to simulate the folding process. These methods often struggled with accuracy and required extensive computational resources, making them impractical for many real-world applications.
 
-## THe critical breaktrought: AlphaFold
+## The critical breakthrough: AlphaFold
 
 MSA-based models, like those used in the early iterations of AlphaFold and Rosetta, made significant strides by leveraging evolutionary couplings between residues. These statistical relationships, inferred from aligned sequences across species, provided powerful constraints on the possible 3D structures. Coupling information was used to construct 2D contact maps — matrices indicating which amino acid pairs were likely to be spatially close in the folded protein.
 
