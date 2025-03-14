@@ -9,11 +9,12 @@ Proteins are the fundamental building blocks of biological systems, and understa
 
 Before the advent of language models and sophisticated deep learning architectures, protein structure prediction relied heavily on physics-based models and evolutionary information encoded in multiple sequence alignments (MSAs). Homology modeling, one of the earliest techniques, used the structures of similar, evolutionarily related proteins to infer the structure of a target protein. Threading methods aligned sequences against known structures to find the best possible fold. Ab initio modeling, in contrast, attempted to predict protein structure from first principles, using physical energy functions to simulate the folding process. These methods often struggled with accuracy and required extensive computational resources, making them impractical for many real-world applications.
 
+## THe critical breaktrought: AlphaFold
+
 MSA-based models, like those used in the early iterations of AlphaFold and Rosetta, made significant strides by leveraging evolutionary couplings between residues. These statistical relationships, inferred from aligned sequences across species, provided powerful constraints on the possible 3D structures. Coupling information was used to construct 2D contact maps — matrices indicating which amino acid pairs were likely to be spatially close in the folded protein.
 
 ![**Figure 1:** The progress in protein structure prediction across iterations of CASP, notice the clear breakthroughs AlphaFold and AlphaFold-2 represent.](images/paste-24.png){fig-align="center"}
 
-## 
 
 AlphaFold[@senior2020] in CASP13, and AlphaFold 2[@jumper2021a] in CASP 14 were revolutionary. The GDT scores, which are the percentage of atoms within 1, 2, or 8 angstroms ($10^{-10}$ m) of the directly measured protein structure, reached ±90, meaning 90% of the atoms in the prediction were extremely close to the measured protein. The score was referred to as "near experimental accuracy," though that claim made in the Nature paper was unreferenced. I kind of wished someone had made a little table with the experimental accuracy (from repeated independent measurements of the protein, for example) and the AF2 predictions' GDT/RMSD side by side (I have not been able to find anything like it, could be my inexperience with the particular field!).
 
@@ -68,7 +69,7 @@ ggplot(msa_data, aes(x = Position, y = Species, fill = AminoAcid)) +
 
 ```
 
-### The Leap to Protein Language Models
+## The Leap to Protein Language Models
 
 The success of AlphaFold 2 marked a watershed moment for protein structure prediction. By integrating attention-based neural networks and using MSAs to predict 3D structures directly from sequence information, AF2 achieved unprecedented accuracy. Yet, the reliance on MSAs introduced limitations — the need for evolutionary data and the computational cost of alignment.
 
@@ -78,7 +79,7 @@ Models like ESM (Evolutionary Scale Modeling) and ProtTrans demonstrated the pot
 
 Protein language models are usually augmented with geometric neural networks or other additional model elements when used for protein structure prediction. These augmentations ensure the 1D sequences, 2D contact maps, and 3D protein shapes that follow adhere to basic geometric rules. A language model or another sequence model isn't inherently aware of 3D space. So while we'll experiment with the latent 2D representations (distances between amino acids) that are implicitly hiding in language models, those representations are noisy and might imply 3D structures that cannot exist (e.g., the distance between a and b, and b and c, might not be consistent with the distance between b and c, etc.). Adding specific neural networks that are designed to produce results that can exist in Euclidean (3D) space greatly improves protein structure prediction.
 
-### Step by Step: 1D Sequences to 3D Structures
+## Step by Step: 1D Sequences to 3D Structures
 
 The process of moving from a linear amino acid sequence to a folded protein structure involves multiple steps, and in the following chapters, we'll trace those steps:
 
