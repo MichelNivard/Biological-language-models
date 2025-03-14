@@ -277,7 +277,8 @@ window.Quarto = {
   <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"><span class="header-section-number">7.1</span> </a>
   <ul class="collapse">
   <li><a href="#good-old-msa" id="toc-good-old-msa" class="nav-link" data-scroll-target="#good-old-msa"><span class="header-section-number">7.1.1</span> Good old MSA</a></li>
-  <li><a href="#step-by-step-1d-sequences-to-3d-structures" id="toc-step-by-step-1d-sequences-to-3d-structures" class="nav-link" data-scroll-target="#step-by-step-1d-sequences-to-3d-structures"><span class="header-section-number">7.1.2</span> Step by Step: 1D Sequences to 3D Structures</a></li>
+  <li><a href="#the-leap-to-protein-language-models" id="toc-the-leap-to-protein-language-models" class="nav-link" data-scroll-target="#the-leap-to-protein-language-models"><span class="header-section-number">7.1.2</span> The Leap to Protein Language Models</a></li>
+  <li><a href="#step-by-step-1d-sequences-to-3d-structures" id="toc-step-by-step-1d-sequences-to-3d-structures" class="nav-link" data-scroll-target="#step-by-step-1d-sequences-to-3d-structures"><span class="header-section-number">7.1.3</span> Step by Step: 1D Sequences to 3D Structures</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -333,14 +334,16 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>s ### The Leap to Protein Language Models</p>
+</section>
+<section id="the-leap-to-protein-language-models" class="level3" data-number="7.1.2">
+<h3 data-number="7.1.2" class="anchored" data-anchor-id="the-leap-to-protein-language-models"><span class="header-section-number">7.1.2</span> The Leap to Protein Language Models</h3>
 <p>The success of AlphaFold 2 marked a watershed moment for protein structure prediction. By integrating attention-based neural networks and using MSAs to predict 3D structures directly from sequence information, AF2 achieved unprecedented accuracy. Yet, the reliance on MSAs introduced limitations — the need for evolutionary data and the computational cost of alignment.</p>
 <p>Protein language models (PLMs) emerged as an alternative. By pretraining on vast protein databases, PLMs capture contextual information about amino acids and their interactions without needing MSAs.</p>
 <p>Models like ESM (Evolutionary Scale Modeling) and ProtTrans demonstrated the potential of PLMs to predict secondary and tertiary structures directly from sequence data. By encoding the relationships between residues through attention mechanisms, these models implicitly learn structural and functional properties, generating accurate 2D contact maps and even 3D coordinates in some cases.</p>
 <p>Protein language models are usually augmented with geometric neural networks or other additional model elements when used for protein structure prediction. These augmentations ensure the 1D sequences, 2D contact maps, and 3D protein shapes that follow adhere to basic geometric rules. A language model or another sequence model isn’t inherently aware of 3D space. So while we’ll experiment with the latent 2D representations (distances between amino acids) that are implicitly hiding in language models, those representations are noisy and might imply 3D structures that cannot exist (e.g., the distance between a and b, and b and c, might not be consistent with the distance between b and c, etc.). Adding specific neural networks that are designed to produce results that can exist in Euclidean (3D) space greatly improves protein structure prediction.</p>
 </section>
-<section id="step-by-step-1d-sequences-to-3d-structures" class="level3" data-number="7.1.2">
-<h3 data-number="7.1.2" class="anchored" data-anchor-id="step-by-step-1d-sequences-to-3d-structures"><span class="header-section-number">7.1.2</span> Step by Step: 1D Sequences to 3D Structures</h3>
+<section id="step-by-step-1d-sequences-to-3d-structures" class="level3" data-number="7.1.3">
+<h3 data-number="7.1.3" class="anchored" data-anchor-id="step-by-step-1d-sequences-to-3d-structures"><span class="header-section-number">7.1.3</span> Step by Step: 1D Sequences to 3D Structures</h3>
 <p>The process of moving from a linear amino acid sequence to a folded protein structure involves multiple steps, and in the following chapters, we’ll trace those steps:</p>
 <ol type="1">
 <li><p>Data sources: As always, science begins with good data. In <strong>Chapter 8</strong>, we’ll talk about data sources for protein (language) models.</p></li>
