@@ -3,37 +3,90 @@ title: "Proteins: from sequence to structure"
 format: html
 ---
 
-
-Proteins are the fundamental building blocks of biological systems, and understanding their structure is crucial for deciphering their function. The journey from a one-dimensional (1D) amino acid sequence to a two-dimensional (2D) contact map and finally to a three-dimensional (3D) structure has been one of the grand challenges in computational biology. In this chapter, we explore how protein models based on attention/transformer-like modules, like Alphafold v1 and Alphafold V2 revolutionized this space. 
-
+Proteins are the fundamental building blocks of biological systems, and understanding their structure is crucial for deciphering their function. The journey from a one-dimensional (1D) amino acid sequence to a two-dimensional (2D) contact map/distance map and finally to a three-dimensional (3D) structure has been one of the grand challenges in computational biology. In this chapter, we explore how protein models based on attention/transformer-like modules, like Alphafold and Alphafold 2 revolutionized this space.
 
 ### Traditional Approaches to Protein Structure Prediction
 
-Before the advent of language models and sophisticated deep learning architectures, protein structure prediction relied heavily on physics-based models and evolutionary information encoded in multiple sequence alignments (MSAs). Homology modeling, one of the earliest techniques, used the structures of similar, evolutionarily related proteins to infer the structure of a target protein. Threading methods aligned sequences against known structures to find the best possible fold.
-
-Ab initio modeling, in contrast, attempted to predict protein structure from first principles, using physical energy functions to simulate the folding process. These methods often struggled with accuracy and required extensive computational resources, making them impractical for many real-world applications.
+Before the advent of language models and sophisticated deep learning architectures, protein structure prediction relied heavily on physics-based models and evolutionary information encoded in multiple sequence alignments (MSAs). Homology modeling, one of the earliest techniques, used the structures of similar, evolutionarily related proteins to infer the structure of a target protein. Threading methods aligned sequences against known structures to find the best possible fold. Ab initio modeling, in contrast, attempted to predict protein structure from first principles, using physical energy functions to simulate the folding process. These methods often struggled with accuracy and required extensive computational resources, making them impractical for many real-world applications.
 
 MSA-based models, like those used in the early iterations of AlphaFold and Rosetta, made significant strides by leveraging evolutionary couplings between residues. These statistical relationships, inferred from aligned sequences across species, provided powerful constraints on the possible 3D structures. Coupling information was used to construct 2D contact maps — matrices indicating which amino acid pairs were likely to be spatially close in the folded protein.
+
+## 
+
+![**Figure 1**: Accuracy in GDT for the best model in each consecutive Ciritical Assesment of Protein Structure (CASP)](https://lh3.googleusercontent.com/GgOuel2ukyAKNq6BY0DC5K1VSzymOU52GaWRdrWthA2-wuWGAgCoVKZn-r0aJd7K157qdfFVoWPGF2vz2CyKt_HHTd310n556Qw_B64VUmlfxhLZ=w616-rw){fig-align="center"}
+
+Alphafold[@senior2020] in CASP13, and Alphafold 2[@jumper2021a] in CASP 14 were revolutionary, the GDT scores, which are the % of atoms within 1,2 or 8 angstroms ( $10^{-10}$m) of the directly measured protein structure, reached ±90 meaning 90% of the atoms in the prediction where extremely close to the measured protein. The score was referred to as "near experimental accuracy" though that claim made in the Nature paper was unreferenced and I kinda wished someone had made a little table with the experimental accuracy (from repeated independent measurement of the protein for example) and the AF2 predictions GDT/RMSA side by side (I have mot been able to find anything like it, could be my inexperience with the particular field!).
+
+### Good old MSA
+
+In our chapters on DNA language models we came across GPN-MSA [@Benegas2024] which relied on multiple sequences alignment (MSA) between species, We even trained a model that was a lot like it in Chapter 4! As you'lll recall the model did amazing, but mostly I feel because while masking we only masked the human base and let the model use all ancestral bases during prediction. The multiple sequences alignments play a big role in the recent success in protein folding.
+
+The logic being, that if two amino acids "correlate" or co-occurrence across species, like column 3 and 9 highlighted in red in **Figure 2** that indicates their co-evolution. Their co-evolution at distance is then viewed as an indicator of their physical proximity in the 3d molecule. in the toy example we only observe G and H OR T and V in positions 3 and 9, which means there is likely a fitness penalty against other combinations. If these co-evolution signals are robust (reliably found across many aligned sequences) and at a distance, they likely reflect the two amino-acids are physically close, and the substitutino of one has an effect on the binding/function of the other.
+
+```{r}
+#| warning: false
+#| echo: false
+#| fig-cap: "**Figure 2:** example MSA with a co-evolving pair of amino-acids (pos 3 and 9) highlighted in red."
+
+library(ggplot2)
+
+# Example MSA data: 8 species, 12 amino acid positions
+msa_data <- data.frame(
+  Species = rep(c("Human", "Chimp", "Dog", "Cat", "Mouse", "Fish", "Bird", "Frog"), each = 12),
+  Position = rep(1:12, times = 8),
+  AminoAcid = c(
+    "A", "A", "G", "D", "E", "F", "C", "I", "H", "K", "L", "M",
+    "A", "A", "G", "D", "E", "F", "C", "I", "H", "K", "L", "M",
+    "A", "A", "G", "E", "E", "F", "C", "I", "H", "K", "L", "M",
+    "A", "A", "T", "D", "E", "F", "C", "I", "V", "K", "L", "M",
+    "A", "S", "T", "D", "E", "F", "C", "I", "V", "K", "L", "M",
+    "A", "A", "G", "D", "Q", "F", "C", "I", "H", "R", "L", "M",
+    "A", "A", "G", "D", "E", "F", "C", "I", "H", "K", "W", "M",
+    "A", "A", "T", "D", "E", "Y", "C", "I", "V", "K", "L", "N"
+  )
+)
+
+# Highlight co-evolving positions (example: positions 3 and 9)
+msa_data$CoEvolve <- ifelse(msa_data$Position %in% c(3, 9), "Co-evolving", "Not co-evolving")
+
+# Get unique positions for co-evolving columns
+co_evolving_positions <- unique(msa_data$Position[msa_data$CoEvolve == "Co-evolving"])
+
+# Visualization
+ggplot(msa_data, aes(x = Position, y = Species, fill = AminoAcid)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = AminoAcid), color = "black", size = 4) +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),legend.position = "none") +
+  labs(title = "Multiple Sequence Alignment (MSA)",
+       subtitle = "Highlighting conserved and co-evolving positions",
+       fill = "Amino Acid") +
+  geom_rect(data = data.frame(Position = co_evolving_positions),
+            aes(xmin = Position - 0.5, xmax = Position + 0.5, ymin = 0.5, ymax = length(unique(msa_data$Species)) + 0.5),
+            color = "red", linewidth = 1.2, fill = NA, inherit.aes = FALSE) 
+
+
+```
 
 ### The Leap to Protein Language Models
 
 The success of AlphaFold2 marked a watershed moment for protein structure prediction. By integrating attention-based neural networks and using MSAs to predict 3D structures directly from sequence information, AF2 achieved unprecedented accuracy. Yet, the reliance on MSAs introduced limitations — the need for evolutionary data and the computational cost of alignment.
 
-Protein language models (PLMs) emerged as an exciting alternative. Inspired by natural language processing, these models treat protein sequences like sentences, learning the grammar and semantics of biological sequences from massive unlabeled datasets. By pretraining on vast protein databases, PLMs capture contextual information about amino acids and their interactions without needing MSAs.
+Protein language models (PLMs) emerged as an alternative. By pretraining on vast protein databases, PLMs capture contextual information about amino acids and their interactions without needing MSAs.
 
 Models like ESM (Evolutionary Scale Modeling) and ProtTrans demonstrated the potential of PLMs to predict secondary and tertiary structures directly from sequence data. By encoding the relationships between residues through attention mechanisms, these models implicitly learn structural and functional properties, generating accurate 2D contact maps and even 3D coordinates in some cases.
 
-### From 1D Sequences to 3D Structures
+Protein language models are usually augmented with geometric neural networks, or other additional model elements, when used for protein structure prediction. These augmentations ensure the 1d sequences, or the 2d contact maps, and 3d protein shapes that follow from these adhere to basic geometric rules. Alanguage model, or another sequence model isn't inherently aware of 3d space. So while we'll experiment with the latent 2d representations (distances between amino-acids) that are implicitly hiding in language models, those representations are noisy, and might imply 3d structures that cannot exist (e.g. the distance between a and b, and b and c, might not be consistent with the distance between b and c etc). Adding specific neural networks that are designed to produce results that can exist in euclidean (3d) space greatly improve protein structure prediction
 
-The process of moving from a linear amino acid sequence to a folded protein structure involves multiple steps:
+### Step by step: 1D Sequences to 3D Structures
 
-1. **1D Sequence Representation:** The raw sequence of amino acids, analogous to a string of text in natural language.
-2. **2D Contact Map Prediction:** A matrix representation showing which pairs of residues are likely to be spatially close, providing key insights into the folding topology.
-3. **3D Structure Construction:** Using the contact map and learned residue interactions to predict the final three-dimensional arrangement of atoms.
+The process of moving from a linear amino acid sequence to a folded protein structure involves multiple steps, and it the following chapters we'll trace those steps
 
-Language models streamline this pipeline by learning the underlying biophysical principles directly from sequence data, bypassing the need for explicit evolutionary information. This approach not only accelerates structure prediction but also opens new possibilities for modeling orphan proteins and de novo sequence design.
+1.  Data sources. As always really science begins with good data in **chapter 8** we'll talk about data sources for protein (language) models.
 
-### Conclusion
+2.  **1D Sequence Representation:** The raw sequence of amino acids, analogous to a string of text in natural language. In **chapter 9** we'll train a protein language model. Since we can't compete with the likes of google deepmind and facebook, or even startups, and I want it to be feasible for you to run ll of the steps at home, we'll we'll train a small language model on an ad-hoc selection of G-Protein coupled receptor (GPCR) (like/related) proteins across hundreds of species. This large protein family (4% of human protein coding genome for ex) share evolutionary origins and therefore its probably a ripe target for a small model with limited training budget.
 
-Protein language models represent a paradigm shift in structural biology. By harnessing the power of large-scale unsupervised learning, these models unlock new capabilities for understanding protein folding and function. As we continue to refine these techniques and integrate them with experimental data, the promise of truly universal protein structure prediction draws closer.
+3.  **2D Contact Map Prediction:** For any protein you can conceive a matrix representation showing which pairs of residues are likely to be spatially close, providing key insights into the folding topology. In **Chapter 10** we'll discuss ways in which protein language models (latently!) actually alreay learn the 2d contact map for each protein,and we'll extract these from the protein modle we trained, and compare to the true contact map for a few proteins.
 
+4.  **3D Structure Construction:** Using the contact map and learned residue interactions to predict the final three-dimensional arrangement of atoms. In **Chapter 11** we'll look at a few different ways in which we can train models that output a full 3d protein by post processing the 2d information learned in protein language models.

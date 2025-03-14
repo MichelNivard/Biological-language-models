@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>6&nbsp; A Review of Current DNA Language Models – Biological Language Models &amp; Neural Networks</title>
+<title>7&nbsp; Proteins: from sequence to structure – Biological Language Models &amp; Neural Networks</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -50,8 +50,8 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./Scaling_training.html" rel="next">
-<link href="./Chapter5_DNA.html" rel="prev">
+<link href="./summary.html" rel="next">
+<link href="./Scaling_training.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -89,6 +89,35 @@ div.csl-indent {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -118,7 +147,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_DNA.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter6_DNA.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_Proteins.html">Proteins</a></li><li class="breadcrumb-item"><a href="./Chapter1_Proteins.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Proteins: from sequence to structure</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -189,7 +218,7 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./Chapter6_DNA.html" class="sidebar-item-text sidebar-link active">
+  <a href="./Chapter6_DNA.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></span></a>
   </div>
 </li>
@@ -212,7 +241,7 @@ div.csl-indent {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./Chapter1_Proteins.html" class="sidebar-item-text sidebar-link">
+  <a href="./Chapter1_Proteins.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Proteins: from sequence to structure</span></span></a>
   </div>
 </li>
@@ -244,19 +273,22 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#modeling-paradigms" id="toc-modeling-paradigms" class="nav-link active" data-scroll-target="#modeling-paradigms"><span class="header-section-number">6.1</span> Modeling Paradigms</a></li>
-  <li><a href="#architectural-innovations" id="toc-architectural-innovations" class="nav-link" data-scroll-target="#architectural-innovations"><span class="header-section-number">6.2</span> Architectural Innovations</a></li>
-  <li><a href="#applications" id="toc-applications" class="nav-link" data-scroll-target="#applications"><span class="header-section-number">6.3</span> Applications</a></li>
-  <li><a href="#challenges-and-future-directions" id="toc-challenges-and-future-directions" class="nav-link" data-scroll-target="#challenges-and-future-directions"><span class="header-section-number">6.4</span> Challenges and Future Directions</a></li>
+  <li><a href="#traditional-approaches-to-protein-structure-prediction" id="toc-traditional-approaches-to-protein-structure-prediction" class="nav-link active" data-scroll-target="#traditional-approaches-to-protein-structure-prediction"><span class="header-section-number">7.0.1</span> Traditional Approaches to Protein Structure Prediction</a></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"><span class="header-section-number">7.1</span> </a>
+  <ul class="collapse">
+  <li><a href="#good-old-msa" id="toc-good-old-msa" class="nav-link" data-scroll-target="#good-old-msa"><span class="header-section-number">7.1.1</span> Good old MSA</a></li>
+  <li><a href="#the-leap-to-protein-language-models" id="toc-the-leap-to-protein-language-models" class="nav-link" data-scroll-target="#the-leap-to-protein-language-models"><span class="header-section-number">7.1.2</span> The Leap to Protein Language Models</a></li>
+  <li><a href="#step-by-step-1d-sequences-to-3d-structures" id="toc-step-by-step-1d-sequences-to-3d-structures" class="nav-link" data-scroll-target="#step-by-step-1d-sequences-to-3d-structures"><span class="header-section-number">7.1.3</span> Step by step: 1D Sequences to 3D Structures</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_DNA.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter6_DNA.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_Proteins.html">Proteins</a></li><li class="breadcrumb-item"><a href="./Chapter1_Proteins.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Proteins: from sequence to structure</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></h1>
+<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Proteins: from sequence to structure</span></h1>
 </div>
 
 
@@ -273,92 +305,66 @@ div.csl-indent {
 </header>
 
 
-<p>This is not an academic review, those are obviously far more comprehensive, see <span class="citation" data-cites="benegas2025">Benegas et al. (<a href="references.html#ref-benegas2025" role="doc-biblioref">2025</a>)</span> for a review I really liked.</p>
-<section id="modeling-paradigms" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="modeling-paradigms"><span class="header-section-number">6.1</span> Modeling Paradigms</h2>
-<p>As we leared in the first 5 chapters, gLMs (genomic Language Models) borrow from natural language processing by treating DNA sequences as “text” composed of four characters (A, C, G, T). Early models used k-mer tokenization (e.g., DNABERT), but newer approaches experiment with both nucleotide‐level and subword tokenizations (such as 3-mer or 6-mer) to better capture biological semantics.</p>
+<p>Proteins are the fundamental building blocks of biological systems, and understanding their structure is crucial for deciphering their function. The journey from a one-dimensional (1D) amino acid sequence to a two-dimensional (2D) contact map/distance map and finally to a three-dimensional (3D) structure has been one of the grand challenges in computational biology. In this chapter, we explore how protein models based on attention/transformer-like modules, like Alphafold and Alphafold 2 revolutionized this space.</p>
+<section id="traditional-approaches-to-protein-structure-prediction" class="level3" data-number="7.0.1">
+<h3 data-number="7.0.1" class="anchored" data-anchor-id="traditional-approaches-to-protein-structure-prediction"><span class="header-section-number">7.0.1</span> Traditional Approaches to Protein Structure Prediction</h3>
+<p>Before the advent of language models and sophisticated deep learning architectures, protein structure prediction relied heavily on physics-based models and evolutionary information encoded in multiple sequence alignments (MSAs). Homology modeling, one of the earliest techniques, used the structures of similar, evolutionarily related proteins to infer the structure of a target protein. Threading methods aligned sequences against known structures to find the best possible fold. Ab initio modeling, in contrast, attempted to predict protein structure from first principles, using physical energy functions to simulate the folding process. These methods often struggled with accuracy and required extensive computational resources, making them impractical for many real-world applications.</p>
+<p>MSA-based models, like those used in the early iterations of AlphaFold and Rosetta, made significant strides by leveraging evolutionary couplings between residues. These statistical relationships, inferred from aligned sequences across species, provided powerful constraints on the possible 3D structures. Coupling information was used to construct 2D contact maps — matrices indicating which amino acid pairs were likely to be spatially close in the folded protein.</p>
 </section>
-<section id="architectural-innovations" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="architectural-innovations"><span class="header-section-number">6.2</span> Architectural Innovations</h2>
-<p>There are two specific architectural innovations in DNA langage models worth discussing, the first is GPA-MSA, the core idea behind a model we discussed in Chapter 4. In this model the trainable embedding layer is replaced with a biologically informed deterministic embeding, that reflects the evolutionary history of the genome at a given base.</p>
-<p>A second innovation was necessitated by the need to model logn range dependence in DNA (changes to DNA can have effect over thousands of bases “downstream”). While transformer-based models initially dominated the field, their quadratic scaling with sequence length has prompted the development of more efficient architectures. Models such as HyenaDNA extend context lengths up to 1 million tokens at single-nucleotide resolution, and hybrid architectures like HybriDNA combine transformers with selective state-space models (Mamba2) to process sequences up to 131 kilobases. Omni-DNA and GENERator further illustrate the trend toward unified, cross-modal genomic foundation models capable of multitask learning.</p>
-<p>Below is a summary table of several prominent DNA language models eith innovative architectures, along with links to their corresponding paper and GitHub (or related resource) repositories:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Model</th>
-<th>Description</th>
-<th>Paper Link</th>
-<th>GitHub / Resource Link</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>DNABERT</strong></td>
-<td>A transformer-based model that learns bidirectional representations from DNA sequences using k-mer tokenization.</td>
-<td><a href="https://doi.org/10.1093/bioinformatics/btab083">DNABERT Paper</a></td>
-<td><a href="https://github.com/jerryji1993/DNABERT">GitHub</a></td>
-</tr>
-<tr class="even">
-<td><strong>Nucleotide Transformer (NT‑v2)</strong></td>
-<td>A large transformer pretrained on massive human genomic data to learn robust DNA representations for various downstream tasks.</td>
-<td><a href="https://doi.org/10.1038/s41592-024-02523-z">Nucleotide Transformer v2</a></td>
-<td><a href="https://github.com/instadeepai/nucleotide-transformer">GitHub</a>/<a href="https://huggingface.co/collections/InstaDeepAI/nucleotide-transformer-65099cdde13ff96230f2e592">HuggingFace</a></td>
-</tr>
-<tr class="odd">
-<td><strong>GPN</strong></td>
-<td>The Genomic Pre-trained Network that leverages unsupervised DNA language modeling to predict genome-wide variant effects.</td>
-<td><a href="https://doi.org/10.1073/pnas.2311219120">GPN Paper (PNAS 2023)</a></td>
-<td><a href="https://github.com/songlab-cal/gpn">GitHub</a></td>
-</tr>
-<tr class="even">
-<td><strong>GPN-MSA</strong></td>
-<td>The Genomic Pre-trained Network that leverage multiple sequenece alignment across species to develop specialized evolution aware token embedding.</td>
-<td><a href="https://pubmed.ncbi.nlm.nih.gov/37873118/">GPN-MSA preprint</a></td>
-<td><a href="https://github.com/songlab-cal/gpn">GitHub</a></td>
-</tr>
-<tr class="odd">
-<td><strong>HyenaDNA</strong></td>
-<td>A long-range genomic language model operating at single-nucleotide resolution using Hyena’s implicit convolutional approach to overcome transformer scaling issues.</td>
-<td><a href="https://arxiv.org/abs/2306.15794">HyenaDNA (arXiv)</a></td>
-<td><a href="https://github.com/HazyResearch/hyena-dna">GitHub</a></td>
-</tr>
-<tr class="even">
-<td><strong>HybriDNA</strong></td>
-<td>A hybrid model combining Transformer and Mamba2 (state-space) architectures for efficient long-range DNA modeling.</td>
-<td><a href="https://arxiv.org/abs/2502.10807">HybriDNA (arXiv)</a></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td><strong>Omni‑DNA</strong></td>
-<td>A unified genomic foundation model that supports cross‑modal and multi‑task learning across a wide range of genomic applications.</td>
-<td><a href="https://arxiv.org/abs/2502.03499">Omni‑DNA (arXiv)</a></td>
-<td><a href="https://huggingface.co/collections/zehui127">Hugging Face Collection</a></td>
-</tr>
-<tr class="even">
-<td><strong>GENERator</strong></td>
-<td>A long-context generative genomic foundation model designed for sequence generation and optimization tasks with a context length of up to 98k bp.</td>
-<td><a href="https://arxiv.org/abs/2502.07272">GENERator (arXiv)</a></td>
-<td><a href="https://github.com/GenerTeam/GENERator">GitHub</a></td>
-</tr>
-</tbody>
-</table>
-<p>This table highlights each model’s core featurs and provides direct access to the publication and code repository (or resource page) where available.</p>
+<section id="section" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="section"><span class="header-section-number">7.1</span> </h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lh3.googleusercontent.com/GgOuel2ukyAKNq6BY0DC5K1VSzymOU52GaWRdrWthA2-wuWGAgCoVKZn-r0aJd7K157qdfFVoWPGF2vz2CyKt_HHTd310n556Qw_B64VUmlfxhLZ=w616-rw.png" class="img-fluid figure-img"></p>
+<figcaption><strong>Figure 1</strong>: Accuracy in GDT for the best model in each consecutive Ciritical Assesment of Protein Structure (CASP)</figcaption>
+</figure>
+</div>
+<p>Alphafold<span class="citation" data-cites="senior2020">(<a href="references.html#ref-senior2020" role="doc-biblioref">Senior et al. 2020</a>)</span> in CASP13, and Alphafold 2<span class="citation" data-cites="jumper2021a">(<a href="references.html#ref-jumper2021a" role="doc-biblioref">Jumper et al. 2021</a>)</span> in CASP 14 were revolutionary, the GDT scores, which are the % of atoms within 1,2 or 8 angstroms ( <span class="math inline">\(10^{-10}\)</span>m) of the directly measured protein structure, reached ±90 meaning 90% of the atoms in the prediction where extremely close to the measured protein. The score was referred to as “near experimental accuracy” though that claim made in the Nature paper was unreferenced and I kinda wished someone had made a little table with the experimental accuracy (from repeated independent measurement of the protein for example) and the AF2 predictions GDT/RMSA side by side (I have mot been able to find anything like it, could be my inexperience with the particular field!).</p>
+<section id="good-old-msa" class="level3" data-number="7.1.1">
+<h3 data-number="7.1.1" class="anchored" data-anchor-id="good-old-msa"><span class="header-section-number">7.1.1</span> Good old MSA</h3>
+<p>In our chapters on DNA language models we came across GPN-MSA <span class="citation" data-cites="Benegas2024">(<a href="references.html#ref-Benegas2024" role="doc-biblioref">Benegas et al. 2023</a>)</span> which relied on multiple sequences alignment (MSA) between species, We even trained a model that was a lot like it in Chapter 4! As you’lll recall the model did amazing, but mostly I feel because while masking we only masked the human base and let the model use all ancestral bases during prediction. The multiple sequences alignments play a big role in the recent success in protein folding.</p>
+<p>The logic being, that if two amino acids “correlate” or co-occurrence across species, like column 3 and 9 highlighted in red in <strong>Figure 2</strong> that indicates their co-evolution. Their co-evolution at distance is then viewed as an indicator of their physical proximity in the 3d molecule. in the toy example we only observe G and H OR T and V in positions 3 and 9, which means there is likely a fitness penalty against other combinations. If these co-evolution signals are robust (reliably found across many aligned sequences) and at a distance, they likely reflect the two amino-acids are physically close, and the substitutino of one has an effect on the binding/function of the other.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Chapter1_Proteins_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption><strong>Figure 2:</strong> example MSA with a co-evolving pair of amino-acids (pos 3 and 9) highlighted in red.</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="applications" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="applications"><span class="header-section-number">6.3</span> Applications</h2>
-<p>These models have demonstrated state-of-the-art performance across multiple downstream tasks including: - <strong>Variant Effect Prediction:</strong> Unsupervised approaches can predict deleterious mutations by modeling the “grammar” of the genome. - <strong>Regulatory Element Identification:</strong> By learning long-range interactions, gLMs help detect promoters, enhancers, and other regulatory motifs. - <strong>Sequence Generation and Protein Tasks:</strong> Some models generate synthetic regulatory sequences or transform coding DNA into meaningful protein representations, bridging genomics and proteomics.</p>
+<section id="the-leap-to-protein-language-models" class="level3" data-number="7.1.2">
+<h3 data-number="7.1.2" class="anchored" data-anchor-id="the-leap-to-protein-language-models"><span class="header-section-number">7.1.2</span> The Leap to Protein Language Models</h3>
+<p>The success of AlphaFold2 marked a watershed moment for protein structure prediction. By integrating attention-based neural networks and using MSAs to predict 3D structures directly from sequence information, AF2 achieved unprecedented accuracy. Yet, the reliance on MSAs introduced limitations — the need for evolutionary data and the computational cost of alignment.</p>
+<p>Protein language models (PLMs) emerged as an alternative. By pretraining on vast protein databases, PLMs capture contextual information about amino acids and their interactions without needing MSAs.</p>
+<p>Models like ESM (Evolutionary Scale Modeling) and ProtTrans demonstrated the potential of PLMs to predict secondary and tertiary structures directly from sequence data. By encoding the relationships between residues through attention mechanisms, these models implicitly learn structural and functional properties, generating accurate 2D contact maps and even 3D coordinates in some cases.</p>
+<p>Protein language models are usually augmented with geometric neural networks, or other additional model elements, when used for protein structure prediction. These augmentations ensure the 1d sequences, or the 2d contact maps, and 3d protein shapes that follow from these adhere to basic geometric rules. Alanguage model, or another sequence model isn’t inherently aware of 3d space. So while we’ll experiment with the latent 2d representations (distances between amino-acids) that are implicitly hiding in language models, those representations are noisy, and might imply 3d structures that cannot exist (e.g.&nbsp;the distance between a and b, and b and c, might not be consistent with the distance between b and c etc). Adding specific neural networks that are designed to produce results that can exist in euclidean (3d) space greatly improve protein structure prediction</p>
 </section>
-<section id="challenges-and-future-directions" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="challenges-and-future-directions"><span class="header-section-number">6.4</span> Challenges and Future Directions</h2>
-<p>Despite impressive progress, challenges remain in tokenization choices, computational efficiency, and interpretability of learned representations. Future work is likely to focus on integrating multimodal data (e.g., epigenomic signals), enhancing model scalability, and further bridging the gap between genomic sequences and cellular function—paving the way toward a “virtual cell.”</p>
+<section id="step-by-step-1d-sequences-to-3d-structures" class="level3" data-number="7.1.3">
+<h3 data-number="7.1.3" class="anchored" data-anchor-id="step-by-step-1d-sequences-to-3d-structures"><span class="header-section-number">7.1.3</span> Step by step: 1D Sequences to 3D Structures</h3>
+<p>The process of moving from a linear amino acid sequence to a folded protein structure involves multiple steps, and it the following chapters we’ll trace those steps</p>
+<ol type="1">
+<li><p>Data sources. As always really science begins with good data in <strong>chapter 8</strong> we’ll talk about data sources for protein (language) models.</p></li>
+<li><p><strong>1D Sequence Representation:</strong> The raw sequence of amino acids, analogous to a string of text in natural language. In <strong>chapter 9</strong> we’ll train a protein language model. Since we can’t compete with the likes of google deepmind and facebook, or even startups, and I want it to be feasible for you to run ll of the steps at home, we’ll we’ll train a small language model on an ad-hoc selection of G-Protein coupled receptor (GPCR) (like/related) proteins across hundreds of species. This large protein family (4% of human protein coding genome for ex) share evolutionary origins and therefore its probably a ripe target for a small model with limited training budget.</p></li>
+<li><p><strong>2D Contact Map Prediction:</strong> For any protein you can conceive a matrix representation showing which pairs of residues are likely to be spatially close, providing key insights into the folding topology. In <strong>Chapter 10</strong> we’ll discuss ways in which protein language models (latently!) actually alreay learn the 2d contact map for each protein,and we’ll extract these from the protein modle we trained, and compare to the true contact map for a few proteins.</p></li>
+<li><p><strong>3D Structure Construction:</strong> Using the contact map and learned residue interactions to predict the final three-dimensional arrangement of atoms. In <strong>Chapter 11</strong> we’ll look at a few different ways in which we can train models that output a full 3d protein by post processing the 2d information learned in protein language models.</p></li>
+</ol>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
-<div id="ref-benegas2025" class="csl-entry" role="listitem">
-Benegas, Gonzalo, Chengzhong Ye, Carlos Albors, Jianan Canal Li, and Yun S. Song. 2025. <span>“Genomic Language Models: Opportunities and Challenges.”</span> <em>Trends in Genetics</em>, January. <a href="https://doi.org/10.1016/j.tig.2024.11.013">https://doi.org/10.1016/j.tig.2024.11.013</a>.
+<div id="ref-Benegas2024" class="csl-entry" role="listitem">
+Benegas, Gonzalo, Carlos Albors, Alan J. Aw, Chengzhong Ye, and Yun S. Song. 2023. <span>“GPN-MSA: An Alignment-Based DNA Language Model for Genome-Wide Variant Effect Prediction.”</span> <a href="http://dx.doi.org/10.1101/2023.10.10.561776">http://dx.doi.org/10.1101/2023.10.10.561776</a>.
+</div>
+<div id="ref-jumper2021a" class="csl-entry" role="listitem">
+Jumper, John, Richard Evans, Alexander Pritzel, Tim Green, Michael Figurnov, Olaf Ronneberger, Kathryn Tunyasuvunakool, et al. 2021. <span>“Highly Accurate Protein Structure Prediction with AlphaFold.”</span> <em>Nature</em> 596 (7873): 583–89. <a href="https://doi.org/10.1038/s41586-021-03819-2">https://doi.org/10.1038/s41586-021-03819-2</a>.
+</div>
+<div id="ref-senior2020" class="csl-entry" role="listitem">
+Senior, Andrew W., Richard Evans, John Jumper, James Kirkpatrick, Laurent Sifre, Tim Green, Chongli Qin, et al. 2020. <span>“Improved Protein Structure Prediction Using Potentials from Deep Learning.”</span> <em>Nature</em> 577 (7792): 706–10. <a href="https://doi.org/10.1038/s41586-019-1923-7">https://doi.org/10.1038/s41586-019-1923-7</a>.
 </div>
 </div>
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -783,13 +789,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./Chapter5_DNA.html" class="pagination-link" aria-label="Weaving Together Models">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Weaving Together Models</span></span>
+      <a href="./Scaling_training.html" class="pagination-link" aria-label="Scale up Training">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Scale up Training</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./Scaling_training.html" class="pagination-link" aria-label="Scale up Training">
-        <span class="nav-page-text">Scale up Training</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./summary.html" class="pagination-link" aria-label="Summary">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Summary</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
