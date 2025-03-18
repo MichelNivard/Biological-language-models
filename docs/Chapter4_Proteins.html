@@ -455,7 +455,7 @@ window.Quarto = {
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    contact_map <span class="op">=</span> dist_matrix <span class="op">&lt;</span> threshold</span>
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> contact_map.astype(<span class="bu">int</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Then we’ll use logistic regression to predict the contact map from the attention maps, to stabilizes the estimateswe’ll do so for 4 genes and average the coefficients. To get an optimal estimate you might use up to 20, 30 or 40 genes here but its interesting to see this actually kind of works with as little as for genes.</p>
+<p>Then we’ll use logistic regression to predict the contact map from the attention maps, to stabilizes the estimates we’ll do so for 4 genes and average the coefficients. To get an optimal estimate you might use up to 20, 30 or 40 genes here but its interesting to see this actually kind of works with as little as four genes.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> seq, pdb <span class="kw">in</span> <span class="bu">zip</span>(sequences[:<span class="dv">3</span>], pdb_filenames[:<span class="dv">3</span>]):</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    true_contact_map <span class="op">=</span> generate_contact_map(pdb, chain_id)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    attention_matrices <span class="op">=</span> extract_attention_matrices(seq)</span>
@@ -513,7 +513,7 @@ Tip
 <section id="conclussion" class="level2" data-number="10.3">
 <h2 data-number="10.3" class="anchored" data-anchor-id="conclussion"><span class="header-section-number">10.3</span> Conclussion</h2>
 <p>So what did we learn here? we learned that within the unsupervised PLM, which is trained on 1-D sequences, we uncover “knowledge” of 2D protein structure. What I did here is by no means an optimal protein contact prediciton but others have build on this idea and done so successfully<span class="citation" data-cites="lin2023">(<a href="references.html#ref-lin2023" role="doc-biblioref">Lin et al. 2023</a>)</span>.</p>
-<p>In the next chapter we’ll discuss how we can append models onto PLMs to go above and beyond and predict 3d protein structure.</p>
+<p>In the next chapter we’ll discuss how we can append models onto PLMs to go above and beyond and predict 3D protein structure.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">

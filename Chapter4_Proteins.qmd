@@ -121,7 +121,7 @@ def generate_contact_map(pdb_filename, chain_id, threshold=12.0):
     return contact_map.astype(int)
 ```
 
-Then we'll use logistic regression to predict the contact map from the attention maps, to stabilizes the estimateswe'll do so for 4 genes and average the coefficients. To get an optimal estimate you might use up to 20, 30 or 40 genes here but its interesting to see this actually kind of works with as little as for genes.
+Then we'll use logistic regression to predict the contact map from the attention maps, to stabilizes the estimates we'll do so for 4 genes and average the coefficients. To get an optimal estimate you might use up to 20, 30 or 40 genes here but its interesting to see this actually kind of works with as little as four genes.
 
 ``` python
 for seq, pdb in zip(sequences[:3], pdb_filenames[:3]):
@@ -169,4 +169,4 @@ If you want a good Masters/PhD term project with limited compute demands, try im
 
 So what did we learn here? we learned that within the unsupervised PLM, which is trained on 1-D sequences, we uncover "knowledge" of 2D protein structure. What I did here is by no means an optimal protein contact prediciton but others have build on this idea and done so successfully[@lin2023].
 
-In the next chapter we'll discuss how we can append models onto PLMs to go above and beyond and predict 3d protein structure.
+In the next chapter we'll discuss how we can append models onto PLMs to go above and beyond and predict 3D protein structure.

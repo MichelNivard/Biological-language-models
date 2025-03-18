@@ -1,4 +1,4 @@
-# Training our first Protein Language Model {$sec-PLM}
+# Training our first Protein Language Model {@sec-PLM}
 
 ::: callout-tip
 ## Abstract
