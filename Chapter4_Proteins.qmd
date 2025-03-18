@@ -1,0 +1,170 @@
+# Protein contact maps from attention maps
+
+One way to construct a scaffold for protein 3d structure learning is to first learn the distances (2d) between all amino-acids, or between atoms within those amino acids. Contact maps have been extensively used as a simplified representation of protein structures. Contact maps "capture most important features of a protein's fold, being preferred by a number of researchers for the description and study of protein structures"[@duarte2010]. 
+
+A protein’s amino acid sequence is one-dimensional (1D) information – the linear order of residues. The functional three-dimensional (3D) structure is how that chain folds in space, bringing certain residues into contact. **Contact maps** serve as a two-dimensional (2D) bridge between sequence and structure. A contact map is essentially a matrix that encodes which pairs of residues are close together in the folded 3D structure​. Specifically, it’s a binary $N \times N$ matrix (for an $N$-residue protein) where an entry is 1 if two residues are within a distance threshold (e.g. 12 Å) in the 3D structure, and 0 if they are not​ This 2D representation captures key structural relationships (who-neighbors-whom) without specifying exact coordinates. In protein structure prediction, one common approach is: **1D sequence ⇒ predicted 2D contact map ⇒ inferred 3D structure**. The contact map, derived from sequence-based predictions (such as co-evolution analysis or machine learning), provides constraints that guide how the chain can fold​. Note however, when converting a full 3D structure into a simplified 2D contact map, some information is inevitably lost. The contact map is a binary (or at best, thresholded distance) representation – it tells us whether a pair of residues is within a certain cutoff distance, but not the exact distance beyond that or their relative orientation. A dramatic illustration is that a protein’s mirror-image (reflected) structure yields an identical contact map, since all pairwise distances are the same​. The map alone cannot distinguish a right-handed fold from its left-handed enantiomer – chirality information is lost. Nevertheless, contact maps can serve as relevant information, or constraints when trying to infer 3D structure. Contact maps can act as a powerful but imperfect intermediate blueprint, translating linear sequence information into spatial relationships that approximate the final folded structure. **Figure 1** is an example contact map based on a distance threshold of 12 Angstrom between C_a atoms (Carbon atoms that are part of the protein backbone ) in the AlphaFold 2 model of the protein structure (PDB format) of a human GRPC protein.
+
+![**Figure 1:** Example of a protein contact map where "contact is defined as \< 12A distance between Ca](images/paste-26.png){fig-align="center"}
+
+Below we'll study how we can estimate contact maps from the self-attention networks, or maps, that are latently encoded in protein language models, based on ideas developed by Roa et al. Roa et al. [@rao2020]. This is frankly like magic, just by training to predict protein sequences, the model learns the 2D structure of the protein, and because we know 2D structure relates to 3D structure we can prove protein language models learn (elements of) the 3D structure of proteins.
+
+Though to be able to predict contact maps, we need to break open the models we have been training and study what attention is, and what attention maps are.
+
+## What is attention *exactly*?
+
+Attention can be thought of as a **more flexible, learned version of correlation**—but one that dynamically changes based on context.
+
+In a traditional correlation or covariance matrix, each entry tells us how strongly two variables (or two positions in a sequence) are related, on average across an entire dataset. If we were studying DNA, for example, a correlation matrix might tell us which nucleotide positions tend to mutate together across many species. However, correlation is static—it does not adapt to the specific sequence we are analyzing at any given moment.
+
+Attention, by contrast, is like a learned, dynamic correlation matrix that changes depending on the sequence it is applied to. Instead of capturing a single, global pattern, it can learn to recognize many different ways in which elements of a sequence relate to one another, depending on context.
+
+For example: - In DNA analysis, attention can learn to recognize when certain nucleotides influence each other in one evolutionary context but not another. - In proteins, attention can capture long-range interactions between amino acids that affect folding, even if they are far apart in the sequence. - In language, attention allows a model to understand that a pronoun like "it" refers to different things in different sentences, based on context.
+
+Mathematically, attention produces an attention map, which is similar to a covariance matrix but is computed on-the-fly for each sequence. This means that instead of assuming a fixed set of relationships, the model can learn multiple different interaction patterns and decide which are relevant based on the input it sees.
+
+### Multi-Head Attention: Learning Many Correlation Patterns
+
+A key advantage of attention is that it does not learn just one correlation pattern—it learns many at the same time. Each attention head in a transformer model acts like an independent correlation matrix, capturing different kinds of dependencies. Some heads might focus on local relationships (like adjacent words in a sentence or nearby mutations in DNA), while others capture long-range dependencies (like structural dependencies in proteins or distant but functionally linked words in a text).
+
+Moreover, because attention is stacked across layers, each layer refines and builds on the patterns learned by previous layers. This allows transformers to discover complex, hierarchical relationships that are impossible to capture with a simple, static correlation matrix.
+
+### The Attention Equation and Multi-Head Attention Mechanism
+
+The fundamental equation of attention in transformer models is based on computing the relationship between different positions in a sequence through the **Query (Q)**, **Key (K)**, and **Value (V)** matrices. The attention score is calculated as:
+
+$$\text{Attention}(Q, K, V) = \text{softmax} \left(\frac{Q K^T}{\sqrt{d_k}}\right) V $$
+
+where $(Q)$ represents the queries (which ask for relevant information), $(K)$ represents the keys (which provide relevance scores), and $(V)$ represents the values (the actual content being retrieved). The **softmax function** ensures that the attention scores sum to 1, effectively acting as a weighting mechanism over the values.
+
+The Query ($Q$), Key ($K$), and Value ($V$) matrices are derived from the input **embeddings**, which represent tokens in a continuous vector space. Each input sequence is first embedded into a fixed-dimensional space, forming a matrix where each row corresponds to a token's embedding. These embeddings are specific to the given sequence, meaning different input sequences will produce different embeddings. The transformation into $Q$, $K$, and $V$ happens through learned **weight matrices** ($W_Q$, $W_K$, $W_V$), which remain **constant after training** but are applied dynamically to the current sequence. Specifically, these transformations are computed as:
+
+$$Q = X W_Q, \quad K = X W_K, \quad V = X W_V$$
+
+where $(X)$ is the matrix of input embeddings for the current sequence. Since ($W_Q$, $W_K$, $W_V$) are learned parameters, they do not change per sequence after training, but the values of $Q$, $K$, and $V$ do change since they depend on the specific embeddings of the input sequence. This means that while the attention mechanism itself is fixed after training, its outputs are entirely **input-dependent**, allowing the model to flexibly compute attention maps for different sequences while maintaining a consistent learned transformation process.
+
+Each layer in a transformer applies this mechanism over the output sequence of the previous layer, computing a **contextualized representation** of each token based on its interactions with all other tokens. This results in an **attention map**, which visually represents how each token attends to every other token in the sequence.
+
+### **Mathematical Link Between Attention and Correlation**
+
+We can draw a mathematical connection between **self-attention** (through the ($QK^T$) term) and **correlation between elements of the input matrix (**$X$). This helps bridge the intuition that attention is like a learned, contextual correlation matrix.
+
+In the core self-attention mechanism:
+
+$$A = \text{softmax} \left(\frac{Q K^T}{\sqrt{d_k}} \right)$$
+
+where:
+
+-   ($Q$) (Query matrix) has shape ($\text{seq}$, $d_k$)
+-   ($K$) (Key matrix) has shape ($\text{seq}$, $d_k$)
+-   ($d_k$) is the dimension of each key vector
+-   ($A$) (attention map) has shape ($\text{seq}$, $\text{seq}$), meaning it represents how much each token attends to every other token in the sequence
+
+As $Q$, $K$, and $V$ are dependent on the specific sequence encoded to $X$ ($Q = X W_Q$). this attention map ($A$) contains values between 0 and 1 (after the softmax normalization) and determines how much weight each token gives to every other token in the sequence **for a given sequence** before computing the final output representation. The value of each entry ($A_{ij}$) represents how much attention token ($i$) pays to token ($j$) in the sequence.
+
+The global attention map is not a simple sum of all the attention maps from different heads. Instead, attention heads operate in parallel, each computing a separate attention matrix ($A_h$), and their outputs are concatenated and linearly projected rather than summed. However, each individual attention map captures a specific conditional relation or dependence in the data.
+
+### How Attention is Stacked Across Layers
+
+In a transformer model, attention is not only computed within a single layer but is also stacked sequentially across multiple layers, allowing deeper layers to refine and build upon the representations learned by previous layers.
+
+**Heads within a layer operate in parallel**: Each attention head captures a different perspective on the input sequence within the same layer. **Layers operate in sequence**: The output of one layer (which has already been shaped by multiple heads) becomes the input for the next layer. This layer-wise stacking allows transformers to build hierarchical feature representations, capturing complex relationships that simple, shallow models cannot.
+
+## Attention encodes biology
+
+Key interpretable AI work by Roa et al. [@rao2020] reveal that the attention matrices of sequences based (one dimensional) Protein language models encode the two dimensional structure of proteins. They extract all individual Attention maps, for a given sequence from a Protein language model, and using those to predict the estimated (or experimentally observed) contact maps for the same sequence.
+
+The intuition here is that the attention maps are amino-acid by amino-acid maps of the relation between the bases in a given sequences, which encode what other bases the model attends to at base $j$, and if the model encodes long range structure (which, spoiler, it does) when if base $j$ and base $I$ are far apart in the sequence, but interact and are co-evolving because their close in the proteins 3D structure, we expect some of the attention maps to tend to that interaction/co-evolution. As the model is an unsupervised black box, we obviously don't know what attention matrices will matter, so we'll simply use Logistic regression where the outcome is the "gold standard" contact map (in our case for convenience sake AlphaFold2 predictions of the contact map) and the predictors are the attention maps. By running logistic regression on only 4(!!!) genes and using the average coefficients we can predict a very crude outline of the contact map of the 5th gene (See **Figure 2**).
+
+### Grabbing attention (maps)
+
+Fortunately, the attention maps are generally an element we can export from language models using standard libraries like `transfomers` so we can write a function to extract all attention maps from a protein language model. These will become the predictors (`x`) in our logistic regression later.
+
+Since the model we trained in @sec-PLM is too small, and a larger model is still in the works (I am running all the compute for this book on my MacBook and an old gaming GPU) we'll work with `"facebook/esm2_t33_650M_UR50D"` an advanced PLM developed by Standford and Facebook. This particular version has 20 attention heads and 33 layers, so that's 20\*30 = 660 attention maps to use for prediction.
+
+``` python
+# Load model and tokenizer
+model_name = "facebook/esm2_t33_650M_UR50D"
+config = AutoConfig.from_pretrained(model_name, output_attentions=True)
+model = AutoModelForMaskedLM.from_pretrained(model_name, config=config)
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+# Function to extract attention matrices
+def extract_attention_matrices(sequence):
+    inputs = tokenizer(sequence, return_tensors='pt')
+    outputs = model(**inputs)
+    attentions = outputs.attentions  # Tuple (num_layers, batch_size, num_heads, seq_len, seq_len)
+    stacked_attentions = torch.cat([attn.squeeze(0) for attn in attentions], dim=0)
+    return stacked_attentions.detach().numpy()
+```
+
+Similarly we extract the "true" contact map from a protein sequence structure file (`PDB` format).
+
+``` python
+# Function to generate true contact maps from PDB
+def generate_contact_map(pdb_filename, chain_id, threshold=12.0):
+    parser = PDBParser()
+    structure = parser.get_structure("protein", pdb_filename)
+    chain = structure[0][chain_id]
+    
+    residues = [res for res in chain if "CA" in res]  # Ensure we only use residues with CA atoms
+    seq_len = len(residues)
+    
+    dist_matrix = np.zeros((seq_len, seq_len))
+    for i, res_one in enumerate(residues):
+        for j, res_two in enumerate(residues):
+            diff_vector = res_one["CA"].coord - res_two["CA"].coord
+            dist_matrix[i, j] = np.sqrt(np.sum(diff_vector * diff_vector))
+    
+    contact_map = dist_matrix < threshold
+    return contact_map.astype(int)
+```
+
+Then we'll use logistic regression to predict the contact map from the attention maps, to stabilizes the estimateswe'll do so for 4 genes and average the coefficients. To get an optimal estimate you might use up to 20, 30 or 40 genes here but its interesting to see this actually kind of works with as little as for genes.
+
+``` python
+for seq, pdb in zip(sequences[:3], pdb_filenames[:3]):
+    true_contact_map = generate_contact_map(pdb, chain_id)
+    attention_matrices = extract_attention_matrices(seq)
+    
+    # Prepare features
+    seq_len = true_contact_map.shape[0]
+    X = np.zeros((seq_len * (seq_len - 1) // 2, attention_matrices.shape[0]))
+    y = np.zeros((seq_len * (seq_len - 1) // 2,))
+
+    index = 0
+    for i in range(seq_len):
+        for j in range(i + 1, seq_len):
+            feature_vector = attention_matrices[:, i, j]
+            if j - i >= 1:  # Ignore near-diagonal contacts
+                X[index] = feature_vector
+                y[index] = true_contact_map[i, j]
+            index += 1
+    
+    # Train logistic regression model
+    clf = LogisticRegression()
+    clf.fit(X, y)
+
+    # Store learned coefficients
+    all_coefs.append(clf.coef_)
+    all_intercepts.append(clf.intercept_)
+
+# Compute the average coefficients
+avg_coefs = np.mean(np.array(all_coefs), axis=0)
+avg_intercept = np.mean(np.array(all_intercepts), axis=0)
+```
+
+### Results
+
+Based on the very limited regression model we can predict the hazy outline of the "contact" map (**Figure 2**).
+
+![**Figure 2**: predicted (top) version "gold standard" contact map based on a very limited "model" trained on 4 genes, predicted into a fifth gene.](images/paste-27.png){fig-align="center"}
+
+::: callout-tip
+If you want a good Masters/PhD term project with limited compute demands, try improving/modeling contact maps. In sequence from beginner to advanced project you could for example: **1.** use ridge or lasso regression to improve on the effectiveness of the prediction. **2.** Train an actual tabular/regression model or adapter across a few thousand genes with very good experimental structure data to squeeze all the juice out of the attention matrices. **3.** Finetune a medium size PLM on a joint masked language model loss, and contact map prediction loss based on the attention maps, jointly optimizing the model as a PLM and a contact map prediction model.
+:::
+
+## Conclussion
+
+So what did we learn here? we learned that within the unsupervised PLM, which is trained on 1-D sequences, we uncover "knowledge" of 2D protein structure. What I did here is by no means an optimal protein contact prediciton but others have build on this idea and done so successfully[@lin2023].
+
+In the next chapter we'll discuss how we can append models onto PLMs to go above and beyond and predict 3d protein structure.

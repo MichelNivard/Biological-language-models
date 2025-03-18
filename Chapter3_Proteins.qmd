@@ -1,4 +1,4 @@
-# Training our first Protein Language Model
+# Training our first Protein Language Model {$sec-PLM}
 
 ::: callout-tip
 ## Abstract
@@ -202,7 +202,7 @@ hf_protein_tokenizer.push_to_hub(repo_id="MichelNivard/GPCRBert-v0.1",use_auth_t
 
 The model is able to learn the structure of GPCR proteins, thought eh strong variability in loss over batches suggests its not uniformly learning all members of the cluster, perhaps due to data imbalances (see **Figure 1**).
 
-![**Figure 1:** GPCR-BERT training loss curve](images/W&B Chart 18_03_2025, 16_52_49.png)
+![**Figure 1:** GPCR-BERT training loss curve](images/W&B%20Chart%2018_03_2025,%2016_52_49.png)
 
 ## Conclusion
 

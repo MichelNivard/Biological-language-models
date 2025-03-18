@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>10&nbsp; Protein contact maps from attention maps – Biological Language Models &amp; Neural Networks</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./summary.html" rel="next">
+<link href="./Chapter3_Proteins.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-e84559ba8659b1a571faa725acb99328.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Biological Language Models &amp; Neural Networks</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_Proteins.html">Proteins</a></li><li class="breadcrumb-item"><a href="./Chapter4_Proteins.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Protein contact maps from attention maps</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Preamble1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What is this Book About?</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Preamble2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How to Read this Book</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">DNA</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter1_DNA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Preparing DNA data for training</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter2_DNA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Training our first DNA Language Model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter3_DNA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating DNA Language Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter4_DNA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Evolution-Aware Encoders</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter5_DNA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Weaving Together Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter6_DNA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Scaling_training.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Scale up Training</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Proteins</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter1_Proteins.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Proteins: from sequence to structure</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter2_Proteins.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Selecting and curating protein sequences</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter3_Proteins.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Training our first Protein Language Model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter4_Proteins.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Protein contact maps from attention maps</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Multi-Modal-Biology</span></span>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#what-is-attention-exactly" id="toc-what-is-attention-exactly" class="nav-link active" data-scroll-target="#what-is-attention-exactly"><span class="header-section-number">10.1</span> What is attention <em>exactly</em>?</a>
+  <ul class="collapse">
+  <li><a href="#multi-head-attention-learning-many-correlation-patterns" id="toc-multi-head-attention-learning-many-correlation-patterns" class="nav-link" data-scroll-target="#multi-head-attention-learning-many-correlation-patterns"><span class="header-section-number">10.1.1</span> Multi-Head Attention: Learning Many Correlation Patterns</a></li>
+  <li><a href="#the-attention-equation-and-multi-head-attention-mechanism" id="toc-the-attention-equation-and-multi-head-attention-mechanism" class="nav-link" data-scroll-target="#the-attention-equation-and-multi-head-attention-mechanism"><span class="header-section-number">10.1.2</span> The Attention Equation and Multi-Head Attention Mechanism</a></li>
+  <li><a href="#mathematical-link-between-attention-and-correlation" id="toc-mathematical-link-between-attention-and-correlation" class="nav-link" data-scroll-target="#mathematical-link-between-attention-and-correlation"><span class="header-section-number">10.1.3</span> <strong>Mathematical Link Between Attention and Correlation</strong></a></li>
+  <li><a href="#how-attention-is-stacked-across-layers" id="toc-how-attention-is-stacked-across-layers" class="nav-link" data-scroll-target="#how-attention-is-stacked-across-layers"><span class="header-section-number">10.1.4</span> How Attention is Stacked Across Layers</a></li>
+  </ul></li>
+  <li><a href="#attention-encodes-biology" id="toc-attention-encodes-biology" class="nav-link" data-scroll-target="#attention-encodes-biology"><span class="header-section-number">10.2</span> Attention encodes biology</a>
+  <ul class="collapse">
+  <li><a href="#grabbing-attention-maps" id="toc-grabbing-attention-maps" class="nav-link" data-scroll-target="#grabbing-attention-maps"><span class="header-section-number">10.2.1</span> Grabbing attention (maps)</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="header-section-number">10.2.2</span> Results</a></li>
+  </ul></li>
+  <li><a href="#conclussion" id="toc-conclussion" class="nav-link" data-scroll-target="#conclussion"><span class="header-section-number">10.3</span> Conclussion</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_Proteins.html">Proteins</a></li><li class="breadcrumb-item"><a href="./Chapter4_Proteins.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Protein contact maps from attention maps</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Protein contact maps from attention maps</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>One way to construct a scaffold for protein 3d structure learning is to first learn the distances (2d) between all amino-acids, or between atoms within those amino acids. Contact maps have been extensively used as a simplified representation of protein structures. Contact maps “capture most important features of a protein’s fold, being preferred by a number of researchers for the description and study of protein structures”<span class="citation" data-cites="duarte2010">(<a href="references.html#ref-duarte2010" role="doc-biblioref">Duarte et al. 2010</a>)</span>.&nbsp;</p>
+<p>A protein’s amino acid sequence is one-dimensional (1D) information – the linear order of residues. The functional three-dimensional (3D) structure is how that chain folds in space, bringing certain residues into contact.&nbsp;<strong>Contact maps</strong>&nbsp;serve as a two-dimensional (2D) bridge between sequence and structure. A contact map is essentially a matrix that encodes which pairs of residues are close together in the folded 3D structure​. Specifically, it’s a binary <span class="math inline">\(N \times N\)</span> matrix (for an <span class="math inline">\(N\)</span>-residue protein) where an entry is 1 if two residues are within a distance threshold (e.g.&nbsp;12 Å) in the 3D structure, and 0 if they are not​ This 2D representation captures key structural relationships (who-neighbors-whom) without specifying exact coordinates. In protein structure prediction, one common approach is:&nbsp;<strong>1D sequence ⇒ predicted 2D contact map ⇒ inferred 3D structure</strong>. The contact map, derived from sequence-based predictions (such as co-evolution analysis or machine learning), provides constraints that guide how the chain can fold​. Note however, when converting a full 3D structure into a simplified 2D contact map, some information is inevitably lost. The contact map is a binary (or at best, thresholded distance) representation – it tells us whether a pair of residues is within a certain cutoff distance, but not the exact distance beyond that or their relative orientation. A dramatic illustration is that a protein’s mirror-image (reflected) structure yields an identical contact map, since all pairwise distances are the same​. The map alone cannot distinguish a right-handed fold from its left-handed enantiomer – chirality information is lost. Nevertheless, contact maps can serve as relevant information, or constraints when trying to infer 3D structure. Contact maps can act as a powerful but imperfect intermediate blueprint, translating linear sequence information into spatial relationships that approximate the final folded structure. <strong>Figure 1</strong> is an example contact map based on a distance threshold of 12 Angstrom between C_a atoms (Carbon atoms that are part of the protein backbone ) in the AlphaFold 2 model of the protein structure (PDB format) of a human GRPC protein.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/paste-26.png" class="img-fluid figure-img"></p>
+<figcaption><strong>Figure 1:</strong> Example of a protein contact map where “contact is defined as &lt; 12A distance between Ca</figcaption>
+</figure>
+</div>
+<p>Below we’ll study how we can estimate contact maps from the self-attention networks, or maps, that are latently encoded in protein language models, based on ideas developed by Roa et al.&nbsp;Roa et al. <span class="citation" data-cites="rao2020">(<a href="references.html#ref-rao2020" role="doc-biblioref">Rao et al. 2020</a>)</span>. This is frankly like magic, just by training to predict protein sequences, the model learns the 2D structure of the protein, and because we know 2D structure relates to 3D structure we can prove protein language models learn (elements of) the 3D structure of proteins.</p>
+<p>Though to be able to predict contact maps, we need to break open the models we have been training and study what attention is, and what attention maps are.</p>
+<section id="what-is-attention-exactly" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="what-is-attention-exactly"><span class="header-section-number">10.1</span> What is attention <em>exactly</em>?</h2>
+<p>Attention can be thought of as a <strong>more flexible, learned version of correlation</strong>—but one that dynamically changes based on context.</p>
+<p>In a traditional correlation or covariance matrix, each entry tells us how strongly two variables (or two positions in a sequence) are related, on average across an entire dataset. If we were studying DNA, for example, a correlation matrix might tell us which nucleotide positions tend to mutate together across many species. However, correlation is static—it does not adapt to the specific sequence we are analyzing at any given moment.</p>
+<p>Attention, by contrast, is like a learned, dynamic correlation matrix that changes depending on the sequence it is applied to. Instead of capturing a single, global pattern, it can learn to recognize many different ways in which elements of a sequence relate to one another, depending on context.</p>
+<p>For example: - In DNA analysis, attention can learn to recognize when certain nucleotides influence each other in one evolutionary context but not another. - In proteins, attention can capture long-range interactions between amino acids that affect folding, even if they are far apart in the sequence. - In language, attention allows a model to understand that a pronoun like “it” refers to different things in different sentences, based on context.</p>
+<p>Mathematically, attention produces an attention map, which is similar to a covariance matrix but is computed on-the-fly for each sequence. This means that instead of assuming a fixed set of relationships, the model can learn multiple different interaction patterns and decide which are relevant based on the input it sees.</p>
+<section id="multi-head-attention-learning-many-correlation-patterns" class="level3" data-number="10.1.1">
+<h3 data-number="10.1.1" class="anchored" data-anchor-id="multi-head-attention-learning-many-correlation-patterns"><span class="header-section-number">10.1.1</span> Multi-Head Attention: Learning Many Correlation Patterns</h3>
+<p>A key advantage of attention is that it does not learn just one correlation pattern—it learns many at the same time. Each attention head in a transformer model acts like an independent correlation matrix, capturing different kinds of dependencies. Some heads might focus on local relationships (like adjacent words in a sentence or nearby mutations in DNA), while others capture long-range dependencies (like structural dependencies in proteins or distant but functionally linked words in a text).</p>
+<p>Moreover, because attention is stacked across layers, each layer refines and builds on the patterns learned by previous layers. This allows transformers to discover complex, hierarchical relationships that are impossible to capture with a simple, static correlation matrix.</p>
+</section>
+<section id="the-attention-equation-and-multi-head-attention-mechanism" class="level3" data-number="10.1.2">
+<h3 data-number="10.1.2" class="anchored" data-anchor-id="the-attention-equation-and-multi-head-attention-mechanism"><span class="header-section-number">10.1.2</span> The Attention Equation and Multi-Head Attention Mechanism</h3>
+<p>The fundamental equation of attention in transformer models is based on computing the relationship between different positions in a sequence through the <strong>Query (Q)</strong>, <strong>Key (K)</strong>, and <strong>Value (V)</strong> matrices. The attention score is calculated as:</p>
+<p><span class="math display">\[\text{Attention}(Q, K, V) = \text{softmax} \left(\frac{Q K^T}{\sqrt{d_k}}\right) V \]</span></p>
+<p>where <span class="math inline">\((Q)\)</span> represents the queries (which ask for relevant information), <span class="math inline">\((K)\)</span> represents the keys (which provide relevance scores), and <span class="math inline">\((V)\)</span> represents the values (the actual content being retrieved). The <strong>softmax function</strong> ensures that the attention scores sum to 1, effectively acting as a weighting mechanism over the values.</p>
+<p>The Query (<span class="math inline">\(Q\)</span>), Key (<span class="math inline">\(K\)</span>), and Value (<span class="math inline">\(V\)</span>) matrices are derived from the input <strong>embeddings</strong>, which represent tokens in a continuous vector space. Each input sequence is first embedded into a fixed-dimensional space, forming a matrix where each row corresponds to a token’s embedding. These embeddings are specific to the given sequence, meaning different input sequences will produce different embeddings. The transformation into <span class="math inline">\(Q\)</span>, <span class="math inline">\(K\)</span>, and <span class="math inline">\(V\)</span> happens through learned <strong>weight matrices</strong> (<span class="math inline">\(W_Q\)</span>, <span class="math inline">\(W_K\)</span>, <span class="math inline">\(W_V\)</span>), which remain <strong>constant after training</strong> but are applied dynamically to the current sequence. Specifically, these transformations are computed as:</p>
+<p><span class="math display">\[Q = X W_Q, \quad K = X W_K, \quad V = X W_V\]</span></p>
+<p>where <span class="math inline">\((X)\)</span> is the matrix of input embeddings for the current sequence. Since (<span class="math inline">\(W_Q\)</span>, <span class="math inline">\(W_K\)</span>, <span class="math inline">\(W_V\)</span>) are learned parameters, they do not change per sequence after training, but the values of <span class="math inline">\(Q\)</span>, <span class="math inline">\(K\)</span>, and <span class="math inline">\(V\)</span> do change since they depend on the specific embeddings of the input sequence. This means that while the attention mechanism itself is fixed after training, its outputs are entirely <strong>input-dependent</strong>, allowing the model to flexibly compute attention maps for different sequences while maintaining a consistent learned transformation process.</p>
+<p>Each layer in a transformer applies this mechanism over the output sequence of the previous layer, computing a <strong>contextualized representation</strong> of each token based on its interactions with all other tokens. This results in an <strong>attention map</strong>, which visually represents how each token attends to every other token in the sequence.</p>
+</section>
+<section id="mathematical-link-between-attention-and-correlation" class="level3" data-number="10.1.3">
+<h3 data-number="10.1.3" class="anchored" data-anchor-id="mathematical-link-between-attention-and-correlation"><span class="header-section-number">10.1.3</span> <strong>Mathematical Link Between Attention and Correlation</strong></h3>
+<p>We can draw a mathematical connection between <strong>self-attention</strong> (through the (<span class="math inline">\(QK^T\)</span>) term) and <strong>correlation between elements of the input matrix (</strong><span class="math inline">\(X\)</span>). This helps bridge the intuition that attention is like a learned, contextual correlation matrix.</p>
+<p>In the core self-attention mechanism:</p>
+<p><span class="math display">\[A = \text{softmax} \left(\frac{Q K^T}{\sqrt{d_k}} \right)\]</span></p>
+<p>where:</p>
+<ul>
+<li>(<span class="math inline">\(Q\)</span>) (Query matrix) has shape (<span class="math inline">\(\text{seq}\)</span>, <span class="math inline">\(d_k\)</span>)</li>
+<li>(<span class="math inline">\(K\)</span>) (Key matrix) has shape (<span class="math inline">\(\text{seq}\)</span>, <span class="math inline">\(d_k\)</span>)</li>
+<li>(<span class="math inline">\(d_k\)</span>) is the dimension of each key vector</li>
+<li>(<span class="math inline">\(A\)</span>) (attention map) has shape (<span class="math inline">\(\text{seq}\)</span>, <span class="math inline">\(\text{seq}\)</span>), meaning it represents how much each token attends to every other token in the sequence</li>
+</ul>
+<p>As <span class="math inline">\(Q\)</span>, <span class="math inline">\(K\)</span>, and <span class="math inline">\(V\)</span> are dependent on the specific sequence encoded to <span class="math inline">\(X\)</span> (<span class="math inline">\(Q = X W_Q\)</span>). this attention map (<span class="math inline">\(A\)</span>) contains values between 0 and 1 (after the softmax normalization) and determines how much weight each token gives to every other token in the sequence <strong>for a given sequence</strong> before computing the final output representation. The value of each entry (<span class="math inline">\(A_{ij}\)</span>) represents how much attention token (<span class="math inline">\(i\)</span>) pays to token (<span class="math inline">\(j\)</span>) in the sequence.</p>
+<p>The global attention map is not a simple sum of all the attention maps from different heads. Instead, attention heads operate in parallel, each computing a separate attention matrix (<span class="math inline">\(A_h\)</span>), and their outputs are concatenated and linearly projected rather than summed. However, each individual attention map captures a specific conditional relation or dependence in the data.</p>
+</section>
+<section id="how-attention-is-stacked-across-layers" class="level3" data-number="10.1.4">
+<h3 data-number="10.1.4" class="anchored" data-anchor-id="how-attention-is-stacked-across-layers"><span class="header-section-number">10.1.4</span> How Attention is Stacked Across Layers</h3>
+<p>In a transformer model, attention is not only computed within a single layer but is also stacked sequentially across multiple layers, allowing deeper layers to refine and build upon the representations learned by previous layers.</p>
+<p><strong>Heads within a layer operate in parallel</strong>: Each attention head captures a different perspective on the input sequence within the same layer. <strong>Layers operate in sequence</strong>: The output of one layer (which has already been shaped by multiple heads) becomes the input for the next layer. This layer-wise stacking allows transformers to build hierarchical feature representations, capturing complex relationships that simple, shallow models cannot.</p>
+</section>
+</section>
+<section id="attention-encodes-biology" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="attention-encodes-biology"><span class="header-section-number">10.2</span> Attention encodes biology</h2>
+<p>Key interpretable AI work by Roa et al. <span class="citation" data-cites="rao2020">(<a href="references.html#ref-rao2020" role="doc-biblioref">Rao et al. 2020</a>)</span> reveal that the attention matrices of sequences based (one dimensional) Protein language models encode the two dimensional structure of proteins. They extract all individual Attention maps, for a given sequence from a Protein language model, and using those to predict the estimated (or experimentally observed) contact maps for the same sequence.</p>
+<p>The intuition here is that the attention maps are amino-acid by amino-acid maps of the relation between the bases in a given sequences, which encode what other bases the model attends to at base <span class="math inline">\(j\)</span>, and if the model encodes long range structure (which, spoiler, it does) when if base <span class="math inline">\(j\)</span> and base <span class="math inline">\(I\)</span> are far apart in the sequence, but interact and are co-evolving because their close in the proteins 3D structure, we expect some of the attention maps to tend to that interaction/co-evolution. As the model is an unsupervised black box, we obviously don’t know what attention matrices will matter, so we’ll simply use Logistic regression where the outcome is the “gold standard” contact map (in our case for convenience sake AlphaFold2 predictions of the contact map) and the predictors are the attention maps. By running logistic regression on only 4(!!!) genes and using the average coefficients we can predict a very crude outline of the contact map of the 5th gene (See <strong>Figure 2</strong>).</p>
+<section id="grabbing-attention-maps" class="level3" data-number="10.2.1">
+<h3 data-number="10.2.1" class="anchored" data-anchor-id="grabbing-attention-maps"><span class="header-section-number">10.2.1</span> Grabbing attention (maps)</h3>
+<p>Fortunately, the attention maps are generally an element we can export from language models using standard libraries like <code>transfomers</code> so we can write a function to extract all attention maps from a protein language model. These will become the predictors (<code>x</code>) in our logistic regression later.</p>
+<p>Since the model we trained in <span class="quarto-unresolved-ref">?sec-PLM</span> is too small, and a larger model is still in the works (I am running all the compute for this book on my MacBook and an old gaming GPU) we’ll work with <code>"facebook/esm2_t33_650M_UR50D"</code> an advanced PLM developed by Standford and Facebook. This particular version has 20 attention heads and 33 layers, so that’s 20*30 = 660 attention maps to use for prediction.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load model and tokenizer</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>model_name <span class="op">=</span> <span class="st">"facebook/esm2_t33_650M_UR50D"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>config <span class="op">=</span> AutoConfig.from_pretrained(model_name, output_attentions<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> AutoModelForMaskedLM.from_pretrained(model_name, config<span class="op">=</span>config)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>tokenizer <span class="op">=</span> AutoTokenizer.from_pretrained(model_name)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to extract attention matrices</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> extract_attention_matrices(sequence):</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    inputs <span class="op">=</span> tokenizer(sequence, return_tensors<span class="op">=</span><span class="st">'pt'</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    outputs <span class="op">=</span> model(<span class="op">**</span>inputs)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    attentions <span class="op">=</span> outputs.attentions  <span class="co"># Tuple (num_layers, batch_size, num_heads, seq_len, seq_len)</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    stacked_attentions <span class="op">=</span> torch.cat([attn.squeeze(<span class="dv">0</span>) <span class="cf">for</span> attn <span class="kw">in</span> attentions], dim<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> stacked_attentions.detach().numpy()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Similarly we extract the “true” contact map from a protein sequence structure file (<code>PDB</code> format).</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to generate true contact maps from PDB</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_contact_map(pdb_filename, chain_id, threshold<span class="op">=</span><span class="fl">12.0</span>):</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    parser <span class="op">=</span> PDBParser()</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    structure <span class="op">=</span> parser.get_structure(<span class="st">"protein"</span>, pdb_filename)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    chain <span class="op">=</span> structure[<span class="dv">0</span>][chain_id]</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    residues <span class="op">=</span> [res <span class="cf">for</span> res <span class="kw">in</span> chain <span class="cf">if</span> <span class="st">"CA"</span> <span class="kw">in</span> res]  <span class="co"># Ensure we only use residues with CA atoms</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    seq_len <span class="op">=</span> <span class="bu">len</span>(residues)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    dist_matrix <span class="op">=</span> np.zeros((seq_len, seq_len))</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, res_one <span class="kw">in</span> <span class="bu">enumerate</span>(residues):</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j, res_two <span class="kw">in</span> <span class="bu">enumerate</span>(residues):</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>            diff_vector <span class="op">=</span> res_one[<span class="st">"CA"</span>].coord <span class="op">-</span> res_two[<span class="st">"CA"</span>].coord</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>            dist_matrix[i, j] <span class="op">=</span> np.sqrt(np.<span class="bu">sum</span>(diff_vector <span class="op">*</span> diff_vector))</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    contact_map <span class="op">=</span> dist_matrix <span class="op">&lt;</span> threshold</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> contact_map.astype(<span class="bu">int</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then we’ll use logistic regression to predict the contact map from the attention maps, to stabilizes the estimateswe’ll do so for 4 genes and average the coefficients. To get an optimal estimate you might use up to 20, 30 or 40 genes here but its interesting to see this actually kind of works with as little as for genes.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> seq, pdb <span class="kw">in</span> <span class="bu">zip</span>(sequences[:<span class="dv">3</span>], pdb_filenames[:<span class="dv">3</span>]):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    true_contact_map <span class="op">=</span> generate_contact_map(pdb, chain_id)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    attention_matrices <span class="op">=</span> extract_attention_matrices(seq)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Prepare features</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    seq_len <span class="op">=</span> true_contact_map.shape[<span class="dv">0</span>]</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> np.zeros((seq_len <span class="op">*</span> (seq_len <span class="op">-</span> <span class="dv">1</span>) <span class="op">//</span> <span class="dv">2</span>, attention_matrices.shape[<span class="dv">0</span>]))</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> np.zeros((seq_len <span class="op">*</span> (seq_len <span class="op">-</span> <span class="dv">1</span>) <span class="op">//</span> <span class="dv">2</span>,))</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    index <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(seq_len):</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(i <span class="op">+</span> <span class="dv">1</span>, seq_len):</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>            feature_vector <span class="op">=</span> attention_matrices[:, i, j]</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> j <span class="op">-</span> i <span class="op">&gt;=</span> <span class="dv">1</span>:  <span class="co"># Ignore near-diagonal contacts</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>                X[index] <span class="op">=</span> feature_vector</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>                y[index] <span class="op">=</span> true_contact_map[i, j]</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>            index <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Train logistic regression model</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    clf <span class="op">=</span> LogisticRegression()</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    clf.fit(X, y)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Store learned coefficients</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    all_coefs.append(clf.coef_)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    all_intercepts.append(clf.intercept_)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the average coefficients</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>avg_coefs <span class="op">=</span> np.mean(np.array(all_coefs), axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>avg_intercept <span class="op">=</span> np.mean(np.array(all_intercepts), axis<span class="op">=</span><span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="results" class="level3" data-number="10.2.2">
+<h3 data-number="10.2.2" class="anchored" data-anchor-id="results"><span class="header-section-number">10.2.2</span> Results</h3>
+<p>Based on the very limited regression model we can predict the hazy outline of the “contact” map (<strong>Figure 2</strong>).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/paste-27.png" class="img-fluid figure-img"></p>
+<figcaption><strong>Figure 2</strong>: predicted (top) version “gold standard” contact map based on a very limited “model” trained on 4 genes, predicted into a fifth gene.</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you want a good Masters/PhD term project with limited compute demands, try improving/modeling contact maps. In sequence from beginner to advanced project you could for example: <strong>1.</strong> use ridge or lasso regression to improve on the effectiveness of the prediction. <strong>2.</strong> Train an actual tabular/regression model or adapter across a few thousand genes with very good experimental structure data to squeeze all the juice out of the attention matrices. <strong>3.</strong> Finetune a medium size PLM on a joint masked language model loss, and contact map prediction loss based on the attention maps, jointly optimizing the model as a PLM and a contact map prediction model.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="conclussion" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="conclussion"><span class="header-section-number">10.3</span> Conclussion</h2>
+<p>So what did we learn here? we learned that within the unsupervised PLM, which is trained on 1-D sequences, we uncover “knowledge” of 2D protein structure. What I did here is by no means an optimal protein contact prediciton but others have build on this idea and done so successfully<span class="citation" data-cites="lin2023">(<a href="references.html#ref-lin2023" role="doc-biblioref">Lin et al. 2023</a>)</span>.</p>
+<p>In the next chapter we’ll discuss how we can append models onto PLMs to go above and beyond and predict 3d protein structure.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-duarte2010" class="csl-entry" role="listitem">
+Duarte, Jose M, Rajagopal Sathyapriya, Henning Stehr, Ioannis Filippis, and Michael Lappe. 2010. <span>“Optimal Contact Definition for Reconstruction of Contact Maps.”</span> <em>BMC Bioinformatics</em> 11 (1). <a href="https://doi.org/10.1186/1471-2105-11-283">https://doi.org/10.1186/1471-2105-11-283</a>.
+</div>
+<div id="ref-lin2023" class="csl-entry" role="listitem">
+Lin, Zeming, Halil Akin, Roshan Rao, Brian Hie, Zhongkai Zhu, Wenting Lu, Nikita Smetanin, et al. 2023. <span>“Evolutionary-Scale Prediction of Atomic-Level Protein Structure with a Language Model.”</span> <em>Science</em> 379 (6637): 1123–30. <a href="https://doi.org/10.1126/science.ade2574">https://doi.org/10.1126/science.ade2574</a>.
+</div>
+<div id="ref-rao2020" class="csl-entry" role="listitem">
+Rao, Roshan, Joshua Meier, Tom Sercu, Sergey Ovchinnikov, and Alexander Rives. 2020. <span>“Transformer Protein Language Models Are Unsupervised Structure Learners.”</span> <a href="http://dx.doi.org/10.1101/2020.12.15.422761">http://dx.doi.org/10.1101/2020.12.15.422761</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<script src="https://utteranc.es/client.js" repo="MichelNivard/Biological-language-models" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./Chapter3_Proteins.html" class="pagination-link" aria-label="Training our first Protein Language Model">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Training our first Protein Language Model</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./summary.html" class="pagination-link" aria-label="Summary">
+        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Summary</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
