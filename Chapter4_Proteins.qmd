@@ -40,7 +40,7 @@ $$Q = X W_Q, \quad K = X W_K, \quad V = X W_V$$
 
 Since ($W_Q$, $W_K$, $W_V$) are learned parameters, they do not change per sequence after training, but the values of $Q$, $K$, and $V$ do change since they depend on the specific embeddings ($X$) of the input sequence. This means that while the attention mechanism itself is fixed after training, its outputs are entirely **input-dependent**, allowing the model to flexibly compute attention maps for different sequences while maintaining a consistent learned transformation process.
 
-### **Mathematical Link Between Attention and Correlation**
+### Mathematical Link Between Attention and Correlation
 
 Lets expand slightly on the conceptual analogy between attention and "covariance". The core self-attention mechanism:
 
@@ -53,9 +53,9 @@ where:
 -   The denominator ( $\sqrt{d_k}$ ) is a scaling factor to stabilize gradients.
 
 
-The term ( $QK\^T = (X W_Q) (X W_K)\^T$ ) computes a similarity measure between elements of ( $X$ ) after transformation. If ( $W_Q = W_K$ ), this resembles the **covariance matrix** of a linear transformation of ( $X$ ), and $QK^T$ can be re-writen as:
+The term ( $QK^T = (X W_Q) (X W_K)^T$ ) computes a similarity measure between elements of ( $X$ ) after transformation. If ( $W_Q = W_K$ ), this resembles the **covariance matrix** of a linear transformation of ( $X$ ), and $QK^T$ can be re-writen as:
 
-$$QK\^T = X W_Q W_K\^T X\^T$$
+$$QK^T = X W_Q W_K^T X^T$$
 
 This is structurally similar to the sample covariance matrix:
 
