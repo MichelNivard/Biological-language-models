@@ -50,7 +50,7 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./summary.html" rel="next">
+<link href="./Chapter2_Proteins.html" rel="next">
 <link href="./Scaling_training.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -245,6 +245,18 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Proteins: from sequence to structure</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter2_Proteins.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Selecting and curating protein sequences</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter3_Proteins.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Training our first Protein Language Model</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -254,7 +266,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -339,8 +351,7 @@ window.Quarto = {
 <section id="the-leap-to-protein-language-models" class="level2" data-number="7.3">
 <h2 data-number="7.3" class="anchored" data-anchor-id="the-leap-to-protein-language-models"><span class="header-section-number">7.3</span> The Leap to Protein Language Models</h2>
 <p>The success of AlphaFold 2 marked a watershed moment for protein structure prediction. By integrating attention-based neural networks and using MSAs to predict 3D structures directly from sequence information, AF2 achieved unprecedented accuracy. Yet, the reliance on MSAs introduced limitations — the need for evolutionary data and the computational cost of alignment.</p>
-<p>Protein language models (PLMs) emerged as an alternative. By pretraining on vast protein databases, PLMs capture contextual information about amino acids and their interactions without needing MSAs.</p>
-<p>Models like ESM (Evolutionary Scale Modeling) and ProtTrans demonstrated the potential of PLMs to predict secondary and tertiary structures directly from sequence data. By encoding the relationships between residues through attention mechanisms, these models implicitly learn structural and functional properties, generating accurate 2D contact maps and even 3D coordinates in some cases.</p>
+<p>Protein language models (PLMs) emerged as an alternative. By pretraining on vast protein databases, PLMs capture contextual information about amino acids and their interactions without needing MSAs.Models like ESM (Evolutionary Scale Modeling) and ProtTrans demonstrated the potential of PLMs to predict secondary and tertiary structures directly from sequence data. By encoding the relationships between residues through attention mechanisms, these models implicitly learn structural and functional properties, generating accurate 2D contact maps and even 3D coordinates in some cases.</p>
 <p>Protein language models are usually augmented with geometric neural networks or other additional model elements when used for protein structure prediction. These augmentations ensure the 1D sequences, 2D contact maps, and 3D protein shapes that follow adhere to basic geometric rules. A language model or another sequence model isn’t inherently aware of 3D space. So while we’ll experiment with the latent 2D representations (distances between amino acids) that are implicitly hiding in language models, those representations are noisy and might imply 3D structures that cannot exist (e.g., the distance between a and b, and b and c, might not be consistent with the distance between b and c, etc.). Adding specific neural networks that are designed to produce results that can exist in Euclidean (3D) space greatly improves protein structure prediction.</p>
 </section>
 <section id="step-by-step-1d-sequences-to-3d-structures" class="level2" data-number="7.4">
@@ -794,8 +805,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./summary.html" class="pagination-link" aria-label="Summary">
-        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Summary</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./Chapter2_Proteins.html" class="pagination-link" aria-label="Selecting and curating protein sequences">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Selecting and curating protein sequences</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

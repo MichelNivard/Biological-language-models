@@ -1,5 +1,55 @@
 ---
 title: "Selecting and curating protein sequences"
 format: html
+bibliography: references.bib
 ---
 
+Protein data comes from multiple sources, each providing different types of information useful for training machine learning models and protein language models. Here’s the revised version with links added at the top of each paragraph:
+
+## **Protein Sequence Data**
+
+[UniProt](https://www.uniprot.org/) \| [NCBI RefSeq](https://www.ncbi.nlm.nih.gov/refseq/) \| [MGnify](https://www.ebi.ac.uk/metagenomics/)\
+The most widely used source of protein sequences is **UniProt**, which contains curated (Swiss-Prot) and unreviewed (TrEMBL) protein sequences from various organisms. Other databases, like **NCBI RefSeq**, provide reference protein sequences linked to genomic data. Large-scale sequencing projects, such as **MGnify**, focus on metagenomic protein sequences, offering an even broader diversity. These sequence datasets serve as the foundation for protein language models (PLMs).
+
+### **UniRef50 and UniRef90**
+
+[UniRef](https://www.uniprot.org/help/uniref)\
+UniRef50 and UniRef90 are clustered versions of UniProt protein sequences designed to reduce redundancy while maintaining sequence diversity. **UniRef90** groups sequences that share at least **90% identity** and have **80% overlap**, merging nearly identical sequences into single representative entries. **UniRef50** applies a looser **50% identity** threshold, further condensing the dataset while preserving diverse functional and structural information. These clustered datasets are particularly useful for training protein language models and other ML applications, as they help mitigate biases from highly redundant sequences while still providing broad coverage across species. By using UniRef datasets, models can learn more generalizable representations of protein sequence space while improving computational efficiency.
+
+### **Protein Structure Data**
+
+[Protein Data Bank (PDB)](https://www.rcsb.org/) \| [AlphaFold DB](https://www.alphafold.ebi.ac.uk/) \| [SCOP](http://scop.mrc-lmb.cam.ac.uk/scop/)\
+For structural information, **the Protein Data Bank (PDB)** is the most comprehensive resource, containing experimentally determined 3D structures from X-ray crystallography, NMR, and cryo-electron microscopy. The recent breakthroughs in **AlphaFold DB** provide high-quality computational structure predictions for almost all known proteins, greatly expanding the available structural information. Another key resource is **SCOP (Structural Classification of Proteins)**, which organizes protein structures into hierarchical families based on evolutionary relationships, helping models understand structure-function relationships.
+
+### **Evolutionary and Functional Data**
+
+[Pfam](https://pfam.xfam.org/) \| [InterPro](https://www.ebi.ac.uk/interpro/) \| [KEGG](https://www.genome.jp/kegg/)\
+Evolutionary conservation is captured in **Pfam**, a database of protein families built from multiple sequence alignments, which is useful for understanding functional motifs. **InterPro** integrates multiple databases to annotate protein sequences with conserved domains, GO (Gene Ontology) terms, and other functional descriptors. **KEGG (Kyoto Encyclopedia of Genes and Genomes)** links proteins to biochemical pathways, aiding in training models to understand biological context.
+
+### **Protein-Protein Interactions and Kinetics**
+
+[STRING](https://string-db.org/) \| [BioGRID](https://thebiogrid.org/) \| [BindingDB](https://www.bindingdb.org/) \| [PDBBind](http://www.pdbbind.org.cn/)\
+Databases like **STRING** and **BioGRID** compile large-scale protein-protein interaction networks, valuable for models predicting binding affinity or molecular interactions. Meanwhile, **BindingDB** and **PDBBind** offer datasets of protein-ligand interactions with binding affinities, supporting drug discovery applications.
+
+### **Specialized Datasets for ML and PLMs**
+
+[TAPE Dataset](https://github.com/songlab-cal/tape) \| [SwissProt50/TrEMBL50](https://www.uniprot.org/)\
+Several datasets have been specifically designed for training ML models and protein LMs. **TAPE (Tasks Assessing Protein Embeddings)** provides benchmarks for PLMs on tasks like secondary structure prediction, fluorescence, and stability prediction. **SwissProt50/TrEMBL50** datasets are commonly used for training PLMs by balancing redundancy in sequence data.
+
+By combining these diverse protein data sources, machine learning models can capture sequence patterns, structural constraints, evolutionary conservation, and functional properties, enabling advancements in protein engineering, drug discovery, and fundamental biological research.
+
+## Sequence diversity in training
+
+When training protein sequence models there is a risk of "overtraining" on abundantly measured, or frequently observed protein sequences. Not all protein families (characterized by a common evolutionary origin) are equally represented and so uniform sampling form Uniprot will skew towards certain types of proteins while undersampling others.
+
+Various empirical projects consider sequencing diversity in training protein (language) models. The ESM-1 paper [@rives2021] evaluated 3 different levels of sequence diversity. The low-diversity dataset (UR100) consists of UniRef100 representative sequences which are all proteins in Uniprot removing identical copies (clustering sequences that share 100% identity). This dataset will have many near identical sequences. The high-diversity sparse dataset (UR50/S) is derived from UniRef50 representative sequences, its goig to have many unique sequences, but limited variation in similar sequences as all sequences with \> 50% shared identity are collapsed into a single cluster from which 1 representative sequence is retained. The high-diversity dense dataset (UR50/D) achieves broader coverage by uniformly sampling UniRef100 sequences across all UniRef50 clusters, mixing uniform representation and dense coverage. When models were compared using the exponentiated cross entropy (ECE) metric, the sense diverse data performed best (see Table 1).
+
+| Model       | Variant  | Params  | Training data               | ECE   |
+|-------------|----------|---------|-----------------------------|-------|
+| Transformer | 34-layer | 669.2 M | UR100 (low diversity)       | 10.32 |
+| Transformer | \-       | \-      | UR50/S (h diversity sparse) | 8.54  |
+| Transformer | \-       | \-      | UR50/D (h diversity dense)  | 8.46  |
+
+: **Table 1:** A single model trained on 3 data mixtures suggests dense diverse sequences lead to better training results (source: [@rives2021] )
+
+If you are going to develop your own base protein (language) model, competing with he likes of facebook and google, then selecting the optimal training set is critically important. it is unlikely you'll be able to compete in terms of compute, but with good data selection you can save you a lot off compute by making the model more efficient.

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>6&nbsp; A Review of Current DNA Language Models – Biological Language Models &amp; Neural Networks</title>
+<title>9&nbsp; Training our first Protein Language Model – Biological Language Models &amp; Neural Networks</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,27 +20,7 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -50,8 +30,8 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./Scaling_training.html" rel="next">
-<link href="./Chapter5_DNA.html" rel="prev">
+<link href="./summary.html" rel="next">
+<link href="./Chapter2_Proteins.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -118,7 +98,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_DNA.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter6_DNA.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_Proteins.html">Proteins</a></li><li class="breadcrumb-item"><a href="./Chapter3_Proteins.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Training our first Protein Language Model</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -189,7 +169,7 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./Chapter6_DNA.html" class="sidebar-item-text sidebar-link active">
+  <a href="./Chapter6_DNA.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></span></a>
   </div>
 </li>
@@ -224,7 +204,7 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./Chapter3_Proteins.html" class="sidebar-item-text sidebar-link">
+  <a href="./Chapter3_Proteins.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Training our first Protein Language Model</span></span></a>
   </div>
 </li>
@@ -256,19 +236,20 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#modeling-paradigms" id="toc-modeling-paradigms" class="nav-link active" data-scroll-target="#modeling-paradigms"><span class="header-section-number">6.1</span> Modeling Paradigms</a></li>
-  <li><a href="#architectural-innovations" id="toc-architectural-innovations" class="nav-link" data-scroll-target="#architectural-innovations"><span class="header-section-number">6.2</span> Architectural Innovations</a></li>
-  <li><a href="#applications" id="toc-applications" class="nav-link" data-scroll-target="#applications"><span class="header-section-number">6.3</span> Applications</a></li>
-  <li><a href="#challenges-and-future-directions" id="toc-challenges-and-future-directions" class="nav-link" data-scroll-target="#challenges-and-future-directions"><span class="header-section-number">6.4</span> Challenges and Future Directions</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">9.1</span> Introduction</a></li>
+  <li><a href="#dataset-preprocessing" id="toc-dataset-preprocessing" class="nav-link" data-scroll-target="#dataset-preprocessing"><span class="header-section-number">9.2</span> Dataset &amp; Preprocessing</a></li>
+  <li><a href="#model-architecture-training" id="toc-model-architecture-training" class="nav-link" data-scroll-target="#model-architecture-training"><span class="header-section-number">9.3</span> Model Architecture &amp; Training</a></li>
+  <li><a href="#evaluation-results" id="toc-evaluation-results" class="nav-link" data-scroll-target="#evaluation-results"><span class="header-section-number">9.4</span> Evaluation &amp; Results</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">9.5</span> Conclusion</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_DNA.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter6_DNA.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_Proteins.html">Proteins</a></li><li class="breadcrumb-item"><a href="./Chapter3_Proteins.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Training our first Protein Language Model</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></h1>
+<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Training our first Protein Language Model</span></h1>
 </div>
 
 
@@ -285,92 +266,58 @@ div.csl-indent {
 </header>
 
 
-<p>This is not an academic review, those are obviously far more comprehensive, see <span class="citation" data-cites="benegas2025">Benegas et al. (<a href="references.html#ref-benegas2025" role="doc-biblioref">2025</a>)</span> for a review I really liked.</p>
-<section id="modeling-paradigms" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="modeling-paradigms"><span class="header-section-number">6.1</span> Modeling Paradigms</h2>
-<p>As we leared in the first 5 chapters, gLMs (genomic Language Models) borrow from natural language processing by treating DNA sequences as “text” composed of four characters (A, C, G, T). Early models used k-mer tokenization (e.g., DNABERT), but newer approaches experiment with both nucleotide‐level and subword tokenizations (such as 3-mer or 6-mer) to better capture biological semantics.</p>
-</section>
-<section id="architectural-innovations" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="architectural-innovations"><span class="header-section-number">6.2</span> Architectural Innovations</h2>
-<p>There are two specific architectural innovations in DNA langage models worth discussing, the first is GPA-MSA, the core idea behind a model we discussed in Chapter 4. In this model the trainable embedding layer is replaced with a biologically informed deterministic embeding, that reflects the evolutionary history of the genome at a given base.</p>
-<p>A second innovation was necessitated by the need to model logn range dependence in DNA (changes to DNA can have effect over thousands of bases “downstream”). While transformer-based models initially dominated the field, their quadratic scaling with sequence length has prompted the development of more efficient architectures. Models such as HyenaDNA extend context lengths up to 1 million tokens at single-nucleotide resolution, and hybrid architectures like HybriDNA combine transformers with selective state-space models (Mamba2) to process sequences up to 131 kilobases. Omni-DNA and GENERator further illustrate the trend toward unified, cross-modal genomic foundation models capable of multitask learning.</p>
-<p>Below is a summary table of several prominent DNA language models eith innovative architectures, along with links to their corresponding paper and GitHub (or related resource) repositories:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Model</th>
-<th>Description</th>
-<th>Paper Link</th>
-<th>GitHub / Resource Link</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>DNABERT</strong></td>
-<td>A transformer-based model that learns bidirectional representations from DNA sequences using k-mer tokenization.</td>
-<td><a href="https://doi.org/10.1093/bioinformatics/btab083">DNABERT Paper</a></td>
-<td><a href="https://github.com/jerryji1993/DNABERT">GitHub</a></td>
-</tr>
-<tr class="even">
-<td><strong>Nucleotide Transformer (NT‑v2)</strong></td>
-<td>A large transformer pretrained on massive human genomic data to learn robust DNA representations for various downstream tasks.</td>
-<td><a href="https://doi.org/10.1038/s41592-024-02523-z">Nucleotide Transformer v2</a></td>
-<td><a href="https://github.com/instadeepai/nucleotide-transformer">GitHub</a>/<a href="https://huggingface.co/collections/InstaDeepAI/nucleotide-transformer-65099cdde13ff96230f2e592">HuggingFace</a></td>
-</tr>
-<tr class="odd">
-<td><strong>GPN</strong></td>
-<td>The Genomic Pre-trained Network that leverages unsupervised DNA language modeling to predict genome-wide variant effects.</td>
-<td><a href="https://doi.org/10.1073/pnas.2311219120">GPN Paper (PNAS 2023)</a></td>
-<td><a href="https://github.com/songlab-cal/gpn">GitHub</a></td>
-</tr>
-<tr class="even">
-<td><strong>GPN-MSA</strong></td>
-<td>The Genomic Pre-trained Network that leverage multiple sequenece alignment across species to develop specialized evolution aware token embedding.</td>
-<td><a href="https://pubmed.ncbi.nlm.nih.gov/37873118/">GPN-MSA preprint</a></td>
-<td><a href="https://github.com/songlab-cal/gpn">GitHub</a></td>
-</tr>
-<tr class="odd">
-<td><strong>HyenaDNA</strong></td>
-<td>A long-range genomic language model operating at single-nucleotide resolution using Hyena’s implicit convolutional approach to overcome transformer scaling issues.</td>
-<td><a href="https://arxiv.org/abs/2306.15794">HyenaDNA (arXiv)</a></td>
-<td><a href="https://github.com/HazyResearch/hyena-dna">GitHub</a></td>
-</tr>
-<tr class="even">
-<td><strong>HybriDNA</strong></td>
-<td>A hybrid model combining Transformer and Mamba2 (state-space) architectures for efficient long-range DNA modeling.</td>
-<td><a href="https://arxiv.org/abs/2502.10807">HybriDNA (arXiv)</a></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td><strong>Omni‑DNA</strong></td>
-<td>A unified genomic foundation model that supports cross‑modal and multi‑task learning across a wide range of genomic applications.</td>
-<td><a href="https://arxiv.org/abs/2502.03499">Omni‑DNA (arXiv)</a></td>
-<td><a href="https://huggingface.co/collections/zehui127">Hugging Face Collection</a></td>
-</tr>
-<tr class="even">
-<td><strong>GENERator</strong></td>
-<td>A long-context generative genomic foundation model designed for sequence generation and optimization tasks with a context length of up to 98k bp.</td>
-<td><a href="https://arxiv.org/abs/2502.07272">GENERator (arXiv)</a></td>
-<td><a href="https://github.com/GenerTeam/GENERator">GitHub</a></td>
-</tr>
-</tbody>
-</table>
-<p>This table highlights each model’s core featurs and provides direct access to the publication and code repository (or resource page) where available.</p>
-</section>
-<section id="applications" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="applications"><span class="header-section-number">6.3</span> Applications</h2>
-<p>These models have demonstrated state-of-the-art performance across multiple downstream tasks including: - <strong>Variant Effect Prediction:</strong> Unsupervised approaches can predict deleterious mutations by modeling the “grammar” of the genome. - <strong>Regulatory Element Identification:</strong> By learning long-range interactions, gLMs help detect promoters, enhancers, and other regulatory motifs. - <strong>Sequence Generation and Protein Tasks:</strong> Some models generate synthetic regulatory sequences or transform coding DNA into meaningful protein representations, bridging genomics and proteomics.</p>
-</section>
-<section id="challenges-and-future-directions" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="challenges-and-future-directions"><span class="header-section-number">6.4</span> Challenges and Future Directions</h2>
-<p>Despite impressive progress, challenges remain in tokenization choices, computational efficiency, and interpretability of learned representations. Future work is likely to focus on integrating multimodal data (e.g., epigenomic signals), enhancing model scalability, and further bridging the gap between genomic sequences and cellular function—paving the way toward a “virtual cell.”</p>
-
-
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
-<div id="ref-benegas2025" class="csl-entry" role="listitem">
-Benegas, Gonzalo, Chengzhong Ye, Carlos Albors, Jianan Canal Li, and Yun S. Song. 2025. <span>“Genomic Language Models: Opportunities and Challenges.”</span> <em>Trends in Genetics</em>, January. <a href="https://doi.org/10.1016/j.tig.2024.11.013">https://doi.org/10.1016/j.tig.2024.11.013</a>.
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Abstract
 </div>
 </div>
+<div class="callout-body-container callout-body">
+<p>In this chapter, we’ll train a protein language model. To run a full training session, you will need a powerful GPU setup or access to cloud computing services, the script below trains on GPCR proteins only to ensure we can study protein language models on a MacBook or moderately powerfull workstation. A Google Colab notebook to train the model is available <a href="#">here</a>.</p>
+<p>If you lack the necessary computing resources, you can download a pre-trained version of GPCR-BERT <a href="https://huggingface.co/MichelNivard/GPCRBert-v0.1">here</a></p>
+<p>All scripts for this chapter are found here: <a href="https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Proteins/Chapter_3" class="uri">https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Proteins/Chapter_3</a></p>
+</div>
+</div>
+<section id="introduction" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">9.1</span> Introduction</h2>
+<p>Now that we have prepared a dataset of protein sequences, we can proceed to train a protein language model using the (Modern)BERT model architecture. Protein sequences, like DNA, follow structured patterns that can be learned by deep learning models. This chapter introduces the training of GPCR-BERT, a transformer-based masked language model (MLM) designed to understand and generate protein sequences.</p>
+<p>Because the fundementals of trainign a Protein language model arent that different then trainign a DNA language model this chapter is somewhat abbriviated, see <a href="Chapter2_DNA.html" class="quarto-xref"><span>Chapter 2</span></a> for more context, most of which directly translates to protein language models.</p>
+</section>
+<section id="dataset-preprocessing" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="dataset-preprocessing"><span class="header-section-number">9.2</span> Dataset &amp; Preprocessing</h2>
+<p>Unlike large-scale protein language models trained on massive datasets from UniProt or AlphaFold, our approach focuses on a more specialized subset: G-protein coupled receptor (GPCR) genes, sourced from RefProt 90. This choice is driven by computational constraints and the goal of achieving high-quality representations within a biologically meaningful domain. By narrowing our scope, we ensure that the model learns from a well-defined set of sequences, optimizing for accuracy and relevance in GPCR-related research rather than sheer scale.</p>
+<p>Protein sequences are represented using the FASTA format, which encodes amino acids with standard single-letter codes. For this model, we define a vocabulary that includes:</p>
+<ul>
+<li>The 20 standard amino acids (A, R, N, D, C, Q, E, G, H, I, L, K, M, F, P, S, T, W, Y, V)</li>
+<li>Ambiguity codes: B (N/D), Z (Q/E), X (any)</li>
+<li>A gap character: ‘-’</li>
+</ul>
+<p>A custom tokenizer is developed to handle these sequences efficiently. The tokenizer splits sequences using the defined vocabulary and applies a <code>WordLevel</code> tokenization approach for better generalization.</p>
+</section>
+<section id="model-architecture-training" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="model-architecture-training"><span class="header-section-number">9.3</span> Model Architecture &amp; Training</h2>
+<p>We use the <code>ModernBertForMaskedLM</code> model from the <code>transformers</code> library. The key components of the training setup are:</p>
+<ul>
+<li><strong>Tokenizer</strong>: A <code>PreTrainedTokenizerFast</code> instance is initialized with our protein vocabulary.</li>
+<li><strong>Model Configuration</strong>: <code>ModernBertConfig</code> defines the model’s parameters, including the number of transformer layers and attention heads.</li>
+<li><strong>Data Collation</strong>: <code>DataCollatorForLanguageModeling</code> is used to prepare masked language modeling inputs.</li>
+<li><strong>Training Arguments</strong>: Configured with learning rate scheduling, batch size, and gradient accumulation settings.</li>
+<li><strong>Trainer</strong>: The <code>Trainer</code> class orchestrates training, validation, and logging using <code>wandb</code> (Weights &amp; Biases).</li>
+</ul>
+<p>Training is conducted on protein sequence datasets, with GPCR (G-protein coupled receptor) sequences serving as a primary example.</p>
+</section>
+<section id="evaluation-results" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="evaluation-results"><span class="header-section-number">9.4</span> Evaluation &amp; Results</h2>
+<p>The trained model is evaluated using perplexity and masked token prediction accuracy. We compare its performance to other protein models and analyze its ability to generate coherent amino acid sequences.</p>
+</section>
+<section id="conclusion" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">9.5</span> Conclusion</h2>
+<p>This chapter introduced GPCR-BERT, a transformer-based language model for protein sequences. In subsequent chapters, we will explore fine-tuning strategies and downstream applications, such as functional annotation and protein structure prediction.</p>
+
+
 </section>
 
 </main> <!-- /main -->
@@ -795,13 +742,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./Chapter5_DNA.html" class="pagination-link" aria-label="Weaving Together Models">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Weaving Together Models</span></span>
+      <a href="./Chapter2_Proteins.html" class="pagination-link" aria-label="Selecting and curating protein sequences">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Selecting and curating protein sequences</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./Scaling_training.html" class="pagination-link" aria-label="Scale up Training">
-        <span class="nav-page-text">Scale up Training</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./summary.html" class="pagination-link" aria-label="Summary">
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Summary</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

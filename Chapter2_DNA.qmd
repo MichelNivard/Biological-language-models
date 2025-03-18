@@ -1,6 +1,4 @@
----
-title: "Training our first DNA Language Model"
----
+# Training our first DNA Language Model {#sec-DNALM}
 
 ::: callout-tip
 ## Abstract
