@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>9&nbsp; Selecting and curating protein sequences – Biological Language Models &amp; Neural Networks</title>
+<title>1&nbsp; The software stack – Biological Language Models &amp; Neural Networks</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -50,8 +50,8 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./Chapter3_Proteins.html" rel="next">
-<link href="./Chapter1_Proteins.html" rel="prev">
+<link href="./Chapter1_DNA.html" rel="next">
+<link href="./Preamble2.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -118,7 +118,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_Proteins.html">Proteins</a></li><li class="breadcrumb-item"><a href="./Chapter2_Proteins.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Selecting and curating protein sequences</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Preamble3.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">The software stack</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -150,7 +150,7 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./Preamble3.html" class="sidebar-item-text sidebar-link">
+  <a href="./Preamble3.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">The software stack</span></span></a>
   </div>
 </li>
@@ -224,7 +224,7 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./Chapter2_Proteins.html" class="sidebar-item-text sidebar-link active">
+  <a href="./Chapter2_Proteins.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Selecting and curating protein sequences</span></span></a>
   </div>
 </li>
@@ -263,29 +263,15 @@ div.csl-indent {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#protein-sequence-data" id="toc-protein-sequence-data" class="nav-link active" data-scroll-target="#protein-sequence-data"><span class="header-section-number">9.1</span> <strong>Protein Sequence Data</strong></a>
-  <ul class="collapse">
-  <li><a href="#uniref50-and-uniref90" id="toc-uniref50-and-uniref90" class="nav-link" data-scroll-target="#uniref50-and-uniref90"><span class="header-section-number">9.1.1</span> <strong>UniRef50 and UniRef90</strong></a></li>
-  <li><a href="#protein-structure-data" id="toc-protein-structure-data" class="nav-link" data-scroll-target="#protein-structure-data"><span class="header-section-number">9.1.2</span> <strong>Protein Structure Data</strong></a></li>
-  <li><a href="#evolutionary-and-functional-data" id="toc-evolutionary-and-functional-data" class="nav-link" data-scroll-target="#evolutionary-and-functional-data"><span class="header-section-number">9.1.3</span> <strong>Evolutionary and Functional Data</strong></a></li>
-  <li><a href="#protein-protein-interactions-and-kinetics" id="toc-protein-protein-interactions-and-kinetics" class="nav-link" data-scroll-target="#protein-protein-interactions-and-kinetics"><span class="header-section-number">9.1.4</span> <strong>Protein-Protein Interactions and Kinetics</strong></a></li>
-  <li><a href="#specialized-datasets-for-ml-and-plms" id="toc-specialized-datasets-for-ml-and-plms" class="nav-link" data-scroll-target="#specialized-datasets-for-ml-and-plms"><span class="header-section-number">9.1.5</span> <strong>Specialized Datasets for ML and PLMs</strong></a></li>
-  </ul></li>
-  <li><a href="#sequence-diversity-in-training" id="toc-sequence-diversity-in-training" class="nav-link" data-scroll-target="#sequence-diversity-in-training"><span class="header-section-number">9.2</span> Sequence diversity in training</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_Proteins.html">Proteins</a></li><li class="breadcrumb-item"><a href="./Chapter2_Proteins.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Selecting and curating protein sequences</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Selecting and curating protein sequences</span></h1>
+<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">The software stack</span></h1>
 </div>
 
 
@@ -302,93 +288,35 @@ div.csl-indent {
 </header>
 
 
-<p>Protein data comes from multiple sources, each providing different types of information useful for training machine learning models and protein language models. Here’s the revised version with links added at the top of each paragraph:</p>
-<section id="protein-sequence-data" class="level2" data-number="9.1">
-<h2 data-number="9.1" class="anchored" data-anchor-id="protein-sequence-data"><span class="header-section-number">9.1</span> <strong>Protein Sequence Data</strong></h2>
-<p><a href="https://www.uniprot.org/">UniProt</a> | <a href="https://www.ncbi.nlm.nih.gov/refseq/">NCBI RefSeq</a> | <a href="https://www.ebi.ac.uk/metagenomics/">MGnify</a><br>
-The most widely used source of protein sequences is <strong>UniProt</strong>, which contains curated (Swiss-Prot) and unreviewed (TrEMBL) protein sequences from various organisms. Other databases, like <strong>NCBI RefSeq</strong>, provide reference protein sequences linked to genomic data. Large-scale sequencing projects, such as <strong>MGnify</strong>, focus on metagenomic protein sequences, offering an even broader diversity. These sequence datasets serve as the foundation for protein language models (PLMs).</p>
-<section id="uniref50-and-uniref90" class="level3" data-number="9.1.1">
-<h3 data-number="9.1.1" class="anchored" data-anchor-id="uniref50-and-uniref90"><span class="header-section-number">9.1.1</span> <strong>UniRef50 and UniRef90</strong></h3>
-<p><a href="https://www.uniprot.org/help/uniref">UniRef</a><br>
-UniRef50 and UniRef90 are clustered versions of UniProt protein sequences designed to reduce redundancy while maintaining sequence diversity. <strong>UniRef90</strong> groups sequences that share at least <strong>90% identity</strong> and have <strong>80% overlap</strong>, merging nearly identical sequences into single representative entries. <strong>UniRef50</strong> applies a looser <strong>50% identity</strong> threshold, further condensing the dataset while preserving diverse functional and structural information. These clustered datasets are particularly useful for training protein language models and other ML applications, as they help mitigate biases from highly redundant sequences while still providing broad coverage across species. By using UniRef datasets, models can learn more generalizable representations of protein sequence space while improving computational efficiency.</p>
-</section>
-<section id="protein-structure-data" class="level3" data-number="9.1.2">
-<h3 data-number="9.1.2" class="anchored" data-anchor-id="protein-structure-data"><span class="header-section-number">9.1.2</span> <strong>Protein Structure Data</strong></h3>
-<p><a href="https://www.rcsb.org/">Protein Data Bank (PDB)</a> | <a href="https://www.alphafold.ebi.ac.uk/">AlphaFold DB</a> | <a href="http://scop.mrc-lmb.cam.ac.uk/scop/">SCOP</a><br>
-For structural information, <strong>the Protein Data Bank (PDB)</strong> is the most comprehensive resource, containing experimentally determined 3D structures from X-ray crystallography, NMR, and cryo-electron microscopy. The recent breakthroughs in <strong>AlphaFold DB</strong> provide high-quality computational structure predictions for almost all known proteins, greatly expanding the available structural information. Another key resource is <strong>SCOP (Structural Classification of Proteins)</strong>, which organizes protein structures into hierarchical families based on evolutionary relationships, helping models understand structure-function relationships.</p>
-</section>
-<section id="evolutionary-and-functional-data" class="level3" data-number="9.1.3">
-<h3 data-number="9.1.3" class="anchored" data-anchor-id="evolutionary-and-functional-data"><span class="header-section-number">9.1.3</span> <strong>Evolutionary and Functional Data</strong></h3>
-<p><a href="https://pfam.xfam.org/">Pfam</a> | <a href="https://www.ebi.ac.uk/interpro/">InterPro</a> | <a href="https://www.genome.jp/kegg/">KEGG</a><br>
-Evolutionary conservation is captured in <strong>Pfam</strong>, a database of protein families built from multiple sequence alignments, which is useful for understanding functional motifs. <strong>InterPro</strong> integrates multiple databases to annotate protein sequences with conserved domains, GO (Gene Ontology) terms, and other functional descriptors. <strong>KEGG (Kyoto Encyclopedia of Genes and Genomes)</strong> links proteins to biochemical pathways, aiding in training models to understand biological context.</p>
-</section>
-<section id="protein-protein-interactions-and-kinetics" class="level3" data-number="9.1.4">
-<h3 data-number="9.1.4" class="anchored" data-anchor-id="protein-protein-interactions-and-kinetics"><span class="header-section-number">9.1.4</span> <strong>Protein-Protein Interactions and Kinetics</strong></h3>
-<p><a href="https://string-db.org/">STRING</a> | <a href="https://thebiogrid.org/">BioGRID</a> | <a href="https://www.bindingdb.org/">BindingDB</a> | <a href="http://www.pdbbind.org.cn/">PDBBind</a><br>
-Databases like <strong>STRING</strong> and <strong>BioGRID</strong> compile large-scale protein-protein interaction networks, valuable for models predicting binding affinity or molecular interactions. Meanwhile, <strong>BindingDB</strong> and <strong>PDBBind</strong> offer datasets of protein-ligand interactions with binding affinities, supporting drug discovery applications.</p>
-</section>
-<section id="specialized-datasets-for-ml-and-plms" class="level3" data-number="9.1.5">
-<h3 data-number="9.1.5" class="anchored" data-anchor-id="specialized-datasets-for-ml-and-plms"><span class="header-section-number">9.1.5</span> <strong>Specialized Datasets for ML and PLMs</strong></h3>
-<p><a href="https://github.com/songlab-cal/tape">TAPE Dataset</a> | <a href="https://www.uniprot.org/">SwissProt50/TrEMBL50</a><br>
-Several datasets have been specifically designed for training ML models and protein LMs. <strong>TAPE (Tasks Assessing Protein Embeddings)</strong> provides benchmarks for PLMs on tasks like secondary structure prediction, fluorescence, and stability prediction. <strong>SwissProt50/TrEMBL50</strong> datasets are commonly used for training PLMs by balancing redundancy in sequence data.</p>
-<p>By combining these diverse protein data sources, machine learning models can capture sequence patterns, structural constraints, evolutionary conservation, and functional properties, enabling advancements in protein engineering, drug discovery, and fundamental biological research.</p>
-</section>
-</section>
-<section id="sequence-diversity-in-training" class="level2" data-number="9.2">
-<h2 data-number="9.2" class="anchored" data-anchor-id="sequence-diversity-in-training"><span class="header-section-number">9.2</span> Sequence diversity in training</h2>
-<p>When training protein sequence models there is a risk of “overtraining” on abundantly measured, or frequently observed protein sequences. Not all protein families (characterized by a common evolutionary origin) are equally represented and so uniform sampling form Uniprot will skew towards certain types of proteins while undersampling others.</p>
-<p>Various empirical projects consider sequencing diversity in training protein (language) models. The ESM-1 paper <span class="citation" data-cites="rives2021">(<a href="references.html#ref-rives2021" role="doc-biblioref">Rives et al. 2021</a>)</span> evaluated 3 different levels of sequence diversity. The low-diversity dataset (UR100) consists of UniRef100 representative sequences which are all proteins in Uniprot removing identical copies (clustering sequences that share 100% identity). This dataset will have many near identical sequences. The high-diversity sparse dataset (UR50/S) is derived from UniRef50 representative sequences, its goig to have many unique sequences, but limited variation in similar sequences as all sequences with &gt; 50% shared identity are collapsed into a single cluster from which 1 representative sequence is retained. The high-diversity dense dataset (UR50/D) achieves broader coverage by uniformly sampling UniRef100 sequences across all UniRef50 clusters, mixing uniform representation and dense coverage. When models were compared using the exponentiated cross entropy (ECE) metric, the sense diverse data performed best (see Table 1).</p>
-<table class="caption-top table">
-<caption><strong>Table 1:</strong> A single model trained on 3 data mixtures suggests dense diverse sequences lead to better training results (source: <span class="citation" data-cites="rives2021">(<a href="references.html#ref-rives2021" role="doc-biblioref">Rives et al. 2021</a>)</span> )</caption>
-<colgroup>
-<col style="width: 19%">
-<col style="width: 14%">
-<col style="width: 13%">
-<col style="width: 42%">
-<col style="width: 10%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Model</th>
-<th>Variant</th>
-<th>Params</th>
-<th>Training data</th>
-<th>ECE</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Transformer</td>
-<td>34-layer</td>
-<td>669.2 M</td>
-<td>UR100 (low diversity)</td>
-<td>10.32</td>
-</tr>
-<tr class="even">
-<td>Transformer</td>
-<td>-</td>
-<td>-</td>
-<td>UR50/S (h diversity sparse)</td>
-<td>8.54</td>
-</tr>
-<tr class="odd">
-<td>Transformer</td>
-<td>-</td>
-<td>-</td>
-<td>UR50/D (h diversity dense)</td>
-<td>8.46</td>
-</tr>
-</tbody>
-</table>
-<p>If you are going to develop your own base protein (language) model, competing with he likes of facebook and google, then selecting the optimal training set is critically important. it is unlikely you’ll be able to compete in terms of compute, but with good data selection you can save you a lot off compute by making the model more efficient.</p>
+<p>To do any kind of machine learning at scale, you need a machine learning library that takes care of interfacing between your high level programming language (almost always <code>Python</code> if you are into niche/alt things <code>Julia</code> or if you are really into punishing yourself <code>R</code> (I tried…)) and low level matrix operations on CPU/GPU.</p>
+<p>These machine learning libraries facilitates a few essential things. First, these libraries offer optimal implementations of elementary mathematical operations on data matrices/tensors on CPU or GPU(sums, min, mean, products, dot products etc. etc.). Second these libraries facilitate automatic differentiation. Most libraries have the options to store/compute a gradient (1st derivative wrt some function) value for all parameters that are to be estimated.</p>
+<p>Estimating parameters in a model almost always boils down to moving parameters values (intelligently) such that the model does its ‘job’ better or achieves its ‘goal’. The way we define a models’ ‘goal’ is in terms of a ‘loss function’. We’re not going to go into loss functions specifically here, there are plenty resources to learn about those. The loss is generally a function of all parameters in the model. A lot of optimization (though not all) is done by gradient descent, the gradient of the parameters wrt the loss is minimized, because if all parameters have gradient 0 wrt the loss their at a (local) minimum. The brute force way of establishing the gradient for a set of parameter values (still sued in many SEM or statistical software frameworks) is to sequentially move each parameter up, then down a little step, record the change in loss. This takes 2*#-parameters evaluations of the loss function, after which all parameters move in the optimal direction and the process re-starts. A key aspect of any machine learning framework is to use automatic differentiation<span class="citation" data-cites="wengert1964 griewank2012">(<a href="references.html#ref-wengert1964" role="doc-biblioref">Wengert 1964</a>; <a href="references.html#ref-griewank2012" role="doc-biblioref">Griewank 2012</a>)</span> to provide the partial derivatives of the loss function with respect to the individual parameters, in order to speed up optimisation greatly (see <a href="https://en.wikipedia.org/wiki/Automatic_differentiation">autodiff</a> on Wikipedia for a fuller explanation). the logic here is that the sign and magnitude of the derivative/gradient tells you which steps to take for optimal gradient descent, to reduce the loss. Automatic differentiation takes twice the compute as a single evaluation of the loss, regardless of the number of parameters involved.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Troughout the book callouts labeled important will highlight key concepts in ML, we don’t have separate ML chapters but the concepts are sprinkled throughout. Studying these topics until you have a conceptual grip on them will make you a better consumer/developer of biological ML models. You don’t have to immediately as they are frequently abstracted away by layers of software and convenience.</p>
+<p>The key concepts to study further here are gradient decent and automatic differentiation, which are basically the building blocks of how all deep learning models are trained.</p>
+</div>
+</div>
+<p>Arguably the four most popular libraries that provide a framework for automatic differentiation, GPU/CPU compute abstraction and reconfigure model elements (attention layers, dense layers, convolutional layers, recurrent networks etc etc) are <code>PyTorch</code>, <code>JAX</code>,<code>tensorflow</code> and <code>keras</code>. These libraries are still quite general, they are able to accommodate a vast universe of models. Build on top of these framework there are libraries like Huggingfaces’ <code>transformers</code>. Huggingface (HF), a company named after an emoji (🤗) and started to develop a chatbot for teens in 2016, at some point pivoted to being the backbone behind language and vision language models and maintain a few powerful libraries that form a top layer over <code>PyTorch</code>,<code>TensorFlow</code> and <code>keras.</code></p>
+<p>We’ll be working with <code>transformers</code> (and a few derivative libraries like <code>trainer</code> and <code>accelerate</code>), when we cannot us the off the shelf models we’ll implement small pieces of code in <code>Pytorch</code> to fit within <code>transformers</code> models. What <code>transformers</code> offers us are highly structured validated implementations of models, of training loops/code of tokenizers (we’ll get into all those). It also directly integrate with all models and dataset hosted on <a href="https://huggingface.co" class="uri">https://huggingface.co</a>. Hosting on HF is free for public models and datasets, though given these can go into the terabytes one wonders how long that can last. When training a model, you can save its weights directly to their hub, from the script. This greatly reduces the friction between model training and deployment.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
-<div id="ref-rives2021" class="csl-entry" role="listitem">
-Rives, Alexander, Joshua Meier, Tom Sercu, Siddharth Goyal, Zeming Lin, Jason Liu, Demi Guo, et al. 2021. <span>“Biological Structure and Function Emerge from Scaling Unsupervised Learning to 250 Million Protein Sequences.”</span> <em>Proceedings of the National Academy of Sciences</em> 118 (15). <a href="https://doi.org/10.1073/pnas.2016239118">https://doi.org/10.1073/pnas.2016239118</a>.
+<div id="ref-griewank2012" class="csl-entry" role="listitem">
+Griewank, Andreas. 2012. <span>“Who Invented the Reverse Mode of Differentiation?”</span> In, 389–400. EMS Press. <a href="https://doi.org/10.4171/dms/6/38">https://doi.org/10.4171/dms/6/38</a>.
+</div>
+<div id="ref-wengert1964" class="csl-entry" role="listitem">
+Wengert, R. E. 1964. <span>“A Simple Automatic Derivative Evaluation Program.”</span> <em>Communications of the ACM</em> 7 (8): 463–64. <a href="https://doi.org/10.1145/355586.364791">https://doi.org/10.1145/355586.364791</a>.
 </div>
 </div>
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -812,13 +740,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./Chapter1_Proteins.html" class="pagination-link" aria-label="Proteins: from sequence to structure">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Proteins: from sequence to structure</span></span>
+      <a href="./Preamble2.html" class="pagination-link" aria-label="How to Read this Book">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">How to Read this Book</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./Chapter3_Proteins.html" class="pagination-link" aria-label="Training our first Protein Language Model">
-        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Training our first Protein Language Model</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./Chapter1_DNA.html" class="pagination-link" aria-label="Preparing DNA data for training">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Preparing DNA data for training</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -14,6 +14,7 @@ book:
     - index.qmd
     - Preamble1.qmd
     - Preamble2.qmd
+    - Preamble3.qmd
     - part: "DNA"
       chapters: 
         - Chapter1_DNA.qmd
