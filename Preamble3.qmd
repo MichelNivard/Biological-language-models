@@ -1,4 +1,4 @@
-# The software stack
+# The software stack {.unnumbered}
 
 To do any kind of machine learning at scale, you need a machine learning library that takes care of interfacing between your high level programming language (almost always `Python` if you are into niche/alt things `Julia` or if you are really into punishing yourself `R` (I tried...)) and low level matrix operations on CPU/GPU.
 
