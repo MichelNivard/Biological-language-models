@@ -19,17 +19,17 @@ These synthetic mutations can form the basis for an evaluation of our DNA langua
 
 This chapter has two goals:
 
--   To explain to **machine learning readers** how to enumerate **synonymous** and **missense** mutations based on the standard **genetic code**, and why this is biologically meaningful. Consider the Khan Academy "AP Bio" course if this chapter doesn't really offer enough for you <https://www.khanacademy.org/science/ap-biology>
+-   To explain to **machine learning readers** how to enumerate synonymous and missense mutations based on the standard genetic code, and why this is biologically meaningful. Consider the Khan Academy "AP Bio" course if this chapter doesn't really offer enough for you <https://www.khanacademy.org/science/ap-biology>
 
--   To explain to **bioinformatics and genetics readers** how the **Masked Language Modeling (MLM) objective** provides a way to compute the **pseudo-log-likelihood (PLL)** of entire sequences and to score mutations in terms of their "naturalness" under the trained model.
+-   To explain to **bioinformatics and genetics readers** how the Masked Language Modeling (MLM) objective provides a way to compute the pseudo-log-likelihood (PLL) of entire sequences and to score mutations in terms of their "naturalness" under the trained model.
 
 ## Biological Background: The Genetic Code and Mutation Types
 
 Before diving into code, it's useful to recall the basics of how DNA encodes proteins. DNA is transcribed into RNA, and RNA is translated into proteins using **codons**, groups of three nucleotides. Each codon corresponds to a specific amino acid — this mapping is called the **genetic code**.
 
-![**Figure 3.1** DNA is translated to RNA then transcribed to amino acids which form proteins. Source: https://www.khanacademy.org/science/ap-biology/gene-expression-and-regulation/translation/a/intro-to-gene-expression-central-dogma](images/paste-6.png){fig-align="center"}
+![**Figure 3.1** DNA is transcribed to RNA then translated to amino acids which form proteins. Source: https://www.khanacademy.org/science/ap-biology/gene-expression-and-regulation/translation/a/intro-to-gene-expression-central-dogma](images/paste-29.png){fig-align="center" width="667"}
 
-Crucially, some amino acids can be encoded by multiple codons, a property called **degeneracy**. This degeneracy is why **synonymous mutations** exist — changes in the DNA sequence that do not alter the resulting amino acid. In contrast, **missense mutations** alter the encoded amino acid, which may change protein function.
+Crucially, some amino acids can be encoded by multiple codons, a property called degeneracy. This degeneracy is why synonymous mutations exist — changes in the DNA sequence that do not alter the resulting amino acid. In contrast, missense mutations alter the encoded amino acid, which may change protein function.
 
 This distinction between **synonymous** and **missense** mutations will allow us to systematically categorize the impact of each possible single nucleotide substitution. Below is the **standard genetic code table; it contains a full translation from DNA to protein**.
 
@@ -79,7 +79,7 @@ This step is crucial in genomics, where we often want to prioritize **functional
 
 I have a preference for R myself, so I wrote this specific job in R. We provide the gene sequence, starting at the start codon; I use the dopamine receptor gene DRD2. Based on the genetic code, which translates DNA to the amino acids that eventually are produced, we then write code to mutate each codon in a gene.
 
-```r
+``` r
 DRD2 <- "ATGGATCCACTGAATCTGTCCTGGTATGATGATGATCTGGAGAGGCAGAACTGGAGCCGGCCCTTCAACGGGTCAGACGGGAAGGCGGACAGACCCCACTACAACTACTATGCCACACTGCTCACCCTGCTCATCGCTGTCATCGTCTTCGGCAACGTGCTGGTGTGCATGGCTGTGTCCCGCGAGAAGGCGCTGCAGACCACCACCAACTACCTGATCGTCAGCCTCGCAGTGGCCGACCTCCTCGTCGCCACACTGGTCATGCCCTGGGTTGTCTACCTGGAGGTGGTAGGTGAGTGGAAATTCAGCAGGATTCACTGTGACATCTTCGTCACTCTGGACGTCATGATGTGCACGGCGAGCATCCTGAACTTGTGTGCCATCAGCATCGACAGGTACACAGCTGTGGCCATGCCCATGCTGTACAATACGCGCTACAGCTCCAAGCGCCGGGTCACCGTCATGATCTCCATCGTCTGGGTCCTGTCCTTCACCATCTCCTGCCCACTCCTCTTCGGACTCAATAACGCAGACCAGAACGAGTGCATCATTGCCAACCCGGCCTTCGTGGTCTACTCCTCCATCGTCTCCTTCTACGTGCCCTTCATTGTCACCCTGCTGGTCTACATCAAGATCTACATTGTCCTCCGCAGACGCCGCAAGCGAGTCAACACCAAACGCAGCAGCCGAGCTTTCAGGGCCCACCTGAGGGCTCCACTAAAGGAGGCTGCCCGGCGAGCCCAGGAGCTGGAGATGGAGATGCTCTCCAGCACCAGCCCACCCGAGAGGACCCGGTACAGCCCCATCCCACCCAGCCACCACCAGCTGACTCTCCCCGACCCGTCCCACCATGGTCTCCACAGCACTCCCGACAGCCCCGCCAAACCAGAGAAGAATGGGCATGCCAAAGACCACCCCAAGATTGCCAAGATCTTTGAGATCCAGACCATGCCCAATGGCAAAACCCGGACCTCCCTCAAGACCATGAGCCGTAGGAAGCTCTCCCAGCAGAAGGAGAAGAAAGCCACTCAGATGCTCGCCATTGTTCTCGGCGTGTTCATCATCTGCTGGCTGCCCTTCTTCATCACACACATCCTGAACATACACTGTGACTGCAACATCCCGCCTGTCCTGTACAGCGCCTTCACGTGGCTGGGCTATGTCAACAGCGCCGTGAACCCCATCATCTACACCACCTTCAACATTGAGTTCCGCAAGGCCTTCCTGAAGATCCTCCACTGCTGA"
 nchar(DRD2)/3
 
@@ -207,7 +207,7 @@ MAX_CONTEXT_LENGTH = 512
 
 Then we define two functions to compute: 1) the pseudo-likelihood of the whole sequence up to 512 bases, as that is the sequence length we trained DNABert for (in full-scale applications, you'd use a longer sequence length), and 2) the log-likelihood ratio of the mutation vs. the wildtype (original DRD2 sequence).
 
-```python
+``` python
 def compute_log_likelihood(sequence, tokenizer, model):
     """Compute pseudo-log-likelihood (PLL) for the first 512 bases."""
     tokens = tokenizer(sequence, return_tensors='pt', add_special_tokens=True)
@@ -271,7 +271,7 @@ This metric is widely used in bioinformatics because it focuses on the exact sit
 
 We then apply these functions to all the synthetic DRD2 mutations we generated (in the first 512 bases) to evaluate whether the DNABert we trained thinks the missense mutations are generally less likely, and therefore possibly damaging, given the model.
 
-```python
+``` python
 # Load dataset directly from Hugging Face dataset repo
 dataset_url = "https://huggingface.co/datasets/MichelNivard/DRD2-mutations/raw/main/DRD2_mutations.csv"
 df = pd.read_csv(dataset_url)
@@ -331,7 +331,7 @@ Why do we care about these log likelihoods and log likelihood ratios? Because th
 
 To explore our result here, we can plot the LLR versus the position within the DRD2 gene, this can give us insight into the location within the coding sequence where we find unlikely (and therefore potentially damaging) mutations. in the plot below a LOW LLR means the variant is unlikely. Most variants cluster around a neutral LLR, consistent with some statistical noise.
 
-```python
+``` python
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt

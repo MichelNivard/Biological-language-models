@@ -364,8 +364,8 @@ Abstract
 <p>These synthetic mutations can form the basis for an evaluation of our DNA language model.</p>
 <p>This chapter has two goals:</p>
 <ul>
-<li><p>To explain to <strong>machine learning readers</strong> how to enumerate <strong>synonymous</strong> and <strong>missense</strong> mutations based on the standard <strong>genetic code</strong>, and why this is biologically meaningful. Consider the Khan Academy “AP Bio” course if this chapter doesn’t really offer enough for you <a href="https://www.khanacademy.org/science/ap-biology" class="uri">https://www.khanacademy.org/science/ap-biology</a></p></li>
-<li><p>To explain to <strong>bioinformatics and genetics readers</strong> how the <strong>Masked Language Modeling (MLM) objective</strong> provides a way to compute the <strong>pseudo-log-likelihood (PLL)</strong> of entire sequences and to score mutations in terms of their “naturalness” under the trained model.</p></li>
+<li><p>To explain to <strong>machine learning readers</strong> how to enumerate synonymous and missense mutations based on the standard genetic code, and why this is biologically meaningful. Consider the Khan Academy “AP Bio” course if this chapter doesn’t really offer enough for you <a href="https://www.khanacademy.org/science/ap-biology" class="uri">https://www.khanacademy.org/science/ap-biology</a></p></li>
+<li><p>To explain to <strong>bioinformatics and genetics readers</strong> how the Masked Language Modeling (MLM) objective provides a way to compute the pseudo-log-likelihood (PLL) of entire sequences and to score mutations in terms of their “naturalness” under the trained model.</p></li>
 </ul>
 </section>
 <section id="biological-background-the-genetic-code-and-mutation-types" class="level2" data-number="3.2">
@@ -373,11 +373,11 @@ Abstract
 <p>Before diving into code, it’s useful to recall the basics of how DNA encodes proteins. DNA is transcribed into RNA, and RNA is translated into proteins using <strong>codons</strong>, groups of three nucleotides. Each codon corresponds to a specific amino acid — this mapping is called the <strong>genetic code</strong>.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/paste-6.png" class="img-fluid figure-img"></p>
-<figcaption><strong>Figure 3.1</strong> DNA is translated to RNA then transcribed to amino acids which form proteins. Source: https://www.khanacademy.org/science/ap-biology/gene-expression-and-regulation/translation/a/intro-to-gene-expression-central-dogma</figcaption>
+<p><img src="images/paste-29.png" class="img-fluid figure-img" width="667"></p>
+<figcaption><strong>Figure 3.1</strong> DNA is transcribed to RNA then translated to amino acids which form proteins. Source: https://www.khanacademy.org/science/ap-biology/gene-expression-and-regulation/translation/a/intro-to-gene-expression-central-dogma</figcaption>
 </figure>
 </div>
-<p>Crucially, some amino acids can be encoded by multiple codons, a property called <strong>degeneracy</strong>. This degeneracy is why <strong>synonymous mutations</strong> exist — changes in the DNA sequence that do not alter the resulting amino acid. In contrast, <strong>missense mutations</strong> alter the encoded amino acid, which may change protein function.</p>
+<p>Crucially, some amino acids can be encoded by multiple codons, a property called degeneracy. This degeneracy is why synonymous mutations exist — changes in the DNA sequence that do not alter the resulting amino acid. In contrast, missense mutations alter the encoded amino acid, which may change protein function.</p>
 <p>This distinction between <strong>synonymous</strong> and <strong>missense</strong> mutations will allow us to systematically categorize the impact of each possible single nucleotide substitution. Below is the <strong>standard genetic code table; it contains a full translation from DNA to protein</strong>.</p>
 <table class="caption-top table">
 <colgroup>
