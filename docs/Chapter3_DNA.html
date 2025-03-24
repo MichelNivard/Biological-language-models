@@ -54,7 +54,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -313,12 +333,14 @@ window.Quarto = {
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">3.1</span> Introduction</a></li>
   <li><a href="#biological-background-the-genetic-code-and-mutation-types" id="toc-biological-background-the-genetic-code-and-mutation-types" class="nav-link" data-scroll-target="#biological-background-the-genetic-code-and-mutation-types"><span class="header-section-number">3.2</span> Biological Background: The Genetic Code and Mutation Types</a></li>
-  <li><a href="#enumerating-all-single-nucleotide-mutants" id="toc-enumerating-all-single-nucleotide-mutants" class="nav-link" data-scroll-target="#enumerating-all-single-nucleotide-mutants"><span class="header-section-number">3.3</span> Enumerating All Single-Nucleotide Mutants</a>
+  <li><a href="#creating-all-single-nucleotide-mutants" id="toc-creating-all-single-nucleotide-mutants" class="nav-link" data-scroll-target="#creating-all-single-nucleotide-mutants"><span class="header-section-number">3.3</span> Creating All Single-Nucleotide Mutants</a>
   <ul class="collapse">
-  <li><a href="#the-likelihood-ratio-to-evaluate-mutations" id="toc-the-likelihood-ratio-to-evaluate-mutations" class="nav-link" data-scroll-target="#the-likelihood-ratio-to-evaluate-mutations"><span class="header-section-number">3.3.1</span> The Likelihood Ratio to evaluate mutations</a></li>
-  <li><a href="#language-models-provide-biological-insight-through-the-likelihood-ratio" id="toc-language-models-provide-biological-insight-through-the-likelihood-ratio" class="nav-link" data-scroll-target="#language-models-provide-biological-insight-through-the-likelihood-ratio"><span class="header-section-number">3.3.2</span> Language Models Provide Biological Insight through the likelihood ratio</a></li>
+  <li><a href="#estimating-the-effects-of-all-mutations" id="toc-estimating-the-effects-of-all-mutations" class="nav-link" data-scroll-target="#estimating-the-effects-of-all-mutations"><span class="header-section-number">3.3.1</span> Estimating the effects of all mutations</a></li>
+  <li><a href="#the-likelihood-ratio-to-evaluate-mutations" id="toc-the-likelihood-ratio-to-evaluate-mutations" class="nav-link" data-scroll-target="#the-likelihood-ratio-to-evaluate-mutations"><span class="header-section-number">3.3.2</span> The Likelihood Ratio to evaluate mutations</a></li>
+  <li><a href="#language-models-provide-biological-insight-through-the-likelihood-ratio" id="toc-language-models-provide-biological-insight-through-the-likelihood-ratio" class="nav-link" data-scroll-target="#language-models-provide-biological-insight-through-the-likelihood-ratio"><span class="header-section-number">3.3.3</span> Language Models Provide Biological Insight through the likelihood ratio</a></li>
   </ul></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">3.4</span> Summary</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">3.4</span> Exercises</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">3.5</span> Summary</a></li>
   </ul>
 </nav>
     </div>
@@ -327,7 +349,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_DNA.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter3_DNA.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating DNA Language Models</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating DNA Language Models</span></h1>
+<h1 class="title"><span id="sec-DNAeval" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating DNA Language Models</span></span></h1>
 </div>
 
 
@@ -378,7 +400,7 @@ Abstract
 </figure>
 </div>
 <p>Crucially, some amino acids can be encoded by multiple codons, a property called degeneracy. This degeneracy is why synonymous mutations exist — changes in the DNA sequence that do not alter the resulting amino acid. In contrast, missense mutations alter the encoded amino acid, which may change protein function.</p>
-<p>This distinction between <strong>synonymous</strong> and <strong>missense</strong> mutations will allow us to systematically categorize the impact of each possible single nucleotide substitution. Below is the <strong>standard genetic code table; it contains a full translation from DNA to protein</strong>.</p>
+<p>This distinction between <strong>synonymous</strong> and <strong>missense</strong> mutations will allow us to systematically categorize the impact of each possible single nucleotide substitution. Below is the standard genetic code table; it contains a full translation from DNA to protein.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 9%">
@@ -569,18 +591,18 @@ Abstract
 <ul>
 <li><strong>A synonymous mutation</strong>: The amino acid does not change, meaning the mutation is “silent” in terms of protein sequence.
 <ul>
-<li><strong>For example</strong>, in row 1 of the table, we see that if we mutate the codon <strong>TTT to TTC</strong>, both before and after the mutation the amino acid F (phe) is produced. While it’s not guaranteed by any means that a synonymous mutation is entirely harmless, they’re very likely to be harmless.</li>
+<li>For example, in row 1 of the table, we see that if we mutate the codon <strong>TTT to TTC</strong>, both before and after the mutation the amino acid F (phe) is produced. While it’s not guaranteed by any means that a synonymous mutation is entirely harmless, they’re very likely to be harmless.</li>
 </ul></li>
 <li><strong>A missense mutation</strong>: The amino acid changes, potentially altering protein structure and function.
 <ul>
-<li><strong>For example</strong>, in row 1 of the table, we see that if we mutate the codon <strong>TTT to TTA</strong>, the amino acid F (phe) is replaced by L (leu) in the protein, potentially changing the function. While missense mutations aren’t always damaging, they are far more likely to be damaging.</li>
+<li>For example, in row 1 of the table, we see that if we mutate the codon <strong>TTT to TTA</strong>, the amino acid F (phe) is replaced by L (leu) in the protein, potentially changing the function. While missense mutations aren’t always damaging, they are far more likely to be damaging.</li>
 </ul></li>
 </ul>
 <p>Earlier, we trained a DNA language model on coding sequences for humans, and I actually expanded that to a training run of 2 epochs (the data was all used twice) on 500k sequences from 13 vertebrate species. This model should, with probabilities slightly above chance,</p>
 </section>
-<section id="enumerating-all-single-nucleotide-mutants" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="enumerating-all-single-nucleotide-mutants"><span class="header-section-number">3.3</span> Enumerating All Single-Nucleotide Mutants</h2>
-<p>The code in this section systematically generates <strong>every possible single nucleotide substitution</strong> across the input sequence. Since each codon consists of three nucleotides, and each nucleotide can mutate into three alternatives, there are up to 9 potential codon variants for each original codon.</p>
+<section id="creating-all-single-nucleotide-mutants" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="creating-all-single-nucleotide-mutants"><span class="header-section-number">3.3</span> Creating All Single-Nucleotide Mutants</h2>
+<p>The code in this section systematically generates <strong>every possible single nucleotide substitution</strong> across the input sequence. Since each codon consists of three nucleotide’s, and each nucleotide can mutate into three alternatives, there are up to 9 potential codon variants for each original codon.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -594,12 +616,12 @@ Tip
 <p>The data generated by applying this “mutator” to the DRD2 (Dopamine receptor D2) gene is on Hugging Face: <a href="https://huggingface.co/datasets/MichelNivard/DRD2-mutations" class="uri">https://huggingface.co/datasets/MichelNivard/DRD2-mutations</a></p>
 </div>
 </div>
-<p>For each mutation, we check the <strong>original amino acid</strong> and the <strong>new amino acid</strong> using the standard genetic code table. This allows us to classify each mutation as either:</p>
+<p>For each mutation, we check the original amino acid and the new amino acid using the standard genetic code table. This allows us to classify each mutation as either:</p>
 <ul>
-<li><p><strong>Synonymous</strong> — Same amino acid, no apparent change to the protein.</p></li>
-<li><p><strong>Missense</strong> — Different amino acid, potential change to protein function.</p></li>
+<li><p>Synonymous — Same amino acid, no apparent change to the protein.</p></li>
+<li><p>Missense — Different amino acid, potential change to protein function.</p></li>
 </ul>
-<p>This step is crucial in genomics, where we often want to prioritize <strong>functional variants</strong> — mutations that actually change protein products, rather than silent changes that do not.</p>
+<p>This step is crucial in genomics, where we often want to prioritize functional variants — mutations that actually change protein products, rather than silent changes that do not.</p>
 <p>I have a preference for R myself, so I wrote this specific job in R. We provide the gene sequence, starting at the start codon; I use the dopamine receptor gene DRD2. Based on the genetic code, which translates DNA to the amino acids that eventually are produced, we then write code to mutate each codon in a gene.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>DRD2 <span class="ot">&lt;-</span> <span class="st">"ATGGATCCACTGAATCTGTCCTGGTATGATGATGATCTGGAGAGGCAGAACTGGAGCCGGCCCTTCAACGGGTCAGACGGGAAGGCGGACAGACCCCACTACAACTACTATGCCACACTGCTCACCCTGCTCATCGCTGTCATCGTCTTCGGCAACGTGCTGGTGTGCATGGCTGTGTCCCGCGAGAAGGCGCTGCAGACCACCACCAACTACCTGATCGTCAGCCTCGCAGTGGCCGACCTCCTCGTCGCCACACTGGTCATGCCCTGGGTTGTCTACCTGGAGGTGGTAGGTGAGTGGAAATTCAGCAGGATTCACTGTGACATCTTCGTCACTCTGGACGTCATGATGTGCACGGCGAGCATCCTGAACTTGTGTGCCATCAGCATCGACAGGTACACAGCTGTGGCCATGCCCATGCTGTACAATACGCGCTACAGCTCCAAGCGCCGGGTCACCGTCATGATCTCCATCGTCTGGGTCCTGTCCTTCACCATCTCCTGCCCACTCCTCTTCGGACTCAATAACGCAGACCAGAACGAGTGCATCATTGCCAACCCGGCCTTCGTGGTCTACTCCTCCATCGTCTCCTTCTACGTGCCCTTCATTGTCACCCTGCTGGTCTACATCAAGATCTACATTGTCCTCCGCAGACGCCGCAAGCGAGTCAACACCAAACGCAGCAGCCGAGCTTTCAGGGCCCACCTGAGGGCTCCACTAAAGGAGGCTGCCCGGCGAGCCCAGGAGCTGGAGATGGAGATGCTCTCCAGCACCAGCCCACCCGAGAGGACCCGGTACAGCCCCATCCCACCCAGCCACCACCAGCTGACTCTCCCCGACCCGTCCCACCATGGTCTCCACAGCACTCCCGACAGCCCCGCCAAACCAGAGAAGAATGGGCATGCCAAAGACCACCCCAAGATTGCCAAGATCTTTGAGATCCAGACCATGCCCAATGGCAAAACCCGGACCTCCCTCAAGACCATGAGCCGTAGGAAGCTCTCCCAGCAGAAGGAGAAGAAAGCCACTCAGATGCTCGCCATTGTTCTCGGCGTGTTCATCATCTGCTGGCTGCCCTTCTTCATCACACACATCCTGAACATACACTGTGACTGCAACATCCCGCCTGTCCTGTACAGCGCCTTCACGTGGCTGGGCTATGTCAACAGCGCCGTGAACCCCATCATCTACACCACCTTCAACATTGAGTTCCGCAAGGCCTTCCTGAAGATCCTCCACTGCTGA"</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nchar</span>(DRD2)<span class="sc">/</span><span class="dv">3</span></span>
@@ -724,7 +746,9 @@ Tip
 <span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a><span class="at"># Maximum context length — BERT's trained context window</span></span>
 <span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a><span class="at">MAX_CONTEXT_LENGTH = 512</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Then we define two functions to compute: 1) the pseudo-likelihood of the whole sequence up to 512 bases, as that is the sequence length we trained DNABert for (in full-scale applications, you’d use a longer sequence length), and 2) the log-likelihood ratio of the mutation vs.&nbsp;the wildtype (original DRD2 sequence).</p>
+<section id="estimating-the-effects-of-all-mutations" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="estimating-the-effects-of-all-mutations"><span class="header-section-number">3.3.1</span> Estimating the effects of all mutations</h3>
+<p>Then we define two functions (we’re back to python here) to compute: 1) the pseudo-likelihood of the whole sequence up to 512 bases, as that is the sequence length we trained DNABert for (in full-scale applications, you’d use a longer sequence length), and 2) the log-likelihood ratio of the mutation vs.&nbsp;the wildtype (original DRD2 sequence).</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> compute_log_likelihood(sequence, tokenizer, model):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Compute pseudo-log-likelihood (PLL) for the first 512 bases."""</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    tokens <span class="op">=</span> tokenizer(sequence, return_tensors<span class="op">=</span><span class="st">'pt'</span>, add_special_tokens<span class="op">=</span><span class="va">True</span>)</span>
@@ -776,8 +800,9 @@ Tip
 <span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>    log_prob_mutant <span class="op">=</span> log_probs[mutant_base_id].item()</span>
 <span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> log_prob_wild <span class="op">-</span> log_prob_mutant</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<section id="the-likelihood-ratio-to-evaluate-mutations" class="level3" data-number="3.3.1">
-<h3 data-number="3.3.1" class="anchored" data-anchor-id="the-likelihood-ratio-to-evaluate-mutations"><span class="header-section-number">3.3.1</span> The Likelihood Ratio to evaluate mutations</h3>
+</section>
+<section id="the-likelihood-ratio-to-evaluate-mutations" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="the-likelihood-ratio-to-evaluate-mutations"><span class="header-section-number">3.3.2</span> The Likelihood Ratio to evaluate mutations</h3>
 <p>The log-likelihood ratio (LLR) compares how much more (or less) likely the wild-type sequence is compared to a mutant sequence, given the DNA language model. Specifically, we compare the log likelihood of the correct wild-type nucleotide to the log likelihood of the mutant nucleotide at the mutated position only.</p>
 <p><span class="math display">\[LLR = log ⁡ P ( wild-type nucleotide ∣ context ) − log ⁡ P ( mutant nucleotide ∣ context )\]</span></p>
 <p>This metric is widely used in bioinformatics because it focuses on the exact site of the mutation, instead of comparing entire sequences. A positive LLR indicates the wild-type is favored by the model (the mutation is unlikely and therefore possibly deleterious), while a negative LLR means the mutant is more likely (the mutation is neutral or maybe even protective).</p>
@@ -834,8 +859,8 @@ Tip
 <span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Optionally, save to CSV</span></span>
 <span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>results_df.to_csv(<span class="st">"sequence_log_likelihoods.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="language-models-provide-biological-insight-through-the-likelihood-ratio" class="level3" data-number="3.3.2">
-<h3 data-number="3.3.2" class="anchored" data-anchor-id="language-models-provide-biological-insight-through-the-likelihood-ratio"><span class="header-section-number">3.3.2</span> Language Models Provide Biological Insight through the likelihood ratio</h3>
+<section id="language-models-provide-biological-insight-through-the-likelihood-ratio" class="level3" data-number="3.3.3">
+<h3 data-number="3.3.3" class="anchored" data-anchor-id="language-models-provide-biological-insight-through-the-likelihood-ratio"><span class="header-section-number">3.3.3</span> Language Models Provide Biological Insight through the likelihood ratio</h3>
 <p>Why do we care about these log likelihoods and log likelihood ratios? Because they provide a direct, data-driven estimate of how plausible or “natural” each mutated sequence looks to the model compared to the wild type sequence. Since the model was trained on real DNA sequences, sequences with high likelihoods resemble biological reality, while sequences with low likelihoods deviate from patterns the model has learned. A high “mutation log likelihood ratio” corresponds to the model strongly favoring the reference sequences over the mutation. This test lets us flag potentially deleterious mutations (those with sharp likelihood drops), prioritize candidate variants for functional follow-up, or even explore adaptive evolution by identifying mutations that DNA BERT “likes” more than the wild-type</p>
 <p>To explore our result here, we can plot the LLR versus the position within the DRD2 gene, this can give us insight into the location within the coding sequence where we find unlikely (and therefore potentially damaging) mutations. in the plot below a LOW LLR means the variant is unlikely. Most variants cluster around a neutral LLR, consistent with some statistical noise.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -885,17 +910,55 @@ Tip
 </div>
 </section>
 </section>
-<section id="summary" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="summary"><span class="header-section-number">3.4</span> Summary</h2>
+<section id="exercises" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="exercises"><span class="header-section-number">3.4</span> Exercises</h2>
+<p>You have reached a key point where you now are a “consumer” of DNA language models. If you have followed along you should be able to run them on a sequence of our choosing. But to become a savvy or discerning consumer (let that <a href="https://en.wikipedia.org/wiki/Cabernet_Sauvignon">cabernet</a> breath, roll it aroud the glass…) of DNA language models, you’ll have to evaluate them on a benchmark that matches your application. The exercises below are meant to give you a taste of evaluating a few models. The hard exercises also set us up for the next few chapters by pulling in external evolutionary salient data. There are people who think long and hard about model evaluation <span class="citation" data-cites="patel2024 tang2024">(<a href="references.html#ref-patel2024" role="doc-biblioref">Patel et al. 2024</a>; <a href="references.html#ref-tang2024" role="doc-biblioref">Tang et al. 2024</a>)</span> and if you are to do rigorous evaluation for an academic project/paper it’ll pay off to catch up on the l;iterature.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you want a good Masters/PhD term project with limited compute demands, or optimal self-study try some of the following excersizes:</p>
+<p><strong>1. (easy)</strong> Evaluate about 100 genes split the variants into synonymous, missense, start-lost (the start coding is changed by the mutation), stop-gained (a specific amino-acid is mutated to a stop coding) and reproduce those 4 rows in <span class="citation" data-cites="benegas2023">(<a href="references.html#ref-benegas2023" role="doc-biblioref">Benegas, Batra, and Song 2023</a>)</span> figure 4. Think critically whether you want to consider alternate metrics for “fit” we used LLR in this chapter, but others used cosine distance, or dot-product between wildtype and mutated sequence embedding as a measure of deleteriousness. Dot he other metrics more clearly separate stop-gained from missense from synonymous?</p>
+<p><strong>2. (medium)</strong> Evaluate about 100 genes split the synthetic variants into synonymous, missense, start-lost , stop-gained and reproduce those 4 rows in <span class="citation" data-cites="benegas2023">(<a href="references.html#ref-benegas2023" role="doc-biblioref">Benegas, Batra, and Song 2023</a>)</span> figure 4. Do so for 3 DNA language models, the one we trained in Chapter2 ( use your own, or if you didn’t train one the one I made available: <a href="https://huggingface.co/MichelNivard/DNABert-CDS-13Species-v0.1" class="uri">https://huggingface.co/MichelNivard/DNABert-CDS-13Species-v0.1</a> ) a medium sized (500m parameters) nucleotide transformer <span class="citation" data-cites="dalla-torre2024">(<a href="references.html#ref-dalla-torre2024" role="doc-biblioref">Dalla-Torre et al. 2024</a>)</span> (<a href="https://huggingface.co/InstaDeepAI/nucleotide-transformer-v2-500m-multi-species" class="uri">https://huggingface.co/InstaDeepAI/nucleotide-transformer-v2-500m-multi-species</a>) and DNABERT-2 <span class="citation" data-cites="zhou2023">(<a href="references.html#ref-zhou2023" role="doc-biblioref">Zhou et al. 2023</a>)</span> (<a href="https://huggingface.co/zhihan1996/DNABERT-2-117M" class="uri">https://huggingface.co/zhihan1996/DNABERT-2-117M</a>).</p>
+<p><strong>3. (hard)</strong> Evaluate about 100 genes split the synthetic variants into synonymous, missense, start-lost , stop-gained and reproduce those 4 rows in <span class="citation" data-cites="benegas2023">(<a href="references.html#ref-benegas2023" role="doc-biblioref">Benegas, Batra, and Song 2023</a>)</span> figure 4. Do so for 3 DNA language models, the one we trained in Chapter2 ( use your own, or if you didn’t train one the one I made available: <a href="https://huggingface.co/MichelNivard/DNABert-CDS-13Species-v0.1" class="uri">https://huggingface.co/MichelNivard/DNABert-CDS-13Species-v0.1</a> ) a medium sized (500m parameters) nucleotide transformer <span class="citation" data-cites="dalla-torre2024">(<a href="references.html#ref-dalla-torre2024" role="doc-biblioref">Dalla-Torre et al. 2024</a>)</span> (<a href="https://huggingface.co/InstaDeepAI/nucleotide-transformer-v2-500m-multi-species" class="uri">https://huggingface.co/InstaDeepAI/nucleotide-transformer-v2-500m-multi-species</a>) and DNABERT-2 <span class="citation" data-cites="zhou2023">(<a href="references.html#ref-zhou2023" role="doc-biblioref">Zhou et al. 2023</a>)</span> (<a href="https://huggingface.co/zhihan1996/DNABERT-2-117M" class="uri">https://huggingface.co/zhihan1996/DNABERT-2-117M</a>). Allign the DNA sequences with at least one external track form the UCSC genome browser, for example the allele frequencies in 1000 genomes, or the 100 way alignment across species (<a href="https://hgdownload.soe.ucsc.edu/goldenPath/hg38/multiz100way/" class="uri">https://hgdownload.soe.ucsc.edu/goldenPath/hg38/multiz100way/</a>). Establish whether mutations to bases that are rarely variant(MAF &lt; 5%), or variants that are never observed (freq = 0%), or those to bases that are less conserved are less likely according to the model.</p>
+</div>
+</div>
+</section>
+<section id="summary" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="summary"><span class="header-section-number">3.5</span> Summary</h2>
 <p>This chapter introduced key pieces that are essential for those who want to train, or just understand, DNA Language models.</p>
 <ul>
 <li>We explored how to systematically generate all <strong>synonymous and missense mutations in a gene</strong>, these simulated mutations then form an important part in initial evaluation of our model.</li>
 <li>We discussed how to compute the <strong>log-likelihood of sequences, and log-likelihood ratio of a single mutation using DNA BERT</strong>. These metrics are a proxy for how natural the model considers each sequence.</li>
 <li>We finally used these simulated mutations and some knowledge of biology (whether the mutations are synonymous or missense) to validate that our language model actually did do some learning.</li>
+<li>We reviewed possible exercises that could help you become a better consumer of genom language models by critically evaluating them.</li>
 </ul>
 <p>The analyses outlined in this chapter form the foundation for variant effect prediction using <strong>genomic language models</strong>.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-benegas2023" class="csl-entry" role="listitem">
+Benegas, Gonzalo, Sanjit Singh Batra, and Yun S. Song. 2023. <span>“DNA Language Models Are Powerful Predictors of Genome-Wide Variant Effects.”</span> <em>Proceedings of the National Academy of Sciences</em> 120 (44). <a href="https://doi.org/10.1073/pnas.2311219120">https://doi.org/10.1073/pnas.2311219120</a>.
+</div>
+<div id="ref-dalla-torre2024" class="csl-entry" role="listitem">
+Dalla-Torre, Hugo, Liam Gonzalez, Javier Mendoza-Revilla, Nicolas Lopez Carranza, Adam Henryk Grzywaczewski, Francesco Oteri, Christian Dallago, et al. 2024. <span>“Nucleotide Transformer: Building and Evaluating Robust Foundation Models for Human Genomics.”</span> <em>Nature Methods</em> 22 (2): 287–97. <a href="https://doi.org/10.1038/s41592-024-02523-z">https://doi.org/10.1038/s41592-024-02523-z</a>.
+</div>
+<div id="ref-patel2024" class="csl-entry" role="listitem">
+Patel, Aman, Arpita Singhal, Austin Wang, Anusri Pampari, Maya Kasowski, and Anshul Kundaje. 2024. <span>“DART-Eval: A Comprehensive DNA Language Model Evaluation Benchmark on Regulatory DNA.”</span> <a href="https://doi.org/10.48550/ARXIV.2412.05430">https://doi.org/10.48550/ARXIV.2412.05430</a>.
+</div>
+<div id="ref-tang2024" class="csl-entry" role="listitem">
+Tang, Ziqi, Nirali Somia, Yiyang Yu, and Peter K Koo. 2024. <span>“Evaluating the Representational Power of Pre-Trained DNA Language Models for Regulatory Genomics.”</span> <a href="http://dx.doi.org/10.1101/2024.02.29.582810">http://dx.doi.org/10.1101/2024.02.29.582810</a>.
+</div>
+<div id="ref-zhou2023" class="csl-entry" role="listitem">
+Zhou, Zhihan, Yanrong Ji, Weijian Li, Pratik Dutta, Ramana Davuluri, and Han Liu. 2023. <span>“DNABERT-2: Efficient Foundation Model and Benchmark for Multi-Species Genome.”</span> <a href="https://doi.org/10.48550/ARXIV.2306.15006">https://doi.org/10.48550/ARXIV.2306.15006</a>.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->

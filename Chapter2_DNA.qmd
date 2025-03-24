@@ -173,16 +173,16 @@ BERT does not process words one at a time but instead considers the entire seque
 
 MLM is a self-supervised learning objective where the model learns by predicting missing tokens in a sequence. During training:
 
--   **Some tokens are randomly replaced with `[MASK]`**
--   The model must **predict the original token** based on surrounding context
+-   Some tokens are randomly replaced with **`[MASK]`**
+-   The model must predict the original token based on surrounding context
 
 For example, if we mask the word "fox" in our sentence:
 
-> "The quick brown \[MASK\] jumps over the lazy dog"
+> "The quick brown **`[MASK]`** jumps over the lazy dog"
 
 BERT will analyze the remaining words and attempt to predict "fox."
 
-This technique enables BERT to **learn useful representations** without requiring labeled data.
+This technique enables BERT to learn useful representations without requiring labeled data.
 
 ### Understanding the model: Transformer Layers, Attention Heads, and Hidden Size
 

@@ -510,15 +510,15 @@ Abstract
 <h3 data-number="2.5.2" class="anchored" data-anchor-id="what-is-masked-language-modeling-mlm"><span class="header-section-number">2.5.2</span> What is Masked Language Modeling (MLM)?</h3>
 <p>MLM is a self-supervised learning objective where the model learns by predicting missing tokens in a sequence. During training:</p>
 <ul>
-<li><strong>Some tokens are randomly replaced with <code>[MASK]</code></strong></li>
-<li>The model must <strong>predict the original token</strong> based on surrounding context</li>
+<li>Some tokens are randomly replaced with <strong><code>[MASK]</code></strong></li>
+<li>The model must predict the original token based on surrounding context</li>
 </ul>
 <p>For example, if we mask the word “fox” in our sentence:</p>
 <blockquote class="blockquote">
-<p>“The quick brown [MASK] jumps over the lazy dog”</p>
+<p>“The quick brown <strong><code>[MASK]</code></strong> jumps over the lazy dog”</p>
 </blockquote>
 <p>BERT will analyze the remaining words and attempt to predict “fox.”</p>
-<p>This technique enables BERT to <strong>learn useful representations</strong> without requiring labeled data.</p>
+<p>This technique enables BERT to learn useful representations without requiring labeled data.</p>
 </section>
 <section id="understanding-the-model-transformer-layers-attention-heads-and-hidden-size" class="level3" data-number="2.5.3">
 <h3 data-number="2.5.3" class="anchored" data-anchor-id="understanding-the-model-transformer-layers-attention-heads-and-hidden-size"><span class="header-section-number">2.5.3</span> Understanding the model: Transformer Layers, Attention Heads, and Hidden Size</h3>

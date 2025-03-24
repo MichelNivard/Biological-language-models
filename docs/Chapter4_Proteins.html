@@ -343,8 +343,9 @@ window.Quarto = {
   <li><a href="#grabbing-attention-maps" id="toc-grabbing-attention-maps" class="nav-link" data-scroll-target="#grabbing-attention-maps"><span class="header-section-number">10.2.1</span> Grabbing attention (maps)</a></li>
   <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="header-section-number">10.2.2</span> Results</a></li>
   </ul></li>
-  <li><a href="#the-wonder-of-attention-and-beyond" id="toc-the-wonder-of-attention-and-beyond" class="nav-link" data-scroll-target="#the-wonder-of-attention-and-beyond"><span class="header-section-number">10.3</span> The wonder of attention, and beyond</a></li>
-  <li><a href="#conclussion" id="toc-conclussion" class="nav-link" data-scroll-target="#conclussion"><span class="header-section-number">10.4</span> Conclussion</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">10.3</span> Exercises</a></li>
+  <li><a href="#the-wonder-of-attention-and-beyond" id="toc-the-wonder-of-attention-and-beyond" class="nav-link" data-scroll-target="#the-wonder-of-attention-and-beyond"><span class="header-section-number">10.4</span> The wonder of attention, and beyond</a></li>
+  <li><a href="#conclussion" id="toc-conclussion" class="nav-link" data-scroll-target="#conclussion"><span class="header-section-number">10.5</span> Conclussion</a></li>
   </ul>
 </nav>
     </div>
@@ -502,7 +503,12 @@ window.Quarto = {
 <figcaption><strong>Figure 2</strong>: predicted (top) version “gold standard” contact map based on a very limited “model” trained on 4 genes, predicted into a fifth gene.</figcaption>
 </figure>
 </div>
-<p>I cant emphasize enough this is just an illustration and not an actual academic analysis/prediction, obviously a fuller implemnetation as done in <span class="citation" data-cites="rao2020">(<a href="references.html#ref-rao2020" role="doc-biblioref">Rao et al. 2020</a>)</span> is.</p>
+<p>I cant emphasize enough this is just an illustration and not an actual academic analysis/prediction, obviously a fuller implementation as done in <span class="citation" data-cites="rao2020">(<a href="references.html#ref-rao2020" role="doc-biblioref">Rao et al. 2020</a>)</span> is.</p>
+</section>
+</section>
+<section id="exercises" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="exercises"><span class="header-section-number">10.3</span> Exercises</h2>
+<p>You have started to put PLMs to work inferring structure, even i only a first few baby steps. If you want a good Masters/PhD term project with limited compute demands, or learn trough noodling with code, try improving/modeling contact maps. There are some obvious easy steps. Why are we predicting threshold distances for example? whouldn’t it be better to predict distance directly? That would retain additional information form the contact maps. Why are we using these ad-hoc data I just copy pasted from UniProt/AF2? We’d probably gain from using a standardized dataset, proteinnet <span class="citation" data-cites="alquraishi2019">(<a href="references.html#ref-alquraishi2019" role="doc-biblioref">AlQuraishi 2019</a>)</span> for example contains sequences and 3d structure of CASP7/8/9/1011 and 12 datasets in a format amenable to analysis.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -513,33 +519,41 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>If you want a good Masters/PhD term project with limited compute demands, try improving/modeling contact maps. In sequence from beginner to advanced project you could for example: <strong>1.</strong> use ridge or lasso regression to improve on the effectiveness of the prediction. <strong>2.</strong> Train an actual tabular/regression model or adapter across a few thousand genes with very good experimental structure data to squeeze all the juice out of the attention matrices. <strong>3.</strong> Finetune a medium size PLM on a joint masked language model loss, and contact map prediction loss based on the attention maps, jointly optimizing the model as a PLM and a contact map prediction model.</p>
+<p>In sequence from beginner to advanced project consider these exercises:</p>
+<p><strong>1. (easy)</strong> Build a predictor across 100 genes, use ridge or lasso regression to improve on the effectiveness of the prediction. Evaluate whether predicting continuous distances results in better prediction results.</p>
+<p><strong>2. (medium)</strong> Why aren’t we doing ML in the prediction step? Train an actual tabular/regression model or adapter across a few thousand genes with very good experimental structure data to squeeze all the juice out of the attention matrices. You can consider whether sing experimentally validated protein structures improves the model.</p>
+<p><strong>3. (hard)</strong> Finetune a medium size PLM on a joint masked language model loss, and contact map prediction loss based on the attention maps, jointly optimizing the model as a PLM and a contact map prediction model. Youd have to grab a pre-trained PLM (say: <code>facebook/esm2_t30_150M_UR50D</code> on huggingface) add code to 1. produce the attention maps during the model’s forward pass, related the attention maps (non-linearly) to the observed distances using MSE loss (of cross entropy if you keep the contact map dichotomous), and finetune the model on the combined loss: <span class="math inline">\(\alpha * MSEloss + \beta * MLMLoss\)</span> YOu’d likely have to do some evaluating of optimal values alpha ans beta. You’d be training a model that concurrently is a great masked protein language model and optimizes the attention matrices such that their maps become an optimal predictor of the molecular distances in the protein.</p>
 </div>
 </div>
 </section>
-</section>
-<section id="the-wonder-of-attention-and-beyond" class="level2" data-number="10.3">
-<h2 data-number="10.3" class="anchored" data-anchor-id="the-wonder-of-attention-and-beyond"><span class="header-section-number">10.3</span> The wonder of attention, and beyond</h2>
+<section id="the-wonder-of-attention-and-beyond" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="the-wonder-of-attention-and-beyond"><span class="header-section-number">10.4</span> The wonder of attention, and beyond</h2>
 <p>The best summary of the amazing properties of attention I came across was in Poli et al.<span class="citation" data-cites="poli2023">(<a href="references.html#ref-poli2023" role="doc-biblioref">Poli et al. 2023</a>)</span>. They,summarize years of mechanistic studies that abstract the essential features in attention that make it so highly effective at token sequence learning.</p>
 <ol type="1">
 <li>Attention is highly expressive, responsive to, and controlled by, the input data. It can see a new sequence, and from its training abstract (imperfectly) the interactions and relations between elements in that sequence.</li>
 <li>While the model size (in terms of # parameters) scales with sequences length, the parameter size of the attention weight matrices themselves do not! The weight matrices (<span class="math inline">\(W_Q\)</span>, <span class="math inline">\(W_K\)</span>, <span class="math inline">\(W_V\)</span>) are of dimension embedding size, by key/query/value vector length.</li>
 <li>While models have a set (or computationally limited) context size, the attention mechanism itself does not! Regardles of the token lenght dimension of X, the products (<span class="math inline">\(Q = X W_Q\)</span> ), ( <span class="math inline">\(K = X W_K\)</span> ), and ( <span class="math inline">\(V = X W_V\)</span> ) can be compute. Attention weights can attended to any pair of tokens regardless of their (relative) position. Though smart types of positional embedding are required to effectively capitalize on this aspect of attentions (i.e.&nbsp;effectively the degree to which attention scales beyond the sequence length seen during training is modest).</li>
 </ol>
-<p>These amazing features come at a cost, the computational cost of attention scale quadratically with the length of the sequence (as <span class="math inline">\(X\)</span> “grows” so do <span class="math inline">\(Q\)</span>,<span class="math inline">\(K\)</span>,<span class="math inline">\(V\)</span>)</p>
+<p>These amazing features come at a cost, the computational cost of attention scale quadratically with the length of the sequence (as <span class="math inline">\(X\)</span> “grows” so do <span class="math inline">\(Q\)</span>,<span class="math inline">\(K\)</span>,<span class="math inline">\(V\)</span>). Chasing sub-quadratic alternatives to attention, with the “hyena operator” being a current favorite<span class="citation" data-cites="nguyen2023a">(<a href="references.html#ref-nguyen2023a" role="doc-biblioref">Nguyen et al. 2023</a>)</span>. These alternatives may not always produce explicit “attention maps” and so peopel have developed alternate strategies to extract contact maps and proteins structure information from PLMs<span class="citation" data-cites="zhang2024">(<a href="references.html#ref-zhang2024" role="doc-biblioref">Zhang et al. 2024</a>)</span>.</p>
 </section>
-<section id="conclussion" class="level2" data-number="10.4">
-<h2 data-number="10.4" class="anchored" data-anchor-id="conclussion"><span class="header-section-number">10.4</span> Conclussion</h2>
+<section id="conclussion" class="level2" data-number="10.5">
+<h2 data-number="10.5" class="anchored" data-anchor-id="conclussion"><span class="header-section-number">10.5</span> Conclussion</h2>
 <p>So what did we learn here? we learned that within the unsupervised PLM, which is trained on 1-D sequences, we uncover “knowledge” of 2D protein structure. What I did here is by no means an optimal protein contact prediction but others have build on this idea and done so successfully<span class="citation" data-cites="lin2023">(<a href="references.html#ref-lin2023" role="doc-biblioref">Lin et al. 2023</a>)</span>.</p>
 <p>In the next chapter we’ll discuss how we can append models onto PLMs to go above and beyond and predict 3D protein structure.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-alquraishi2019" class="csl-entry" role="listitem">
+AlQuraishi, Mohammed. 2019. <span>“ProteinNet: A Standardized Data Set for Machine Learning of Protein Structure.”</span> <em>BMC Bioinformatics</em> 20 (1). <a href="https://doi.org/10.1186/s12859-019-2932-0">https://doi.org/10.1186/s12859-019-2932-0</a>.
+</div>
 <div id="ref-duarte2010" class="csl-entry" role="listitem">
 Duarte, Jose M, Rajagopal Sathyapriya, Henning Stehr, Ioannis Filippis, and Michael Lappe. 2010. <span>“Optimal Contact Definition for Reconstruction of Contact Maps.”</span> <em>BMC Bioinformatics</em> 11 (1). <a href="https://doi.org/10.1186/1471-2105-11-283">https://doi.org/10.1186/1471-2105-11-283</a>.
 </div>
 <div id="ref-lin2023" class="csl-entry" role="listitem">
 Lin, Zeming, Halil Akin, Roshan Rao, Brian Hie, Zhongkai Zhu, Wenting Lu, Nikita Smetanin, et al. 2023. <span>“Evolutionary-Scale Prediction of Atomic-Level Protein Structure with a Language Model.”</span> <em>Science</em> 379 (6637): 1123–30. <a href="https://doi.org/10.1126/science.ade2574">https://doi.org/10.1126/science.ade2574</a>.
+</div>
+<div id="ref-nguyen2023a" class="csl-entry" role="listitem">
+Nguyen, Eric, Michael Poli, Marjan Faizi, Armin Thomas, Callum Birch-Sykes, Michael Wornow, Aman Patel, et al. 2023. <span>“HyenaDNA: Long-Range Genomic Sequence Modeling at Single Nucleotide Resolution.”</span> <a href="https://doi.org/10.48550/ARXIV.2306.15794">https://doi.org/10.48550/ARXIV.2306.15794</a>.
 </div>
 <div id="ref-poli2023" class="csl-entry" role="listitem">
 Poli, Michael, Stefano Massaroli, Eric Nguyen, Daniel Y. Fu, Tri Dao, Stephen Baccus, Yoshua Bengio, Stefano Ermon, and Christopher Ré. 2023. <span>“Hyena Hierarchy: Towards Larger Convolutional Language Models.”</span> <a href="https://doi.org/10.48550/ARXIV.2302.10866">https://doi.org/10.48550/ARXIV.2302.10866</a>.
@@ -549,6 +563,9 @@ Rao, Roshan, Joshua Meier, Tom Sercu, Sergey Ovchinnikov, and Alexander Rives. 2
 </div>
 <div id="ref-vig2020" class="csl-entry" role="listitem">
 Vig, Jesse, Ali Madani, Lav R. Varshney, Caiming Xiong, Richard Socher, and Nazneen Fatema Rajani. 2020. <span>“BERTology Meets Biology: Interpreting Attention in Protein Language Models.”</span> <a href="https://doi.org/10.48550/ARXIV.2006.15222">https://doi.org/10.48550/ARXIV.2006.15222</a>.
+</div>
+<div id="ref-zhang2024" class="csl-entry" role="listitem">
+Zhang, Zhidian, Hannah K. Wayment-Steele, Garyk Brixi, Haobo Wang, Dorothee Kern, and Sergey Ovchinnikov. 2024. <span>“Protein Language Models Learn Evolutionary Statistics of Interacting Sequence Motifs.”</span> <em>Proceedings of the National Academy of Sciences</em> 121 (45). <a href="https://doi.org/10.1073/pnas.2406285121">https://doi.org/10.1073/pnas.2406285121</a>.
 </div>
 </div>
 </section>

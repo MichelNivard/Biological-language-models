@@ -160,10 +160,20 @@ Based on the very limited regression model we can predict the hazy outline of th
 
 ![**Figure 2**: predicted (top) version "gold standard" contact map based on a very limited "model" trained on 4 genes, predicted into a fifth gene.](images/paste-27.png){fig-align="center"}
 
-I cant emphasize enough this is just an illustration and not an actual academic analysis/prediction, obviously a fuller implemnetation as done in [@rao2020] is.
+I cant emphasize enough this is just an illustration and not an actual academic analysis/prediction, obviously a fuller implementation as done in [@rao2020] is.
+
+## Exercises
+
+You have started to put PLMs to work inferring structure, even i only a first few baby steps. If you want a good Masters/PhD term project with limited compute demands, or learn trough noodling with code, try improving/modeling contact maps. There are some obvious easy steps. Why are we predicting threshold distances for example? whouldn't it be better to predict distance directly? That would retain additional information form the contact maps. Why are we using these ad-hoc data I just copy pasted from UniProt/AF2? We'd probably gain from using a standardized dataset, proteinnet [@alquraishi2019] for example contains sequences and 3d structure of CASP7/8/9/1011 and 12 datasets in a format amenable to analysis.
 
 ::: callout-tip
-If you want a good Masters/PhD term project with limited compute demands, try improving/modeling contact maps. In sequence from beginner to advanced project you could for example: **1.** use ridge or lasso regression to improve on the effectiveness of the prediction. **2.** Train an actual tabular/regression model or adapter across a few thousand genes with very good experimental structure data to squeeze all the juice out of the attention matrices. **3.** Finetune a medium size PLM on a joint masked language model loss, and contact map prediction loss based on the attention maps, jointly optimizing the model as a PLM and a contact map prediction model.
+In sequence from beginner to advanced project consider these exercises:
+
+**1. (easy)** Build a predictor across 100 genes, use ridge or lasso regression to improve on the effectiveness of the prediction. Evaluate whether predicting continuous distances results in better prediction results.
+
+**2. (medium)** Why aren't we doing ML in the prediction step? Train an actual tabular/regression model or adapter across a few thousand genes with very good experimental structure data to squeeze all the juice out of the attention matrices. You can consider whether sing experimentally validated protein structures improves the model.
+
+**3. (hard)** Finetune a medium size PLM on a joint masked language model loss, and contact map prediction loss based on the attention maps, jointly optimizing the model as a PLM and a contact map prediction model. Youd have to grab a pre-trained PLM (say: `facebook/esm2_t30_150M_UR50D` on huggingface) add code to 1. produce the attention maps during the model's forward pass, related the attention maps (non-linearly) to the observed distances using MSE loss (of cross entropy if you keep the contact map dichotomous), and finetune the model on the combined loss: $\alpha * MSEloss + \beta * MLMLoss$ YOu'd likely have to do some evaluating of optimal values alpha ans beta. You'd be training a model that concurrently is a great masked protein language model and optimizes the attention matrices such that their maps become an optimal predictor of the molecular distances in the protein.
 :::
 
 ## The wonder of attention, and beyond
@@ -174,7 +184,7 @@ The best summary of the amazing properties of attention I came across was in Pol
 2.  While the model size (in terms of \# parameters) scales with sequences length, the parameter size of the attention weight matrices themselves do not! The weight matrices ($W_Q$, $W_K$, $W_V$) are of dimension embedding size, by key/query/value vector length.
 3.  While models have a set (or computationally limited) context size, the attention mechanism itself does not! Regardles of the token lenght dimension of X, the products ($Q = X W_Q$ ), ( $K = X W_K$ ), and ( $V = X W_V$ ) can be compute. Attention weights can attended to any pair of tokens regardless of their (relative) position. Though smart types of positional embedding are required to effectively capitalize on this aspect of attentions (i.e. effectively the degree to which attention scales beyond the sequence length seen during training is modest).
 
-These amazing features come at a cost, the computational cost of attention scale quadratically with the length of the sequence (as $X$ "grows" so do $Q$,$K$,$V$)
+These amazing features come at a cost, the computational cost of attention scale quadratically with the length of the sequence (as $X$ "grows" so do $Q$,$K$,$V$). Chasing sub-quadratic alternatives to attention, with the "hyena operator" being a current favorite[@nguyen2023a]. These alternatives may not always produce explicit "attention maps" and so peopel have developed alternate strategies to extract contact maps and proteins structure information from PLMs[@zhang2024].
 
 ## Conclussion
 
