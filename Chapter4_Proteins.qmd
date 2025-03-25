@@ -160,11 +160,13 @@ Based on the very limited regression model we can predict the hazy outline of th
 
 ![**Figure 2**: predicted (top) version "gold standard" contact map based on a very limited "model" trained on 4 genes, predicted into a fifth gene.](images/paste-27.png){fig-align="center"}
 
-I cant emphasize enough this is just an illustration and not an actual academic analysis/prediction, obviously a fuller implementation as done in [@rao2020] is.
+I cant emphasize enough this is just an illustration and not an actual academic analysis/prediction, obviously a fuller implementation as done in [@rao2020] is. The full process of this chapter is outlined in **Figure 3**, parallel attention heads, across sequential layers, ensure proteins structure can be predicted. We then attention maps form the model, and use those to predict the protein contact map. Currently the prediction of the contacts, and the masked sequence elements are seperate processes, but in many deep learning models in general, and protein language models in specific, those prediction tasks are fused into one single model.
+
+![**Figure 3.** Protein 2-D structure prediction attention, and attention maps. ](images/paste-30.png){alt="Figure 3. Protein 2-D structure prediction attention, and attention maps. "}
 
 ## Exercises
 
-You have started to put PLMs to work inferring structure, even i only a first few baby steps. If you want a good Masters/PhD term project with limited compute demands, or learn trough noodling with code, try improving/modeling contact maps. There are some obvious easy steps. Why are we predicting threshold distances for example? whouldn't it be better to predict distance directly? That would retain additional information form the contact maps. Why are we using these ad-hoc data I just copy pasted from UniProt/AF2? We'd probably gain from using a standardized dataset, proteinnet [@alquraishi2019] for example contains sequences and 3d structure of CASP7/8/9/1011 and 12 datasets in a format amenable to analysis.
+If you want a good Masters/PhD term project with limited compute demands, or you prefer to do self-study trough coding 9Icertainly do), try improving/modeling contact maps. There are some obvious pieces of low hanging fruit here, for example why are we predicting threshold distances for example? whouldn't it be better to predict distance directly? That would retain additional information form the contact maps. Why are we using these ad-hoc data I just copy pasted from UniProt/AF2? We'd probably gain from using a standardized dataset, proteinnet [@alquraishi2019] for example contains sequences and 3d structure of CASP7/8/9/1011 and 12 datasets in a format amenable to analysis. The exercises below motivate you to think about optimizing parts of the process outlined in **Figure 3**, and, if you are up for it, trying to capture the entire process into a single model.
 
 ::: callout-tip
 In sequence from beginner to advanced project consider these exercises:
@@ -175,6 +177,8 @@ In sequence from beginner to advanced project consider these exercises:
 
 **3. (hard)** Finetune a medium size PLM on a joint masked language model loss, and contact map prediction loss based on the attention maps, jointly optimizing the model as a PLM and a contact map prediction model. Youd have to grab a pre-trained PLM (say: `facebook/esm2_t30_150M_UR50D` on huggingface) add code to 1. produce the attention maps during the model's forward pass, related the attention maps (non-linearly) to the observed distances using MSE loss (of cross entropy if you keep the contact map dichotomous), and finetune the model on the combined loss: $\alpha * MSEloss + \beta * MLMLoss$ YOu'd likely have to do some evaluating of optimal values alpha ans beta. You'd be training a model that concurrently is a great masked protein language model and optimizes the attention matrices such that their maps become an optimal predictor of the molecular distances in the protein.
 :::
+
+If you make it to the hard exercise, you are essentially training a "adapter" to fit on top of your PLM. This is common practice in machine learning with language models, add parts to an existing model, either freezing the exciting model in place, or letting it optimize along with he adapter, to excel at a specific task. One of the best performing protein folding PLMs, ESMfold[@lin2023a], is such an adapter, though that adapter is more sophisticated then the one you'd train here.
 
 ## The wonder of attention, and beyond
 
@@ -188,6 +192,4 @@ These amazing features come at a cost, the computational cost of attention scale
 
 ## Conclussion
 
-So what did we learn here? we learned that within the unsupervised PLM, which is trained on 1-D sequences, we uncover "knowledge" of 2D protein structure. What I did here is by no means an optimal protein contact prediction but others have build on this idea and done so successfully[@lin2023].
-
-In the next chapter we'll discuss how we can append models onto PLMs to go above and beyond and predict 3D protein structure.
+So what did we learn here? we learned that within the unsupervised PLM, which is trained on 1-D sequences, we uncover "knowledge" of 2D protein structure. What I did here is by no means an optimal protein contact prediction but others have build on this idea and done so successfully[@lin2023]. In the next chapter we'll discuss how we can append models onto PLMs first to predict 2D contact maps, and then to go above and beyond and predict 3D protein structure.

@@ -503,12 +503,18 @@ window.Quarto = {
 <figcaption><strong>Figure 2</strong>: predicted (top) version “gold standard” contact map based on a very limited “model” trained on 4 genes, predicted into a fifth gene.</figcaption>
 </figure>
 </div>
-<p>I cant emphasize enough this is just an illustration and not an actual academic analysis/prediction, obviously a fuller implementation as done in <span class="citation" data-cites="rao2020">(<a href="references.html#ref-rao2020" role="doc-biblioref">Rao et al. 2020</a>)</span> is.</p>
+<p>I cant emphasize enough this is just an illustration and not an actual academic analysis/prediction, obviously a fuller implementation as done in <span class="citation" data-cites="rao2020">(<a href="references.html#ref-rao2020" role="doc-biblioref">Rao et al. 2020</a>)</span> is. The full process of this chapter is outlined in <strong>Figure 3</strong>, parallel attention heads, across sequential layers, ensure proteins structure can be predicted. We then attention maps form the model, and use those to predict the protein contact map. Currently the prediction of the contacts, and the masked sequence elements are seperate processes, but in many deep learning models in general, and protein language models in specific, those prediction tasks are fused into one single model.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/paste-30.png" class="img-fluid figure-img"></p>
+<figcaption><strong>Figure 3.</strong> Protein 2-D structure prediction attention, and attention maps.</figcaption>
+</figure>
+</div>
 </section>
 </section>
 <section id="exercises" class="level2" data-number="10.3">
 <h2 data-number="10.3" class="anchored" data-anchor-id="exercises"><span class="header-section-number">10.3</span> Exercises</h2>
-<p>You have started to put PLMs to work inferring structure, even i only a first few baby steps. If you want a good Masters/PhD term project with limited compute demands, or learn trough noodling with code, try improving/modeling contact maps. There are some obvious easy steps. Why are we predicting threshold distances for example? whouldn’t it be better to predict distance directly? That would retain additional information form the contact maps. Why are we using these ad-hoc data I just copy pasted from UniProt/AF2? We’d probably gain from using a standardized dataset, proteinnet <span class="citation" data-cites="alquraishi2019">(<a href="references.html#ref-alquraishi2019" role="doc-biblioref">AlQuraishi 2019</a>)</span> for example contains sequences and 3d structure of CASP7/8/9/1011 and 12 datasets in a format amenable to analysis.</p>
+<p>If you want a good Masters/PhD term project with limited compute demands, or you prefer to do self-study trough coding 9Icertainly do), try improving/modeling contact maps. There are some obvious pieces of low hanging fruit here, for example why are we predicting threshold distances for example? whouldn’t it be better to predict distance directly? That would retain additional information form the contact maps. Why are we using these ad-hoc data I just copy pasted from UniProt/AF2? We’d probably gain from using a standardized dataset, proteinnet <span class="citation" data-cites="alquraishi2019">(<a href="references.html#ref-alquraishi2019" role="doc-biblioref">AlQuraishi 2019</a>)</span> for example contains sequences and 3d structure of CASP7/8/9/1011 and 12 datasets in a format amenable to analysis. The exercises below motivate you to think about optimizing parts of the process outlined in <strong>Figure 3</strong>, and, if you are up for it, trying to capture the entire process into a single model.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -525,6 +531,7 @@ Tip
 <p><strong>3. (hard)</strong> Finetune a medium size PLM on a joint masked language model loss, and contact map prediction loss based on the attention maps, jointly optimizing the model as a PLM and a contact map prediction model. Youd have to grab a pre-trained PLM (say: <code>facebook/esm2_t30_150M_UR50D</code> on huggingface) add code to 1. produce the attention maps during the model’s forward pass, related the attention maps (non-linearly) to the observed distances using MSE loss (of cross entropy if you keep the contact map dichotomous), and finetune the model on the combined loss: <span class="math inline">\(\alpha * MSEloss + \beta * MLMLoss\)</span> YOu’d likely have to do some evaluating of optimal values alpha ans beta. You’d be training a model that concurrently is a great masked protein language model and optimizes the attention matrices such that their maps become an optimal predictor of the molecular distances in the protein.</p>
 </div>
 </div>
+<p>If you make it to the hard exercise, you are essentially training a “adapter” to fit on top of your PLM. This is common practice in machine learning with language models, add parts to an existing model, either freezing the exciting model in place, or letting it optimize along with he adapter, to excel at a specific task. One of the best performing protein folding PLMs, ESMfold<span class="citation" data-cites="lin2023a">(<a href="references.html#ref-lin2023a" role="doc-biblioref">Lin et al. 2023a</a>)</span>, is such an adapter, though that adapter is more sophisticated then the one you’d train here.</p>
 </section>
 <section id="the-wonder-of-attention-and-beyond" class="level2" data-number="10.4">
 <h2 data-number="10.4" class="anchored" data-anchor-id="the-wonder-of-attention-and-beyond"><span class="header-section-number">10.4</span> The wonder of attention, and beyond</h2>
@@ -538,8 +545,7 @@ Tip
 </section>
 <section id="conclussion" class="level2" data-number="10.5">
 <h2 data-number="10.5" class="anchored" data-anchor-id="conclussion"><span class="header-section-number">10.5</span> Conclussion</h2>
-<p>So what did we learn here? we learned that within the unsupervised PLM, which is trained on 1-D sequences, we uncover “knowledge” of 2D protein structure. What I did here is by no means an optimal protein contact prediction but others have build on this idea and done so successfully<span class="citation" data-cites="lin2023">(<a href="references.html#ref-lin2023" role="doc-biblioref">Lin et al. 2023</a>)</span>.</p>
-<p>In the next chapter we’ll discuss how we can append models onto PLMs to go above and beyond and predict 3D protein structure.</p>
+<p>So what did we learn here? we learned that within the unsupervised PLM, which is trained on 1-D sequences, we uncover “knowledge” of 2D protein structure. What I did here is by no means an optimal protein contact prediction but others have build on this idea and done so successfully<span class="citation" data-cites="lin2023">(<a href="references.html#ref-lin2023" role="doc-biblioref">Lin et al. 2023b</a>)</span>. In the next chapter we’ll discuss how we can append models onto PLMs first to predict 2D contact maps, and then to go above and beyond and predict 3D protein structure.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
@@ -550,7 +556,10 @@ AlQuraishi, Mohammed. 2019. <span>“ProteinNet: A Standardized Data Set for Mac
 Duarte, Jose M, Rajagopal Sathyapriya, Henning Stehr, Ioannis Filippis, and Michael Lappe. 2010. <span>“Optimal Contact Definition for Reconstruction of Contact Maps.”</span> <em>BMC Bioinformatics</em> 11 (1). <a href="https://doi.org/10.1186/1471-2105-11-283">https://doi.org/10.1186/1471-2105-11-283</a>.
 </div>
 <div id="ref-lin2023" class="csl-entry" role="listitem">
-Lin, Zeming, Halil Akin, Roshan Rao, Brian Hie, Zhongkai Zhu, Wenting Lu, Nikita Smetanin, et al. 2023. <span>“Evolutionary-Scale Prediction of Atomic-Level Protein Structure with a Language Model.”</span> <em>Science</em> 379 (6637): 1123–30. <a href="https://doi.org/10.1126/science.ade2574">https://doi.org/10.1126/science.ade2574</a>.
+Lin, Zeming, Halil Akin, Roshan Rao, Brian Hie, Zhongkai Zhu, Wenting Lu, Nikita Smetanin, et al. 2023b. <span>“Evolutionary-Scale Prediction of Atomic-Level Protein Structure with a Language Model.”</span> <em>Science</em> 379 (6637): 1123–30. <a href="https://doi.org/10.1126/science.ade2574">https://doi.org/10.1126/science.ade2574</a>.
+</div>
+<div id="ref-lin2023a" class="csl-entry" role="listitem">
+———, et al. 2023a. <span>“Evolutionary-Scale Prediction of Atomic-Level Protein Structure with a Language Model.”</span> <em>Science</em> 379 (6637): 1123–30. <a href="https://doi.org/10.1126/science.ade2574">https://doi.org/10.1126/science.ade2574</a>.
 </div>
 <div id="ref-nguyen2023a" class="csl-entry" role="listitem">
 Nguyen, Eric, Michael Poli, Marjan Faizi, Armin Thomas, Callum Birch-Sykes, Michael Wornow, Aman Patel, et al. 2023. <span>“HyenaDNA: Long-Range Genomic Sequence Modeling at Single Nucleotide Resolution.”</span> <a href="https://doi.org/10.48550/ARXIV.2306.15794">https://doi.org/10.48550/ARXIV.2306.15794</a>.
