@@ -127,7 +127,7 @@ This requires:
 
 The code below takes a human sequence, encodes it in a one-hot encoding (so A: 10000, T: 01000, G: 00100, C: 00010, -: 00001 for example), does the same for any auxiliary aligned sequences from other species. Then the embedding function combines both into one.
 
-```python
+``` python
 # --------------------------------
 # 5. Encode Human and Auxiliary Species Sequences in 
 # --------------------------------
@@ -194,7 +194,7 @@ class GPNEmbedding(nn.Module):
 
 From here on out, things are fairly standard. A transformer model (here BERT but could be anything really) is initialized to learn the relationship between adjacent tokens using a masked language model training regime. In the code below, the custom embeddings are introduced into the masked language model (ModernBert in this case) while the encoder part of the model (the core part of the model that learns the relation between adjacent tokens) remains unchanged.
 
-```python
+``` python
 # --------------------------------
 # 6. GPNBERTMaskedLM
 # --------------------------------
@@ -237,7 +237,7 @@ class GPNBERTMaskedLM(nn.Module):
 
 ## What are we masking?
 
-I promised we'd have to deeply consider what we count as prediction, and that's going to have to happen right now. In Chapter 2, we trained a DNA language model, and in Chapter 3, we saw how well it did and did not predict specific features. In **Figure 3.3**, you saw the model predicts the true bases in the DRD2 gene with about 40%. What if I told you I can predict the bases in the human reference genome with > 95% probability with a "model" based on a supervised model? To do so, I'd just pick the consensus base across other species! Human DNA and chimpanzee DNA are > 90% identical, and human and mouse genomes are remarkably similar (85%, I think). In **Figure 4.3** (from [@initial2002]), we see the human sequences that are preserved well in the mouse genome, and they cover a staggering portion of it. This means we can "beat" base predictions made by our previous model by a mile, simply by picking the base that is most frequent across evolutionary history.
+I promised we'd have to deeply consider what we count as prediction, and that's going to have to happen right now. In Chapter 2, we trained a DNA language model, and in Chapter 3, we saw how well it did and did not predict specific features. In **Figure 3.3**, you saw the model predicts the true bases in the DRD2 gene with about 40%. What if I told you I can predict the bases in the human reference genome with \> 95% probability with a "model" based on a supervised model? To do so, I'd just pick the consensus base across other species! Human DNA and chimpanzee DNA are \> 90% identical, and human and mouse genomes are remarkably similar (85%, I think). In **Figure 4.3** (from [@initial2002]), we see the human sequences that are preserved well in the mouse genome, and they cover a staggering portion of it. This means we can "beat" base predictions made by our previous model by a mile, simply by picking the base that is most frequent across evolutionary history.
 
 ![**Figure 4.3** The mouse genome, with sections of the human genome (color-coded) that are largely preserved across evolution (Figure 3 in [@initial2002])](images/paste-18.png){fig-align="center"}
 

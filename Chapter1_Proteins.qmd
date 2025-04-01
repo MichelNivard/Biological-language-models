@@ -1,7 +1,5 @@
----
-title: "Proteins: from sequence to structure"
-format: html
----
+# Proteins: from sequence to structure  {#sec-ProtIntro}
+
 
 Proteins are the fundamental building blocks of biological systems, and understanding their structure is crucial for deciphering their function. The journey from a one-dimensional (1D) amino acid sequence to a two-dimensional (2D) contact map/distance map and finally to a three-dimensional (3D) structure has been one of the grand challenges in computational biology. In this chapter, we explore how protein models based on attention/transformer-like modules, like AlphaFold and ESMfold, revolutionized this space.
 

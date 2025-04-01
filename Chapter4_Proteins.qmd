@@ -1,5 +1,14 @@
 # Protein contact maps from attention maps
 
+::: callout-tip
+## Abstract
+
+In this chapter, we'll discuss how self-attention works and how it latently encodes a protein's structure.
+All scripts for this chapter, and the 5 PDB files used, are found here: <https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Proteins/Chapter10>
+:::
+
+## 
+
 One way to construct a scaffold for protein 3d structure learning is to first learn the distances (2d) between all amino-acids, or between atoms within those amino acids. Contact maps have been extensively used as a simplified representation of protein structures. Contact maps "capture most important features of a protein's fold, being preferred by a number of researchers for the description and study of protein structures"[@duarte2010]. 
 
 A protein’s amino acid sequence is one-dimensional (1D) information – the linear order of residues. The functional three-dimensional (3D) structure is how that chain folds in space, bringing certain residues into contact. **Contact maps** serve as a two-dimensional (2D) bridge between sequence and structure. A contact map is essentially a matrix that encodes which pairs of residues are close together in the folded 3D structure​. Specifically, it’s a binary $N \times N$ matrix (for an $N$-residue protein) where an entry is 1 if two residues are within a distance threshold (e.g. 12 Å) in the 3D structure, and 0 if they are not​ This 2D representation captures key structural relationships (who-neighbors-whom) without specifying exact coordinates. In protein structure prediction, one common approach is: **1D sequence ⇒ predicted 2D contact map ⇒ inferred 3D structure**. The contact map, derived from sequence-based predictions (such as co-evolution analysis or machine learning), provides constraints that guide how the chain can fold​. Note however, when converting a full 3D structure into a simplified 2D contact map, some information is inevitably lost. The contact map is a binary (or at best, thresholded distance) representation – it tells us whether a pair of residues is within a certain cutoff distance, but not the exact distance beyond that or their relative orientation. A dramatic illustration is that a protein’s mirror-image (reflected) structure yields an identical contact map, since all pairwise distances are the same​. The map alone cannot distinguish a right-handed fold from its left-handed enantiomer – chirality information is lost. Nevertheless, contact maps can serve as relevant information, or constraints when trying to infer 3D structure. Contact maps can act as a powerful but imperfect intermediate blueprint, translating linear sequence information into spatial relationships that approximate the final folded structure. **Figure 1** is an example contact map based on a distance threshold of 12 Angstrom between C_a atoms (Carbon atoms that are part of the protein backbone ) in the AlphaFold 2 model of the protein structure (PDB format) of a human GRPC protein.
@@ -162,7 +171,7 @@ Based on the very limited regression model we can predict the hazy outline of th
 
 I cant emphasize enough this is just an illustration and not an actual academic analysis/prediction, obviously a fuller implementation as done in [@rao2020] is. The full process of this chapter is outlined in **Figure 3**, parallel attention heads, across sequential layers, ensure proteins structure can be predicted. We then attention maps form the model, and use those to predict the protein contact map. Currently the prediction of the contacts, and the masked sequence elements are seperate processes, but in many deep learning models in general, and protein language models in specific, those prediction tasks are fused into one single model.
 
-![**Figure 3.** Protein 2-D structure prediction attention, and attention maps. ](images/paste-30.png){alt="Figure 3. Protein 2-D structure prediction attention, and attention maps. "}
+![Figure 3. Protein 2-D structure prediction attention, and attention maps.](images/paste-30.png)
 
 ## Exercises
 

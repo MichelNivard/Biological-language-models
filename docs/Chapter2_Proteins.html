@@ -277,6 +277,7 @@ div.csl-indent {
   <li><a href="#specialized-datasets-for-ml-and-plms" id="toc-specialized-datasets-for-ml-and-plms" class="nav-link" data-scroll-target="#specialized-datasets-for-ml-and-plms"><span class="header-section-number">8.1.5</span> <strong>Specialized Datasets for ML and PLMs</strong></a></li>
   </ul></li>
   <li><a href="#sequence-diversity-in-training" id="toc-sequence-diversity-in-training" class="nav-link" data-scroll-target="#sequence-diversity-in-training"><span class="header-section-number">8.2</span> Sequence diversity in training</a></li>
+  <li><a href="#are-we-running-out-of-training-data" id="toc-are-we-running-out-of-training-data" class="nav-link" data-scroll-target="#are-we-running-out-of-training-data"><span class="header-section-number">8.3</span> Are we running out of training data?</a></li>
   </ul>
 </nav>
     </div>
@@ -285,7 +286,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_Proteins.html">Proteins</a></li><li class="breadcrumb-item"><a href="./Chapter2_Proteins.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Selecting and curating protein sequences</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Selecting and curating protein sequences</span></h1>
+<h1 class="title"><span id="sec-ProtData" class="quarto-section-identifier"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Selecting and curating protein sequences</span></span></h1>
 </div>
 
 
@@ -329,15 +330,14 @@ Databases like <strong>STRING</strong> and <strong>BioGRID</strong> compile larg
 </section>
 <section id="specialized-datasets-for-ml-and-plms" class="level3" data-number="8.1.5">
 <h3 data-number="8.1.5" class="anchored" data-anchor-id="specialized-datasets-for-ml-and-plms"><span class="header-section-number">8.1.5</span> <strong>Specialized Datasets for ML and PLMs</strong></h3>
-<p><a href="https://github.com/songlab-cal/tape">TAPE Dataset</a> | <a href="https://www.uniprot.org/">SwissProt50/TrEMBL50</a><br>
-Several datasets have been specifically designed for training ML models and protein LMs. <strong>TAPE (Tasks Assessing Protein Embeddings)</strong> provides benchmarks for PLMs on tasks like secondary structure prediction, fluorescence, and stability prediction. <strong>SwissProt50/TrEMBL50</strong> datasets are commonly used for training PLMs by balancing redundancy in sequence data.</p>
-<p>By combining these diverse protein data sources, machine learning models can capture sequence patterns, structural constraints, evolutionary conservation, and functional properties, enabling advancements in protein engineering, drug discovery, and fundamental biological research.</p>
+<p><a href="https://github.com/songlab-cal/tape">TAPE Dataset</a> | <a href="https://www.uniprot.org/">SwissProt50/TrEMBL50</a> | <a href="https://github.com/aqlaboratory/proteinnet">Proteinnet</a><br>
+Several datasets have been specifically designed for training ML models and protein LMs. <strong>TAPE (Tasks Assessing Protein Embeddings)</strong> provides benchmarks for PLMs on tasks like secondary structure prediction, fluorescence, and stability prediction. <strong>SwissProt50/TrEMBL50</strong> datasets are commonly used for training PLMs by balancing redundancy in sequence data. <strong>Proteinnet</strong> contains the sequence, functional annotations, and atomic structure of all CASP proteins. The cool thing is that they are ordered chronologically, so you can train on CASP 7/8/9/10/11 and use CASP 12 or 13 as holdouts for validation.</p>
 </section>
 </section>
 <section id="sequence-diversity-in-training" class="level2" data-number="8.2">
 <h2 data-number="8.2" class="anchored" data-anchor-id="sequence-diversity-in-training"><span class="header-section-number">8.2</span> Sequence diversity in training</h2>
-<p>When training protein sequence models there is a risk of “overtraining” on abundantly measured, or frequently observed protein sequences. Not all protein families (characterized by a common evolutionary origin) are equally represented and so uniform sampling form Uniprot will skew towards certain types of proteins while undersampling others.</p>
-<p>Various empirical projects consider sequencing diversity in training protein (language) models. The ESM-1 paper <span class="citation" data-cites="rives2021">(<a href="references.html#ref-rives2021" role="doc-biblioref">Rives et al. 2021</a>)</span> evaluated 3 different levels of sequence diversity. The low-diversity dataset (UR100) consists of UniRef100 representative sequences which are all proteins in Uniprot removing identical copies (clustering sequences that share 100% identity). This dataset will have many near identical sequences. The high-diversity sparse dataset (UR50/S) is derived from UniRef50 representative sequences, its goig to have many unique sequences, but limited variation in similar sequences as all sequences with &gt; 50% shared identity are collapsed into a single cluster from which 1 representative sequence is retained. The high-diversity dense dataset (UR50/D) achieves broader coverage by uniformly sampling UniRef100 sequences across all UniRef50 clusters, mixing uniform representation and dense coverage. When models were compared using the exponentiated cross entropy (ECE) metric, the sense diverse data performed best (see Table 1).</p>
+<p>When training protein sequence models, there is a risk of “overtraining” on abundantly measured, or frequently observed protein sequences. Not all protein families (characterized by a common evolutionary origin) are equally represented, and so uniform sampling from UniProt will skew towards certain types of proteins while undersampling others.</p>
+<p>Various empirical projects consider sequencing diversity in training protein (language) models. The ESM-1 paper <span class="citation" data-cites="rives2021">(<a href="references.html#ref-rives2021" role="doc-biblioref">Rives et al. 2021</a>)</span> evaluated 3 different levels of sequence diversity. The low-diversity dataset (UR100) consists of UniRef100 representative sequences, which are all proteins in UniProt removing identical copies (clustering sequences that share 100% identity). This dataset will have many near-identical sequences. The high-diversity sparse dataset (UR50/S) is derived from UniRef50 representative sequences; it’s going to have many unique sequences, but limited variation in similar sequences as all sequences with &gt; 50% shared identity are collapsed into a single cluster from which 1 representative sequence is retained. The high-diversity dense dataset (UR50/D) achieves broader coverage by uniformly sampling UniRef100 sequences across all UniRef50 clusters, mixing uniform representation and dense coverage. When models were compared using the exponentiated cross-entropy (ECE) metric, the sense diverse data performed best (see Table 1).</p>
 <table class="caption-top table">
 <caption><strong>Table 1:</strong> A single model trained on 3 data mixtures suggests dense diverse sequences lead to better training results (source: <span class="citation" data-cites="rives2021">(<a href="references.html#ref-rives2021" role="doc-biblioref">Rives et al. 2021</a>)</span> )</caption>
 <colgroup>
@@ -380,10 +380,24 @@ Several datasets have been specifically designed for training ML models and prot
 </tr>
 </tbody>
 </table>
-<p>If you are going to develop your own base protein (language) model, competing with he likes of facebook and google, then selecting the optimal training set is critically important. it is unlikely you’ll be able to compete in terms of compute, but with good data selection you can save you a lot off compute by making the model more efficient.</p>
+<p>If you are going to develop your own base protein (language) model, competing with the likes of Facebook and Google, then selecting the optimal training set is critically important. It is unlikely you’ll be able to compete in terms of compute, but with good data selection, you can save a lot of compute by making the model more efficient.</p>
+</section>
+<section id="are-we-running-out-of-training-data" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="are-we-running-out-of-training-data"><span class="header-section-number">8.3</span> Are we running out of training data?</h2>
+<p>An insightful study by <span class="citation" data-cites="cheng2024">(<a href="references.html#ref-cheng2024" role="doc-biblioref">Cheng et al. 2024</a>)</span> shows that if you train on UniRef50 (about 15 billion tokens, or amino-acids), then larger models (3 Billion) start to deteriorate on validating data after training for 3 (or more) Epochs. While if you expand training to metagenomic sources (that cover eukaryotic species, viruses, etc.), you can expect continued improvements.</p>
+<p>The most recent generation of protein deep learning models, like ESM-3<span class="citation" data-cites="Hayes2025">(<a href="references.html#ref-Hayes2025" role="doc-biblioref">Hayes et al. 2025</a>)</span> and ESM-c <span class="citation" data-cites="esm2024cambrian">(<a href="references.html#ref-esm2024cambrian" role="doc-biblioref">ESM Team 2024</a>)</span>, train on a kind of UniRef70 (trying to find a sweet spot between 50 and 70) augmented with millions of metagenomic sequences from EMBL’s MGnify and JGI’s IMG databases. A good open source of that data is <a href="https://huggingface.co/datasets/tattabio/OMG_prot50">OMG_Prot50</a>, a clustered version of the Open MetaGenomic dataset (OMG, which contains MGnify and IMG) clustered at 50% sequence identity to minimize duplication and maximize diversity. Across OMG_prot50 and UniRef50 or 90, there are a few billion relatively unique proteins and several hundreds of billions of amino acids to train on. That sounds like a lot (and it is), but the latest natural language models are trained on tens of trillions of tokens and show no signs of being saturated.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-cheng2024" class="csl-entry" role="listitem">
+Cheng, Xingyi, Bo Chen, Pan Li, Jing Gong, Jie Tang, and Le Song. 2024. <span>“Training Compute-Optimal Protein Language Models.”</span> <a href="http://dx.doi.org/10.1101/2024.06.06.597716">http://dx.doi.org/10.1101/2024.06.06.597716</a>.
+</div>
+<div id="ref-esm2024cambrian" class="csl-entry" role="listitem">
+ESM Team. 2024. <span>“ESM Cambrian: Revealing the Mysteries of Proteins with Unsupervised Learning.”</span> EvolutionaryScale Website. <a href="https://evolutionaryscale.ai/blog/esm-cambrian">https://evolutionaryscale.ai/blog/esm-cambrian</a>.
+</div>
+<div id="ref-Hayes2025" class="csl-entry" role="listitem">
+Hayes, Thomas, Roshan Rao, Halil Akin, Nicholas J. Sofroniew, Deniz Oktay, Zeming Lin, Robert Verkuil, et al. 2025. <span>“Simulating 500 Million Years of Evolution with a Language Model.”</span> <em>Science</em> 387 (6736): 850–58. <a href="https://doi.org/10.1126/science.ads0018">https://doi.org/10.1126/science.ads0018</a>.
+</div>
 <div id="ref-rives2021" class="csl-entry" role="listitem">
 Rives, Alexander, Joshua Meier, Tom Sercu, Siddharth Goyal, Zeming Lin, Jason Liu, Demi Guo, et al. 2021. <span>“Biological Structure and Function Emerge from Scaling Unsupervised Learning to 250 Million Protein Sequences.”</span> <em>Proceedings of the National Academy of Sciences</em> 118 (15). <a href="https://doi.org/10.1073/pnas.2016239118">https://doi.org/10.1073/pnas.2016239118</a>.
 </div>

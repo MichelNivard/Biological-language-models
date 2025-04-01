@@ -54,7 +54,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -287,7 +307,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#load-the-training-data" id="toc-load-the-training-data" class="nav-link" data-scroll-target="#load-the-training-data"><span class="header-section-number">9.3</span> Load the training data</a></li>
   <li><a href="#model-architecture-training" id="toc-model-architecture-training" class="nav-link" data-scroll-target="#model-architecture-training"><span class="header-section-number">9.4</span> Model Architecture &amp; Training</a></li>
   <li><a href="#result" id="toc-result" class="nav-link" data-scroll-target="#result"><span class="header-section-number">9.5</span> Result</a></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">9.6</span> Conclusion</a></li>
+  <li><a href="#homework" id="toc-homework" class="nav-link" data-scroll-target="#homework"><span class="header-section-number">9.6</span> Homework</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">9.7</span> Conclusion</a></li>
   </ul>
 </nav>
     </div>
@@ -514,12 +535,41 @@ Abstract
 <figcaption><strong>Figure 1:</strong> GPCR-BERT training loss curve</figcaption>
 </figure>
 </div>
+<p>Its interesting to note that the GCPR-Bert training loss is lower then that of much larger protein models trained on larger datasets. This makes sense, the loss (especially on training data!) is highly dependent on the diversity of the data, learning ALL proteins, is harder then learning a subset of proteins. Even at larger scales this phenomena is still evident. In <strong>Figure 2</strong> (source <span class="citation" data-cites="cheng2024">(<a href="references.html#ref-cheng2024" role="doc-biblioref">Cheng et al. 2024</a>)</span> Figure A11) we see two love curves for 85m parameter protein language models. Trained on UniRef90 (representative but not extremely diverse) and ColabFoldDB which contains a lot of meta-genomic protein sequences with far greater diversity. Its harder for the model to learn more diverse data, have the higher loss. However, on downstream tasks like atomic contact prediction and fold classification, the models perform nearly identical!</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/paste-31.png" class="img-fluid figure-img"></p>
+<figcaption><strong>Figure 2</strong> (Figure A11 from <span class="citation" data-cites="cheng2024">(<a href="references.html#ref-cheng2024" role="doc-biblioref">Cheng et al. 2024</a>)</span>) the loss curves, and downstream task performances of two models trained on different datasets. Clearly we can’t directly compare the loss as the very different losses translate to similar performance!</figcaption>
+</figure>
+</div>
 </section>
-<section id="conclusion" class="level2" data-number="9.6">
-<h2 data-number="9.6" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">9.6</span> Conclusion</h2>
-<p>This chapter introduced GPCR-BERT, a transformer-based language model for protein sequences. In subsequent chapters, we will explore fine-tuning strategies and downstream applications, such as protein structure prediction. In order to do so we’ll have to really unpack the internals of transformer models, the <strong>self-attention mechanism</strong>.</p>
+<section id="homework" class="level2" data-number="9.6">
+<h2 data-number="9.6" class="anchored" data-anchor-id="homework"><span class="header-section-number">9.6</span> Homework</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Cheng et. all reveal something profound about model loss and scientits’s goals. The loss isn’t a direct measure of the modle’s quality for your specific goals. If you are to design a protein language model for a specific tasks (predict the fold of human proteins after mutation for example) then you have to design validation accordingly. We read in this chapter, and last, that because we are running out of animal and plant reference protein data people include meta-genomic protein data is training. Thets probably a great idea, but its worth considering weather for YOUR downstream tasks it is. ESM3 is better then ESM2, is its trained on way more data, but is it better for <em>your</em> applications?</p>
+<p>An interesting unsolved issue to work on in protein model training is how to introduce low diversity but critical protein data in training. We saw models do well on diverse data, but what if we want to introduce data from many individual humans, with disease status as meta info for example, that would be very low diversity data. But the diversity that does exists tells us important things about what variation is, and isn’t tolerated. We need ways to fine-tune a pre-trained models on high value but low diversity data without reducing the models performance. would you reduce the learnign rate, would you mix in very diverse sequences? Would you freeze parts of the model in place?</p>
+</div>
+</div>
+</section>
+<section id="conclusion" class="level2" data-number="9.7">
+<h2 data-number="9.7" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">9.7</span> Conclusion</h2>
+<p>This chapter introduced GPCR-BERT, a transformer-based language model for protein sequences. In subsequent chapters, we will explore fine-tuning strategies and downstream applications, such as protein structure prediction. In order to do so we’ll have to really unpack the internals of transformer models, the <strong>self-attention mechanism</strong>. We’ll return to training protein language models in the chapter “putting it all together” in which we putt all lessons together to do one massive training run and training a protein language model that rivals facebook ESM-2 (and cost me ±900$ out of my own pocket in compute).</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-cheng2024" class="csl-entry" role="listitem">
+Cheng, Xingyi, Bo Chen, Pan Li, Jing Gong, Jie Tang, and Le Song. 2024. <span>“Training Compute-Optimal Protein Language Models.”</span> <a href="http://dx.doi.org/10.1101/2024.06.06.597716">http://dx.doi.org/10.1101/2024.06.06.597716</a>.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->

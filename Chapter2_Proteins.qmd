@@ -1,8 +1,5 @@
----
-title: "Selecting and curating protein sequences"
-format: html
-bibliography: references.bib
----
+# Selecting and curating protein sequences {#sec-ProtData}
+
 
 Protein data comes from multiple sources, each providing different types of information useful for training machine learning models and protein language models. Here’s the revised version with links added at the top of each paragraph:
 
@@ -33,16 +30,14 @@ Databases like **STRING** and **BioGRID** compile large-scale protein-protein in
 
 ### **Specialized Datasets for ML and PLMs**
 
-[TAPE Dataset](https://github.com/songlab-cal/tape) \| [SwissProt50/TrEMBL50](https://www.uniprot.org/)\
-Several datasets have been specifically designed for training ML models and protein LMs. **TAPE (Tasks Assessing Protein Embeddings)** provides benchmarks for PLMs on tasks like secondary structure prediction, fluorescence, and stability prediction. **SwissProt50/TrEMBL50** datasets are commonly used for training PLMs by balancing redundancy in sequence data.
-
-By combining these diverse protein data sources, machine learning models can capture sequence patterns, structural constraints, evolutionary conservation, and functional properties, enabling advancements in protein engineering, drug discovery, and fundamental biological research.
+[TAPE Dataset](https://github.com/songlab-cal/tape) \| [SwissProt50/TrEMBL50](https://www.uniprot.org/) \| [Proteinnet](https://github.com/aqlaboratory/proteinnet)\
+Several datasets have been specifically designed for training ML models and protein LMs. **TAPE (Tasks Assessing Protein Embeddings)** provides benchmarks for PLMs on tasks like secondary structure prediction, fluorescence, and stability prediction. **SwissProt50/TrEMBL50** datasets are commonly used for training PLMs by balancing redundancy in sequence data. **Proteinnet** contains the sequence, functional annotations, and atomic structure of all CASP proteins. The cool thing is that they are ordered chronologically, so you can train on CASP 7/8/9/10/11 and use CASP 12 or 13 as holdouts for validation.
 
 ## Sequence diversity in training
 
-When training protein sequence models there is a risk of "overtraining" on abundantly measured, or frequently observed protein sequences. Not all protein families (characterized by a common evolutionary origin) are equally represented and so uniform sampling form Uniprot will skew towards certain types of proteins while undersampling others.
+When training protein sequence models, there is a risk of "overtraining" on abundantly measured, or frequently observed protein sequences. Not all protein families (characterized by a common evolutionary origin) are equally represented, and so uniform sampling from UniProt will skew towards certain types of proteins while undersampling others.
 
-Various empirical projects consider sequencing diversity in training protein (language) models. The ESM-1 paper [@rives2021] evaluated 3 different levels of sequence diversity. The low-diversity dataset (UR100) consists of UniRef100 representative sequences which are all proteins in Uniprot removing identical copies (clustering sequences that share 100% identity). This dataset will have many near identical sequences. The high-diversity sparse dataset (UR50/S) is derived from UniRef50 representative sequences, its goig to have many unique sequences, but limited variation in similar sequences as all sequences with \> 50% shared identity are collapsed into a single cluster from which 1 representative sequence is retained. The high-diversity dense dataset (UR50/D) achieves broader coverage by uniformly sampling UniRef100 sequences across all UniRef50 clusters, mixing uniform representation and dense coverage. When models were compared using the exponentiated cross entropy (ECE) metric, the sense diverse data performed best (see Table 1).
+Various empirical projects consider sequencing diversity in training protein (language) models. The ESM-1 paper [@rives2021] evaluated 3 different levels of sequence diversity. The low-diversity dataset (UR100) consists of UniRef100 representative sequences, which are all proteins in UniProt removing identical copies (clustering sequences that share 100% identity). This dataset will have many near-identical sequences. The high-diversity sparse dataset (UR50/S) is derived from UniRef50 representative sequences; it's going to have many unique sequences, but limited variation in similar sequences as all sequences with > 50% shared identity are collapsed into a single cluster from which 1 representative sequence is retained. The high-diversity dense dataset (UR50/D) achieves broader coverage by uniformly sampling UniRef100 sequences across all UniRef50 clusters, mixing uniform representation and dense coverage. When models were compared using the exponentiated cross-entropy (ECE) metric, the sense diverse data performed best (see Table 1).
 
 | Model       | Variant  | Params  | Training data               | ECE   |
 |-------------|----------|---------|-----------------------------|-------|
@@ -52,4 +47,10 @@ Various empirical projects consider sequencing diversity in training protein (la
 
 : **Table 1:** A single model trained on 3 data mixtures suggests dense diverse sequences lead to better training results (source: [@rives2021] )
 
-If you are going to develop your own base protein (language) model, competing with he likes of facebook and google, then selecting the optimal training set is critically important. it is unlikely you'll be able to compete in terms of compute, but with good data selection you can save you a lot off compute by making the model more efficient.
+If you are going to develop your own base protein (language) model, competing with the likes of Facebook and Google, then selecting the optimal training set is critically important. It is unlikely you'll be able to compete in terms of compute, but with good data selection, you can save a lot of compute by making the model more efficient.
+
+## Are we running out of training data?
+
+An insightful study by [@cheng2024] shows that if you train on UniRef50 (about 15 billion tokens, or amino-acids), then larger models (3 Billion) start to deteriorate on validating data after training for 3 (or more) Epochs. While if you expand training to metagenomic sources (that cover eukaryotic species, viruses, etc.), you can expect continued improvements.
+
+The most recent generation of protein deep learning models, like ESM-3[@Hayes2025] and ESM-c [@esm2024cambrian], train on a kind of UniRef70 (trying to find a sweet spot between 50 and 70) augmented with millions of metagenomic sequences from EMBL's MGnify and JGI's IMG databases. A good open source of that data is [OMG_Prot50](https://huggingface.co/datasets/tattabio/OMG_prot50), a clustered version of the Open MetaGenomic dataset (OMG, which contains MGnify and IMG) clustered at 50% sequence identity to minimize duplication and maximize diversity. Across OMG_prot50 and UniRef50 or 90, there are a few billion relatively unique proteins and several hundreds of billions of amino acids to train on. That sounds like a lot (and it is), but the latest natural language models are trained on tens of trillions of tokens and show no signs of being saturated.
