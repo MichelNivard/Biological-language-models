@@ -10,6 +10,7 @@ book:
   date: "2/27/2025"
   navbar:
     search: true
+    logo: DNA.png
   chapters:
     - index.qmd
     - Preamble1.qmd
