@@ -84,7 +84,7 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./summary.html" rel="next">
+<link href="./Chapter5_Proteins.html" rel="next">
 <link href="./Chapter3_Proteins.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -306,6 +306,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Protein contact maps from attention maps</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter5_Proteins.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Integrated protein diffusion language models</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -315,7 +321,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -565,10 +571,16 @@ Tip
 </section>
 <section id="conclussion" class="level2" data-number="10.6">
 <h2 data-number="10.6" class="anchored" data-anchor-id="conclussion"><span class="header-section-number">10.6</span> Conclussion</h2>
-<p>So what did we learn here? we learned that within the unsupervised PLM, which is trained on 1-D sequences, we uncover “knowledge” of 2D protein structure. What I did here is by no means an optimal protein contact prediction but others have build on this idea and done so successfully<span class="citation" data-cites="lin2023">(<a href="references.html#ref-lin2023" role="doc-biblioref">Lin et al. 2023b</a>)</span>. In the next chapter we’ll discuss how we can append models onto PLMs first to predict 2D contact maps, and then to go above and beyond and predict 3D protein structure.</p>
+<p>So what did we learn here? we learned that within the unsupervised PLM, which is trained on 1-D sequences, we uncover “knowledge” of 2D protein structure. What I did here is by no means an optimal protein contact prediction but others have build on this idea and done so successfully<span class="citation" data-cites="lin2023">(<a href="references.html#ref-lin2023" role="doc-biblioref">Lin et al. 2023b</a>)</span>. In the next chapter we’ll discuss how we can append models onto PLMs first to predict 2D contact maps, and then to go above and beyond and predict 3D protein structure. To do so we’ll build a model that has conceptual similarities to alphafold3<span class="citation" data-cites="abramson2024a">(<a href="references.html#ref-abramson2024a" role="doc-biblioref">Abramson et al. 2024</a>)</span> which means we’ll need to learn about diffusion image models, and about cross-attention between sequences and molecules. With Alphafold3 we’ll also step into the world of model closed off for commercial reasons. It obvious why google deepmind would want to retain an edge, but its less clear why Nature published the Alphafold3 paper and accepted it without code<span class="citation" data-cites="2024">(<a href="references.html#ref-2024" role="doc-biblioref"><span>“AlphaFold3 <span></span> Why Did Nature Publish It Without Its Code?”</span> 2024</a>)</span>, which makes studying it a lot harder.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-abramson2024a" class="csl-entry" role="listitem">
+Abramson, Josh, Jonas Adler, Jack Dunger, Richard Evans, Tim Green, Alexander Pritzel, Olaf Ronneberger, et al. 2024. <span>“Accurate Structure Prediction of Biomolecular Interactions with AlphaFold 3.”</span> <em>Nature</em> 630 (8016): 493–500. <a href="https://doi.org/10.1038/s41586-024-07487-w">https://doi.org/10.1038/s41586-024-07487-w</a>.
+</div>
+<div id="ref-2024" class="csl-entry" role="listitem">
+<span>“AlphaFold3 <span></span> Why Did Nature Publish It Without Its Code?”</span> 2024. <em>Nature</em> 629 (8013): 728–28. <a href="https://doi.org/10.1038/d41586-024-01463-0">https://doi.org/10.1038/d41586-024-01463-0</a>.
+</div>
 <div id="ref-alquraishi2019" class="csl-entry" role="listitem">
 AlQuraishi, Mohammed. 2019. <span>“ProteinNet: A Standardized Data Set for Machine Learning of Protein Structure.”</span> <em>BMC Bioinformatics</em> 20 (1). <a href="https://doi.org/10.1186/s12859-019-2932-0">https://doi.org/10.1186/s12859-019-2932-0</a>.
 </div>
@@ -1026,8 +1038,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./summary.html" class="pagination-link" aria-label="Summary">
-        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Summary</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./Chapter5_Proteins.html" class="pagination-link" aria-label="Integrated protein diffusion language models">
+        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Integrated protein diffusion language models</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -3,8 +3,7 @@
 ::: callout-tip
 ## Abstract
 
-In this chapter, we'll discuss how self-attention works and how it latently encodes a protein's structure.
-All scripts for this chapter, and the 5 PDB files used, are found here: <https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Proteins/Chapter10>
+In this chapter, we'll discuss how self-attention works and how it latently encodes a protein's structure. All scripts for this chapter, and the 5 PDB files used, are found here: <https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Proteins/Chapter10>
 :::
 
 ## 
@@ -201,4 +200,4 @@ These amazing features come at a cost, the computational cost of attention scale
 
 ## Conclussion
 
-So what did we learn here? we learned that within the unsupervised PLM, which is trained on 1-D sequences, we uncover "knowledge" of 2D protein structure. What I did here is by no means an optimal protein contact prediction but others have build on this idea and done so successfully[@lin2023]. In the next chapter we'll discuss how we can append models onto PLMs first to predict 2D contact maps, and then to go above and beyond and predict 3D protein structure.
+So what did we learn here? we learned that within the unsupervised PLM, which is trained on 1-D sequences, we uncover "knowledge" of 2D protein structure. What I did here is by no means an optimal protein contact prediction but others have build on this idea and done so successfully[@lin2023]. In the next chapter we'll discuss how we can append models onto PLMs first to predict 2D contact maps, and then to go above and beyond and predict 3D protein structure. To do so we'll build a model that has conceptual similarities to alphafold3[@abramson2024a] which means we'll need to learn about diffusion image models, and about cross-attention between sequences and molecules. With Alphafold3 we'll also step into the world of model closed off for commercial reasons. It obvious why google deepmind would want to retain an edge, but its less clear why Nature published the Alphafold3 paper and accepted it without code[@2024], which makes studying it a lot harder.

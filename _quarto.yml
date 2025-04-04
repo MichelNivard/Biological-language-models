@@ -31,6 +31,7 @@ book:
         - Chapter2_Proteins.qmd
         - Chapter3_Proteins.qmd
         - Chapter4_Proteins.qmd
+        - Chapter5_Proteins.qmd
     - part: "Multi-Modal-Biology"
     - summary.qmd
     - references.qmd
