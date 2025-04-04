@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 /* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
@@ -422,67 +388,9 @@ X_{t-1} =  b_0 * X_{t} + b_1 * \mathcal{N}(\mu,\sigma)
 <p>After the main part of the down block, there’s a&nbsp;<strong>downsampling layer</strong>&nbsp;that reduces the size of the image (usually by half) so the next layer can focus on a broader view of the picture. This is often done with a&nbsp;strided convolution, which skips over pixels to shrink the height and width while keeping the most important features. Skip connections pass the feature maps from each downsampling stage directly to the matching upsampling stage on the other side of the U. This helps the model keep important details that might be lost during compression, allowing the decoder to reconstruct sharper and more accurate outputs.</p>
 <p>In the&nbsp;<strong>middle of the U-Net</strong>, after the deepest downsampling layer, there’s often a&nbsp;<strong>self-attention block</strong>. This layer helps the model understand&nbsp;<strong>global relationships</strong>&nbsp;in the image — for example, connecting far-apart pixels that should be related (like opposite ends of a stripe or outline). Since it operates at the most compressed resolution, it’s efficient but powerful, and it benefits from the time embedding just like the ResBlocks.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">grViz</span>(<span class="st">"</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="st">digraph diffusion_unet {</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="st">  graph [layout = dot, rankdir = LR, fontsize = 30]</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="st">  // Node styles</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="st">  node [shape=box, style=filled, fontname=Helvetica, fontsize=30]</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="st">  // Input and encoder</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="st">  input     [label='Input Image</span><span class="sc">\\</span><span class="st">n(1×128×128)', fillcolor=lightgray]</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="st">  init_conv [label='Init Conv</span><span class="sc">\\</span><span class="st">n(1 → 64)', fillcolor=lightgray]</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="st">  down1     [label='Down Block 1</span><span class="sc">\\</span><span class="st">nResBlock ×2</span><span class="sc">\\</span><span class="st">n(64)', fillcolor=lightblue]</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="st">  down2     [label='Down Block 2</span><span class="sc">\\</span><span class="st">nResBlock ×2</span><span class="sc">\\</span><span class="st">n(128)', fillcolor=lightblue]</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="st">  down3     [label='Down Block 3</span><span class="sc">\\</span><span class="st">nResBlock ×2</span><span class="sc">\\</span><span class="st">n(256)', fillcolor=lightblue]</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="st">  down4     [label='Down Block 4</span><span class="sc">\\</span><span class="st">nResBlock ×2</span><span class="sc">\\</span><span class="st">n(512)', fillcolor=lightblue]</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="st">  // Bottleneck</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="st">  mid1      [label='Mid Block 1</span><span class="sc">\\</span><span class="st">nResBlock</span><span class="sc">\\</span><span class="st">n(512)', fillcolor=gold]</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="st">  mid_attn  [label='Mid Attention</span><span class="sc">\\</span><span class="st">nSelf-Attn</span><span class="sc">\\</span><span class="st">n(512)', shape=ellipse, fillcolor=orange]</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="st">  mid2      [label='Mid Block 2</span><span class="sc">\\</span><span class="st">nResBlock</span><span class="sc">\\</span><span class="st">n(512)', fillcolor=gold]</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="st">  // Decoder (upsampling path)</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="st">  up4       [label='Up Block 4</span><span class="sc">\\</span><span class="st">nResBlock ×2</span><span class="sc">\\</span><span class="st">n(512 → 256)', fillcolor=lightblue]</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="st">  up3       [label='Up Block 3</span><span class="sc">\\</span><span class="st">nResBlock ×2</span><span class="sc">\\</span><span class="st">n(256 → 128)', fillcolor=lightblue]</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="st">  up2       [label='Up Block 2</span><span class="sc">\\</span><span class="st">nResBlock ×2</span><span class="sc">\\</span><span class="st">n(128 → 64)', fillcolor=lightblue]</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="st">  up1       [label='Up Block 1</span><span class="sc">\\</span><span class="st">nResBlock ×2</span><span class="sc">\\</span><span class="st">n(64)', fillcolor=lightblue]</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="st">  final_res [label='Final ResBlock</span><span class="sc">\\</span><span class="st">n(64)', fillcolor=lightblue]</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="st">  final_conv[label='Final Conv</span><span class="sc">\\</span><span class="st">n(64 → 1)', fillcolor=lightblue]</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="st">  output    [label='Output Image</span><span class="sc">\\</span><span class="st">n(1×128×128)', fillcolor=lightgray]</span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="st">  // Time embedding</span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="st">  time_mlp  [label='Time MLP</span><span class="sc">\\</span><span class="st">nSinusoidal + MLP</span><span class="sc">\\</span><span class="st">n(→ 64/128/256/512)', shape=hexagon, fillcolor=pink]</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="st">  // Flow (encoder → bottleneck → decoder)</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="st">  input     -&gt; init_conv -&gt; down1 -&gt; down2 -&gt; down3 -&gt; down4</span></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="st">  down4     -&gt; mid1 -&gt; mid_attn -&gt; mid2 -&gt; up4 -&gt; up3 -&gt; up2 -&gt; up1 -&gt; final_res -&gt; final_conv -&gt; output</span></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="st">  // Time embedding connections to all ResBlocks</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="st">  time_mlp -&gt; down1</span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="st">  time_mlp -&gt; down2</span></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="st">  time_mlp -&gt; down3</span></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="st">  time_mlp -&gt; down4</span></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="st">  time_mlp -&gt; mid1</span></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="st">  time_mlp -&gt; mid2</span></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="st">  time_mlp -&gt; up4</span></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="st">  time_mlp -&gt; up3</span></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="st">  time_mlp -&gt; up2</span></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="st">  time_mlp -&gt; up1</span></span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="st">  time_mlp -&gt; final_res</span></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="st">  // Skip connections across the U</span></span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="st">  down4 -&gt; up4 [style=dashed, color=darkgray]</span></span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="st">  down3 -&gt; up3 [style=dashed, color=darkgray]</span></span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="st">  down2 -&gt; up2 [style=dashed, color=darkgray]</span></span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="st">  down1 -&gt; up1 [style=dashed, color=darkgray]</span></span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-c60a4609833be3692475" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-c60a4609833be3692475">{"x":{"diagram":"\ndigraph diffusion_unet {\n  graph [layout = dot, rankdir = LR, fontsize = 30]\n\n  // Node styles\n  node [shape=box, style=filled, fontname=Helvetica, fontsize=30]\n\n  // Input and encoder\n  input     [label=\"Input Image\\n(1×128×128)\", fillcolor=lightgray]\n  init_conv [label=\"Init Conv\\n(1 → 64)\", fillcolor=lightgray]\n  down1     [label=\"Down Block 1\\nResBlock ×2\\n(64)\", fillcolor=lightblue]\n  down2     [label=\"Down Block 2\\nResBlock ×2\\n(128)\", fillcolor=lightblue]\n  down3     [label=\"Down Block 3\\nResBlock ×2\\n(256)\", fillcolor=lightblue]\n  down4     [label=\"Down Block 4\\nResBlock ×2\\n(512)\", fillcolor=lightblue]\n\n  // Bottleneck\n  mid1      [label=\"Mid Block 1\\nResBlock\\n(512)\", fillcolor=gold]\n  mid_attn  [label=\"Mid Attention\\nSelf-Attn\\n(512)\", shape=ellipse, fillcolor=orange]\n  mid2      [label=\"Mid Block 2\\nResBlock\\n(512)\", fillcolor=gold]\n\n  // Decoder (upsampling path)\n  up4       [label=\"Up Block 4\\nResBlock ×2\\n(512 → 256)\", fillcolor=lightblue]\n  up3       [label=\"Up Block 3\\nResBlock ×2\\n(256 → 128)\", fillcolor=lightblue]\n  up2       [label=\"Up Block 2\\nResBlock ×2\\n(128 → 64)\", fillcolor=lightblue]\n  up1       [label=\"Up Block 1\\nResBlock ×2\\n(64)\", fillcolor=lightblue]\n  final_res [label=\"Final ResBlock\\n(64)\", fillcolor=lightblue]\n  final_conv[label=\"Final Conv\\n(64 → 1)\", fillcolor=lightblue]\n  output    [label=\"Output Image\\n(1×128×128)\", fillcolor=lightgray]\n\n  // Time embedding\n  time_mlp  [label=\"Time MLP\\nSinusoidal + MLP\\n(→ 64/128/256/512)\", shape=hexagon, fillcolor=pink]\n\n  // Flow (encoder → bottleneck → decoder)\n  input     -> init_conv -> down1 -> down2 -> down3 -> down4\n  down4     -> mid1 -> mid_attn -> mid2 -> up4 -> up3 -> up2 -> up1 -> final_res -> final_conv -> output\n\n  // Time embedding connections to all ResBlocks\n  time_mlp -> down1\n  time_mlp -> down2\n  time_mlp -> down3\n  time_mlp -> down4\n  time_mlp -> mid1\n  time_mlp -> mid2\n  time_mlp -> up4\n  time_mlp -> up3\n  time_mlp -> up2\n  time_mlp -> up1\n  time_mlp -> final_res\n\n  // Skip connections across the U\n  down4 -> up4 [style=dashed, color=darkgray]\n  down3 -> up3 [style=dashed, color=darkgray]\n  down2 -> up2 [style=dashed, color=darkgray]\n  down1 -> up1 [style=dashed, color=darkgray]\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-811bce2d5273d2f9c458" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-811bce2d5273d2f9c458">{"x":{"diagram":"\ndigraph diffusion_unet {\n  graph [layout = dot, rankdir = LR, fontsize = 30]\n\n  // Node styles\n  node [shape=box, style=filled, fontname=Helvetica, fontsize=30]\n\n  // Input and encoder\n  input     [label=\"Input Image\\n(1×128×128)\", fillcolor=lightgray]\n  init_conv [label=\"Init Conv\\n(1 → 64)\", fillcolor=lightgray]\n  down1     [label=\"Down Block 1\\nResBlock ×2\\n(64)\", fillcolor=lightblue]\n  down2     [label=\"Down Block 2\\nResBlock ×2\\n(128)\", fillcolor=lightblue]\n  down3     [label=\"Down Block 3\\nResBlock ×2\\n(256)\", fillcolor=lightblue]\n  down4     [label=\"Down Block 4\\nResBlock ×2\\n(512)\", fillcolor=lightblue]\n\n  // Bottleneck\n  mid1      [label=\"Mid Block 1\\nResBlock\\n(512)\", fillcolor=gold]\n  mid_attn  [label=\"Mid Attention\\nSelf-Attn\\n(512)\", shape=ellipse, fillcolor=orange]\n  mid2      [label=\"Mid Block 2\\nResBlock\\n(512)\", fillcolor=gold]\n\n  // Decoder (upsampling path)\n  up4       [label=\"Up Block 4\\nResBlock ×2\\n(512 → 256)\", fillcolor=lightblue]\n  up3       [label=\"Up Block 3\\nResBlock ×2\\n(256 → 128)\", fillcolor=lightblue]\n  up2       [label=\"Up Block 2\\nResBlock ×2\\n(128 → 64)\", fillcolor=lightblue]\n  up1       [label=\"Up Block 1\\nResBlock ×2\\n(64)\", fillcolor=lightblue]\n  final_res [label=\"Final ResBlock\\n(64)\", fillcolor=lightblue]\n  final_conv[label=\"Final Conv\\n(64 → 1)\", fillcolor=lightblue]\n  output    [label=\"Output Image\\n(1×128×128)\", fillcolor=lightgray]\n\n  // Time embedding\n  time_mlp  [label=\"Time MLP\\nSinusoidal + MLP\\n(→ 64/128/256/512)\", shape=hexagon, fillcolor=pink]\n\n  // Flow (encoder → bottleneck → decoder)\n  input     -> init_conv -> down1 -> down2 -> down3 -> down4\n  down4     -> mid1 -> mid_attn -> mid2 -> up4 -> up3 -> up2 -> up1 -> final_res -> final_conv -> output\n\n  // Time embedding connections to all ResBlocks\n  time_mlp -> down1\n  time_mlp -> down2\n  time_mlp -> down3\n  time_mlp -> down4\n  time_mlp -> mid1\n  time_mlp -> mid2\n  time_mlp -> up4\n  time_mlp -> up3\n  time_mlp -> up2\n  time_mlp -> up1\n  time_mlp -> final_res\n\n  // Skip connections across the U\n  down4 -> up4 [style=dashed, color=darkgray]\n  down3 -> up3 [style=dashed, color=darkgray]\n  down2 -> up2 [style=dashed, color=darkgray]\n  down1 -> up1 [style=dashed, color=darkgray]\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <p><strong>Up blocks</strong> in a diffusion U-Net are the mirror of the down blocks—they take the compressed features and gradually rebuild the image to its original size. Each up block typically starts by&nbsp;<strong>upsampling</strong>&nbsp;the feature map, usually with a&nbsp;transpose convolution&nbsp;or&nbsp;nearest-neighbor interpolation followed by a Conv2D, which increases the height and width (often doubling them). After upsampling, the block&nbsp;combines the upsampled features with the skip connection&nbsp;from the matching down block, so it has both high-level context and fine details. It then passes this combined input through one or more&nbsp;ResBlocks, just like in the encoder, using normalization, activation, convolutions, and time embedding again to refine the reconstruction.</p>

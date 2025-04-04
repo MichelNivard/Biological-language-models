@@ -45,6 +45,7 @@ After the main part of the down block, there's a **downsampling layer** that r
 In the **middle of the U-Net**, after the deepest downsampling layer, there's often a **self-attention block**. This layer helps the model understand **global relationships** in the image — for example, connecting far-apart pixels that should be related (like opposite ends of a stripe or outline). Since it operates at the most compressed resolution, it’s efficient but powerful, and it benefits from the time embedding just like the ResBlocks.
 
 ```{r}
+#| echo: false
 library(DiagrammeR)
 
 grViz("
