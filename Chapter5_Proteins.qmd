@@ -3,22 +3,28 @@
 ::: callout-tip
 ## Abstract
 
-In this chapter, we'll discuss AlphaFold3 and its joint sequence (language model like) & diffusion (Image generation model like) architecture. To do so we'll need to covewr three core deeplearning concepts, 1. denoising diffusion 2. guided diffusion and 3. cross attention (the actual link between sequecnes and 3D molecules). The code used for this chapter is found here: <https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Proteins/Chapter11>
+In this chapter, we'll discuss AlphaFold3 and its joint sequence (language model like) & diffusion (Image generation model like) architecture. But because AF3 is a truly complex model, we'll use a far simple protein contact diffusion model, guided by a protein language model.
+
+In doing so we'll cover and study three core deeplearning concepts, 1. denoising diffusion 2. guided diffusion and 3. cross attention (the actual link between sequences and 3D molecules). The code used for this chapter is found here: [https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Proteins/Chapter11](#0){.uri}
 :::
 
 ## Alphafold3
 
-Alphafold3[@abramson2024b] has what initially looks like a very complex architecture (See **Figure 1**), at least it did to me for the longest time.
+Alphafold3[@abramson2024a] has what initially looks like a very complex architecture (See **Figure 1**), at least it did to me for the longest time.
 
 ![**Figure 1:** (source: Figure 1d Alphafold paper[@abramson2024b]) which abstracts the model architecture used in Alphafold3. We'll talk trough hings step by step below.](images/paste-33.png)
 
-What's new in this architecture is the "Diffusion module" on the bottom right. It has 2 inputs, the results form the other model elements feed into it (blue paths) and a weird little point cloud. Because I am not interested in digging very deeply into the language model like inputs right now, we are going to replace the inputs with a generic protein language model ( `EvolutionaryScale/esmc-300m-2024-12` to be precise, ESM2's successor) and attach a diffusion model to it. Now since I don't have the compute that google deepmind has (and neither do you...) I am not training a 3D diffusion model that generates 3D molecules (or even whole protein complexes), instead we'll train a 2D diffusion model that, guided by the protein language model, generates protein contact maps. As You can imagine training a model to model 128\*128 distance/contact values is easier on my GPU/wallet then modeling a 128\*128\*128 3D molecule. Fortunately for us if we would want to go from a 2D to a 3D model we'd simply replace a few 2D operators with 3D operators and so we'll actually be able to cover all concepts involved without training very heavy models.
+One important new aspect to the architecture is the "Diffusion module" on the bottom right. It has 3 inputs, the results from three other model elements feed into it (blue paths) and a weird little point cloud. The actual architecture of AF3 is really remarkably complex, I feel in no way competent to teach it. Onew of the best overviews I saw is a [blog post by Elena Simon & Jake Silberg](https://elanapearl.github.io/blog/2024/the-illustrated-alphafold/). Like AF2 before it AF3 is a model that impose evolutionarily sensible (the multiple sequence alignments) and geometric (triangle rules) constraint that means their models are tailored/specific/supervised/slower but often better the pure protein language models (at the expense of speed and efficiency).
+
+Because I cant do the full complexity of AF3 justice, but I think I can get people up to speed on how you'd begin to think bridging protein sequence models, and 2D and 3D representation of proteins we are going to train a protein diffusion model, that is guided by the inputs with a generic protein language model ( `EvolutionaryScale/esmc-300m-2024-12` to be precise, ESM2's successor) and attaches a diffusion model to it.
+
+Now since I don't have the compute that google deepmind has (and neither do you...), we'll train a 2D diffusion model that, guided by a pre-existing protein language model, generates protein contact maps. The reason to again work on predicting contact maps is that 1. the image like illustrations contact maps are help me effectively convey the concept of diffusion and 2. abstracting away the highly effective MSA and physics based architecture in AF3 lets me focus on something fairly profound 9I think: **cross-attention**. To my simple statistics/numerically minded brain the fact that through encoding and attention we can capture the correlations between sequences of tokens is already a huge leap. When I think about how to capture two entirely separate (but related) modalities, a sequence of tokenized amino acids, and the 3-D (or 2D) structure of the molecule, my brain breaks a little. Cross attention is how ChatGPT can relate your written command ("make a picture of a dog strapped to the roof of Mittt Romney's car, in the style of Studi Ghibli") and produce an image of just that scene, to the incredible annoyance and in some cases despair of artists who's work they pirated for that! Fortunately for us, in Genomics the data is actually int the public domain! and so there are no moral compromises to what we are about to do in that respect!
 
 ## Diffusion models
 
 Gaussian Denoising DIffusion models are a very flexible, and ingenious, class of deep learning models for images. Architectures derived form diffusion models the conceptual basis for all kinds of famous image generation models, like the one integrated into ChatGPT or other image generation AI models.
 
-Diffusion modles have two parts, a forward process, which is defined, or fixed, and a reverse process which is learned. The forward process takes images (in our case of protein distance maps) and adds seqeucnetially more noise (See Figure 2).
+Diffusion models have two parts, a *forward* process, which is defined, or fixed, and a *reverse* process which takes the form of a neural network and which is learned. The forward process takes training images (in our case of protein distance maps) and adds sequentially more noise (See Figure 2).
 
 The relation between the image (x) at time t, and t-1 is:
 
@@ -26,23 +32,19 @@ $$
 X_{t-1} =  b_0 * X_{t} + b_1 * \mathcal{N}(\mu,\sigma)
 $$
 
-Where $b_0$ and $b_1$ are parameterized in a clever way, such that they 1. depend on t alone and 2. the variance of the total image stays the same, or is controlled. This means that we dont have to store/create all \$X\_{t-1} \$ images bu can reconstruct them from t and the input image $X_0$. For a specific protein contact map ( $X_0$ )the "noising" sequence might look a little like **figure 2**.
-
-```{r}
-
-```
+Where $b_0$ and $b_1$ are parameterized in a clever way, such that they 1. depend on t alone and 2. the variance of the total image stays the same, or is controlled. This means that we don't have to store/create all \$X\_{t-1} \$ images bu can reconstruct them from t and the input image $X_0$. For a specific protein contact map ( $X_0$ )the "noising" sequence might look a little like **figure 2**.
 
 ![**Figure 2**: Denoising diffusion forward process](images/paste-35.png)
 
-A diffusion model uses the, and the value of $t$ to learn to "denoise" the image. It doesnt denoise in one step though it trains to denoise from t=500 to t=499, t=150 to t=149 etc etc. They way this happens s that the images are embedded with their specific timestep $t$ such that one model (generally a U-Net architecture) can learn weights that are able to optimally estimate (and the subtract) the noise for. given image at time step t.
+A diffusion model uses the, and the value of $t$ to learn to "denoise" the image. It doesn't denoise ithe image all at once though, it trains to denoise from t=500 to t=499, and t=150 to t=149 etc etc. During braining the images are embedded with their specific timestep $t$ such that the *reverse* diffusion model (generally a U-Net architecture) can learn weights that are able to optimally estimate (and the subtract) the noise for. given image at time step t.
 
-### Diffusion model architecture
+### Diffusion reverse model architecture
 
 Each "down block" in a diffusion U-Net starts with a normalization layer, which helps keep the model stable during training by making sure the numbers flowing through the network stay within a reasonable range. Then comes an activation function, like Swish or GELU, which adds flexibility to the model and helps it learn more complex patterns. The core part of the block is a **Conv2D layer**, which looks at small squares of pixels (like 3×3 patches) and learns to summarize what's in them—kind of like learning to detect edges, textures, or other useful features. A special trick used in diffusion models is the **time embedding**, which tells the model what step of the denoising process it's on. This time information is turned into numbers and added to the features in the block so the model can behave differently at each step.
 
-After the main part of the down block, there's a **downsampling layer** that reduces the size of the image (usually by half) so the next layer can focus on a broader view of the picture. This is often done with a strided convolution, which skips over pixels to shrink the height and width while keeping the most important features. Skip connections pass the feature maps from each downsampling stage directly to the matching upsampling stage on the other side of the U. This helps the model keep important details that might be lost during compression, allowing the decoder to reconstruct sharper and more accurate outputs.
+After the main part of the down block, there's a **downsampling layer** that reduces the size of the image (usually by half) so the next layer can focus on a broader view of the picture. This is often done with a strided convolution, which skips over pixels to shrink the height and width while keeping the most important features. Skip connections pass the feature maps from each downsampling stage directly to the matching upsampling stage on the other side of the U. This helps the model keep important details that might be lost during compression, allowing the decoder to reconstruct sharper and more accurate outputs. The goal of downsamling the image is to tend to the same image at different scales, the fine detail in the early layers, the more global structure int he later layers. In the case of protein contact maps the early layers tend to secondary structure: local spatial conformation of the polypeptide backbone, helices, sheets and loops.
 
-In the **middle of the U-Net**, after the deepest downsampling layer, there's often a **self-attention block**. This layer helps the model understand **global relationships** in the image — for example, connecting far-apart pixels that should be related (like opposite ends of a stripe or outline). Since it operates at the most compressed resolution, it’s efficient but powerful, and it benefits from the time embedding just like the ResBlocks.
+In the **middle of the U-Net**, after the deepest downsampling layer, there's often a **self-attention block**. This layer helps the model understand **global relationships** in the image — for example, connecting far-apart pixels that should be related (like opposite ends of a stripe or outline). Since it operates at the most compressed resolution, it’s efficient but powerful, and it benefits from the time embedding just like the ResBlocks. in the context of protein contact diffusion models the attention learn aspects of the tertiary protein structure.
 
 ```{r}
 #| echo: false
@@ -114,14 +116,159 @@ At the start, the scalar timestep `t` is turned into a **high-dimensional vec
 
 ### Diffusion model for contact maps
 
-As a trainignset I build 7000 contact maps, based on experimentally validated proteins in the CASP12 set. I do not build strictly binary contact maps, but build images that reflect 9 distances thresholds (see **Figure 3** for an example entry form the training set).
+As a training set I build 7000 contact maps, based on experimentally validated proteins in the CASP12 set I obtained form the SideChainNet dataset [@king2021]. I do not build strictly binary contact maps, but build images that reflect 9 distances thresholds (see **Figure 3** for an example entry form the training set).
 
-![**Figure 3**: A distance map based on experimental CASP12 data.](images/1KZQ_d1kzqb1.jpg){fig-align="center" width="444"}
+here is the code I use to download the data, and create the individual images.
+
+``` python
+mport os
+import numpy as np
+import sidechainnet as scn
+from denoising_diffusion_pytorch import Unet, GaussianDiffusion
+import torch
+from torch.utils.data import Dataset, DataLoader
+import torchvision.transforms as T
+from PIL import Image
+from pathlib import Path
+from tqdm import tqdm
+import matplotlib.pyplot as plt
+
+# === PARAMETERS ===
+output_dir = "contact_maps_128"
+max_residues = 512
+final_image_size = (128, 128)
+contact_threshold = 8.0  # only used if you want binary maps
+scale_to_255 = True
+distance_clip = 20.0  # max Å distance
+
+os.makedirs(output_dir, exist_ok=True)
+
+# === FUNCTIONS ===
+
+def make_contact_map(coords, binary=False, threshold=8.0):
+    """
+    Computes a contact or distance map from 3D Cα coordinates.
+
+    Args:
+        coords (np.ndarray): Shape (L, 3) or (L, A, 3), 3D coordinates.
+        binary (bool): Whether to return binary contact map.
+        threshold (float): Å distance cutoff for binary maps.
+        clip_dist (float): Max distance for clipping and scaling.
+
+    Returns:
+        np.ndarray: (L, L) contact or scaled distance map in uint8.
+    """
+    # extract only Cα coordinates (atom 0 for each residue)
+    ca_coords = coords[:, 0, :]  # shape (L, 3)
+
+    n_residues = ca_coords.shape[0]
+    n_missing = np.isnan(ca_coords).any(axis=1).sum()
+    frac_missing = n_missing / n_residues
+
+    if frac_missing > 0.10:
+        print(f"{protein_id} skipped: {n_missing}/{n_residues} Cα coords missing ({frac_missing:.1%})")
+        return None
+
+    if np.unique(ca_coords, axis=0).shape[0] <= 1:
+        print(f"{protein_id} skipped: collapsed structure (identical Cα)")
+        return None
+
+    if n_residues < 10:
+        print(f"{protein_id} skipped: too short ({n_residues} residues)")
+        return None
+
+
+    # normalize based on first Cα
+    ca_coords -= ca_coords[0]  # shift so residue 0 is at (0, 0, 0)
+
+    # compute pairwise distance matrix
+    dists = np.linalg.norm(ca_coords[:, None, :] - ca_coords[None, :, :], axis=-1)
+
+    if binary:
+        contact_map = (dists < threshold).astype(np.uint8) * 255
+        return contact_map
+    else:
+        levels = [0,20,40,60,80,100,120,140,160,180]
+        contact_map = np.zeros_like(dists, dtype=np.uint8) + 255
+
+        # Bin 0: d < threshold - 3
+        mask = dists < (threshold - 3)
+        contact_map[mask] = levels[0]
+
+        # Bins 1 to 9: 1Å slices
+        for i in range(1, 9):
+            lower = threshold - 5 + (i) 
+            upper = lower + 1
+            mask = (dists >= lower) & (dists < upper)
+            contact_map[mask] = levels[i]
+        return contact_map
+
+
+
+# Or simply crol the first 128 amino-acids (Ca atoms associated witht hose amino-acids)
+def crop_contact_map(contact_map, crop_size=256, pad_value=255, min_size=20):
+    """
+    Crop the top-left corner of the contact map to (crop_size, crop_size).
+    Pads with `pad_value` if the map is smaller.
+    Skips maps smaller than `min_size`.
+    """
+    h, w = contact_map.shape
+
+    if h < min_size or w < min_size:
+        raise ValueError(f"Contact map too small: {h}x{w} (min required: {min_size})")
+
+    canvas = np.full((crop_size, crop_size), pad_value, dtype=np.uint8)
+    crop_h = min(h, crop_size)
+    crop_w = min(w, crop_size)
+    canvas[:crop_h, :crop_w] = contact_map[:crop_h, :crop_w]
+
+    return Image.fromarray(canvas)
+
+# === MAIN ===
+
+print("Loading SideChainNet CASP12 dataset...")
+data = scn.load(casp_version=12)
+
+print("Generating contact maps...")
+for i, sample in enumerate(data):
+    try:
+        protein_id = sample.id
+        coords = sample.coords  # shape: (L, A, 3)
+
+        if coords is None or coords.shape[0] < 2:
+            continue
+
+        # Compute distance matrix and preprocess
+        distance_map = make_contact_map(coords, binary=False)
+
+        # Skip if it's completely empty
+        if np.all(distance_map == 255):
+            print(f"Skipping {protein_id}: distance map is all white")
+            continue
+            
+        # Make the final image
+        img = crop_contact_map(distance_map, crop_size=128,pad_value=255)
+        img.save(os.path.join(output_dir, f"{protein_id}.jpg"), format='JPEG')
+
+        if i % 100 == 0:
+            print(f"[{i}] Saved: {protein_id}.jpg")
+
+    except Exception as e:
+        print(f"Skipping {sample.id} due to error: {e}")
+
+print("✅ Done.")
+```
+
+This generates a folder with thousands of images of contact maps, where the specific share of grey of the pixel correspond to \<4 (black), 5, 6, 7, 8, 9, 10, 11, 12,or \>13 (white) Angstrom distances.
+
+![**Figure 3**: A protein distance map based on experimental CASP12 data.](images/1KZQ_d1kzqb1.jpg){fig-align="center" width="444"}
 
 #### **Detailed Parameter Breakdown by Module for our model**
 
+The table below breaks down the different elements of the U-Net architecture of a tiny diffusion model I trained. The table describes how how many free parameters each part of the model contains. as you can see the decoder `ups` part of the model has almost half of the parameters. This is where the encoded information, and the skip connections are brought together. You'll also note the most number of parameters in the `time_mlp` which is the part of the model which encodes the influences of the specific timestep `t` though its important to realize the the ResBlocks (both in the encoder and decoder) also contain parameters that map the time specif embedding to the image information, those regulated *how* the time information influences the image generation at each specific stage.
+
 | Module | Parameters | Description |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | `ups` | 19,832,768 | **Upsampling path (decoder):** progressively reconstructs the denoised image from compressed features. Includes ResBlocks, upsampling (e.g. transposed convolutions), and skip connections from encoder layers. |
 | `downs` | 5,402,816 | **Downsampling path (encoder):** extracts hierarchical features from the noisy input image using stacked ResBlocks and downsampling layers. |
 | `mid_block1` | 4,983,808 | **First bottleneck ResBlock:** processes the most compressed latent representation of the input, directly before/after the attention block. |
@@ -132,4 +279,8 @@ As a trainignset I build 7000 contact maps, based on experimentally validated pr
 | `init_conv` | 3,200 | **Initial input convolution:** expands the input image from 1 channel to base feature dimension (`dim=64`), preparing it for downstream processing. |
 | `final_conv` | 65 | **Final output convolution:** projects the final hidden features back to 1 channel to match the original image shape. Predicts either noise (`ε_t`) or clean image (`x₀`). |
 
-![](images/paste-36.png)
+Once we've traned the diffusion model for about 40/60 minutes (though ideally longer and on way more data!) we can sample from it. Sampling form it involves sampling pure gaussian noise ("`t - 999`") and pasisng the noise trough the dissuion model a few hundred times (each time updating `t`). There are speedups and trick that mean you wont have to pass it trought he model 1000 times to get a solid result though more passes ("steps") generally means a better result. Because protein contact maps are symmetric, but the model doenst know that, I generate a protein but then copy over one of the two halfs. In **Figure 3** I show a particularly convincing looking sample at 5 steps form noise to final protein contact map.
+
+![**Figure 3:** interim and final stages of a protein contact map sampled from pure noise, after training for a few epochs on 7000 real proteins.](images/paste-36.png)
+
+The protein contact map sampled in **Figure 3** is a fiction that, according to the model, fits the distribution of the training data, which while fascinating isn't very useful yet. To make things useful we must condition the model on not just timestep, but also on condensed, or embedded sequence information.
