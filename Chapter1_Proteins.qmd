@@ -91,6 +91,6 @@ The process of moving from a linear amino acid sequence to a folded protein stru
 
 ## Weird and wonderfull protein model variants
 
-Ont he back of the succes of Alphfold have come some truely creative models. 
+On the back of the succes of Alphfold have come some truely creative models. 
 
  **Amino-acids to structure and then back to tokens**: In **Chapter 13**, we'll discuss an interesting class of models that actually mimic nature in a weird way, these models take molecules as input, and condense those into categorical tokens, not amino-acid, but learned tokens trained to represent a hyper efficient geometric alphabet. Foldseek [@vankempen2023] and models like it[@gao2024a] **take a 3D structure, and encode that into categorical tokens**, at the same resolution of the amino acids. Then at each base we know amino-acid, its location in 3D space, and a new token that compresses that location in space. This technique, the first of which was known as might sound a little redundant but it gets at an important issue: many very different proteins, in terms of structure, might fold in similar ways, and even serve similar or the same biological function! Furthermore having encoded structure into tokens allows for ultra fast structure similarity search (orders of magnitudes faster then search based on the full 3d molecule). One of the exciting applications these models might have is to train GPT like models on these spatial tokens in order to generate candidate proteins which are likely to fold into a specific shape[@gaujac2024].
