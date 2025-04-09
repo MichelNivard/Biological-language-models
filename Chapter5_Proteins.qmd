@@ -5,7 +5,7 @@
 
 In this chapter, we'll discuss AlphaFold3 and its joint sequence (language model like) & diffusion (Image generation model like) architecture. But because AF3 is a truly complex model, we'll use a far simpler protein contact diffusion model, guided by a protein language model.
 
-In doing so we'll cover and study three core deep learning concepts, 1. denoising diffusion, 2. cross-attentions and 3. sequence guided diffusion (the actual link between sequences and 2D or 3D representations of molecules). The code used for this chapter is found here: [https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Proteins/Chapter11](#0){.uri}
+In doing so we'll cover and study three core deep learning concepts, 1. denoising diffusion, 2. cross-attentions and 3. sequence guided diffusion (the actual link between sequences and 2D or 3D representations of molecules). The code used for this chapter is found here: [https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Proteins/Chapter11](https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Proteins/Chapter11)
 :::
 
 ## Alphafold3
