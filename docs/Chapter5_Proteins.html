@@ -351,6 +351,10 @@ window.Quarto = {
   <li><a href="#diffusion-reverse-model-architecture" id="toc-diffusion-reverse-model-architecture" class="nav-link" data-scroll-target="#diffusion-reverse-model-architecture"><span class="header-section-number">11.2.1</span> Diffusion reverse model architecture</a></li>
   <li><a href="#diffusion-model-for-contact-maps" id="toc-diffusion-model-for-contact-maps" class="nav-link" data-scroll-target="#diffusion-model-for-contact-maps"><span class="header-section-number">11.2.2</span> Diffusion model for contact maps</a></li>
   </ul></li>
+  <li><a href="#from-attention-to-cross-attention" id="toc-from-attention-to-cross-attention" class="nav-link" data-scroll-target="#from-attention-to-cross-attention"><span class="header-section-number">11.3</span> From attention, to cross-attention</a></li>
+  <li><a href="#cross-attention-and-a-diffusion-model." id="toc-cross-attention-and-a-diffusion-model." class="nav-link" data-scroll-target="#cross-attention-and-a-diffusion-model."><span class="header-section-number">11.4</span> Cross attention and a diffusion model.</a></li>
+  <li><a href="#training-the-imagen-model" id="toc-training-the-imagen-model" class="nav-link" data-scroll-target="#training-the-imagen-model"><span class="header-section-number">11.5</span> Training the imagen model</a></li>
+  <li><a href="#conclussion" id="toc-conclussion" class="nav-link" data-scroll-target="#conclussion"><span class="header-section-number">11.6</span> Conclussion</a></li>
   </ul>
 </nav>
     </div>
@@ -386,8 +390,8 @@ Abstract
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>In this chapter, we’ll discuss AlphaFold3 and its joint sequence (language model like) &amp; diffusion (Image generation model like) architecture. But because AF3 is a truly complex model, we’ll use a far simple protein contact diffusion model, guided by a protein language model.</p>
-<p>In doing so we’ll cover and study three core deeplearning concepts, 1. denoising diffusion 2. guided diffusion and 3. cross attention (the actual link between sequences and 3D molecules). The code used for this chapter is found here: <a href="#0" class="uri">https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Proteins/Chapter11</a></p>
+<p>In this chapter, we’ll discuss AlphaFold3 and its joint sequence (language model like) &amp; diffusion (Image generation model like) architecture. But because AF3 is a truly complex model, we’ll use a far simpler protein contact diffusion model, guided by a protein language model.</p>
+<p>In doing so we’ll cover and study three core deep learning concepts, 1. denoising diffusion, 2. cross-attentions and 3. sequence guided diffusion (the actual link between sequences and 2D or 3D representations of molecules). The code used for this chapter is found here: <a href="#0" class="uri">https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Proteins/Chapter11</a></p>
 </div>
 </div>
 <section id="alphafold3" class="level2" data-number="11.1">
@@ -396,38 +400,38 @@ Abstract
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/paste-33.png" class="img-fluid figure-img"></p>
-<figcaption><strong>Figure 1:</strong> (source: Figure 1d Alphafold paper<span class="citation" data-cites="abramson2024b">(<a href="references.html#ref-abramson2024b" role="doc-biblioref">Abramson et al. 2024b</a>)</span>) which abstracts the model architecture used in Alphafold3. We’ll talk trough hings step by step below.</figcaption>
+<figcaption><strong>Figure 1:</strong> (source: Figure 1d Alphafold paper<span class="citation" data-cites="abramson2024b">(<a href="references.html#ref-abramson2024b" role="doc-biblioref">Abramson et al. 2024b</a>)</span>) which abstracts the model architecture used in Alphafold3. We’ll talk through things step by step below.</figcaption>
 </figure>
 </div>
-<p>One important new aspect to the architecture is the “Diffusion module” on the bottom right. It has 3 inputs, the results from three other model elements feed into it (blue paths) and a weird little point cloud. The actual architecture of AF3 is really remarkably complex, I feel in no way competent to teach it. Onew of the best overviews I saw is a <a href="https://elanapearl.github.io/blog/2024/the-illustrated-alphafold/">blog post by Elena Simon &amp; Jake Silberg</a>. Like AF2 before it AF3 is a model that impose evolutionarily sensible (the multiple sequence alignments) and geometric (triangle rules) constraint that means their models are tailored/specific/supervised/slower but often better the pure protein language models (at the expense of speed and efficiency).</p>
-<p>Because I cant do the full complexity of AF3 justice, but I think I can get people up to speed on how you’d begin to think bridging protein sequence models, and 2D and 3D representation of proteins we are going to train a protein diffusion model, that is guided by the inputs with a generic protein language model ( <code>EvolutionaryScale/esmc-300m-2024-12</code> to be precise, ESM2’s successor) and attaches a diffusion model to it.</p>
-<p>Now since I don’t have the compute that google deepmind has (and neither do you…), we’ll train a 2D diffusion model that, guided by a pre-existing protein language model, generates protein contact maps. The reason to again work on predicting contact maps is that 1. the image like illustrations contact maps are help me effectively convey the concept of diffusion and 2. abstracting away the highly effective MSA and physics based architecture in AF3 lets me focus on something fairly profound 9I think: <strong>cross-attention</strong>. To my simple statistics/numerically minded brain the fact that through encoding and attention we can capture the correlations between sequences of tokens is already a huge leap. When I think about how to capture two entirely separate (but related) modalities, a sequence of tokenized amino acids, and the 3-D (or 2D) structure of the molecule, my brain breaks a little. Cross attention is how ChatGPT can relate your written command (“make a picture of a dog strapped to the roof of Mittt Romney’s car, in the style of Studi Ghibli”) and produce an image of just that scene, to the incredible annoyance and in some cases despair of artists who’s work they pirated for that! Fortunately for us, in Genomics the data is actually int the public domain! and so there are no moral compromises to what we are about to do in that respect!</p>
+<p>One important new aspect to the architecture is the “Diffusion module” on the bottom right. It has 3 inputs, the results from three other model elements feed into it (blue paths) and a weird little point cloud. The actual architecture of AF3 is really remarkably complex, I feel in no way competent to teach it. One of the best overviews I saw is a <a href="https://elanapearl.github.io/blog/2024/the-illustrated-alphafold/">blog post by Elena Simon &amp; Jake Silberg</a>. Like AF2 before it, AF3 is a model that imposes evolutionarily sensible (the multiple sequence alignments) and geometric (triangle rules) constraints that mean their models are tailored/specific/supervised/slower but often better than pure protein language models (at the expense of speed and efficiency).</p>
+<p>Because I can’t do the full complexity of AF3 justice, but I think I can get people up to speed on how you’d begin to think about bridging protein sequence models, and 2D and 3D representation of proteins, we are going to train a protein diffusion model, that is guided by the inputs with a generic protein language model (<code>EvolutionaryScale/esmc-300m-2024-12</code> to be precise, ESM2’s successor) and attaches a diffusion model to it.</p>
+<p>Now since I don’t have the compute that Google DeepMind has (and neither do you…), we’ll train a 2D diffusion model that, guided by a pre-existing protein language model, generates protein contact maps. The reason to again work on predicting contact maps is that 1. the image-like illustrations contact maps are help me effectively convey the concept of diffusion and 2. abstracting away the highly effective MSA and physics-based architecture in AF3 lets me focus on something fairly profound (I think): <strong>cross-attention</strong>. To my simple statistics/numerically minded brain, the fact that through encoding and attention we can capture the correlations between sequences of tokens is already a huge leap. When I think about how to capture two entirely separate (but related) modalities, a sequence of tokenized amino acids, and the 3-D (or 2D) structure of the molecule, my brain breaks a little. Cross-attention is how ChatGPT can relate your written command (“make a picture of a dog strapped to the roof of Mitt Romney’s car, in the style of Studio Ghibli”) and produce an image of just that scene, to the incredible annoyance and in some cases despair of artists who’s work they pirated for that! Fortunately for us, in Genomics, the data is actually in the public domain! and so there are no moral compromises to what we are about to do in that respect!</p>
 </section>
 <section id="diffusion-models" class="level2" data-number="11.2">
 <h2 data-number="11.2" class="anchored" data-anchor-id="diffusion-models"><span class="header-section-number">11.2</span> Diffusion models</h2>
-<p>Gaussian Denoising DIffusion models are a very flexible, and ingenious, class of deep learning models for images. Architectures derived form diffusion models the conceptual basis for all kinds of famous image generation models, like the one integrated into ChatGPT or other image generation AI models.</p>
+<p>Gaussian Denoising Diffusion models are a very flexible, and ingenious, class of deep learning models for images. Architectures derived from diffusion models are the conceptual basis for all kinds of famous image generation models, like the one integrated into ChatGPT or other image generation AI models.</p>
 <p>Diffusion models have two parts, a <em>forward</em> process, which is defined, or fixed, and a <em>reverse</em> process which takes the form of a neural network and which is learned. The forward process takes training images (in our case of protein distance maps) and adds sequentially more noise (See Figure 2).</p>
 <p>The relation between the image (x) at time t, and t-1 is:</p>
 <p><span class="math display">\[
 X_{t-1} =  b_0 * X_{t} + b_1 * \mathcal{N}(\mu,\sigma)
 \]</span></p>
-<p>Where <span class="math inline">\(b_0\)</span> and <span class="math inline">\(b_1\)</span> are parameterized in a clever way, such that they 1. depend on t alone and 2. the variance of the total image stays the same, or is controlled. This means that we don’t have to store/create all $X_{t-1} $ images bu can reconstruct them from t and the input image <span class="math inline">\(X_0\)</span>. For a specific protein contact map ( <span class="math inline">\(X_0\)</span> )the “noising” sequence might look a little like <strong>figure 2</strong>.</p>
+<p>Where <span class="math inline">\(b_0\)</span> and <span class="math inline">\(b_1\)</span> are parameterized in a clever way, such that they 1. depend on t alone and 2. the variance of the total image stays the same, or is controlled. This means that we don’t have to store/create all $X_{t-1} $ images but can reconstruct them from t and the input image <span class="math inline">\(X_0\)</span>. For a specific protein contact map ( <span class="math inline">\(X_0\)</span> )the “noising” sequence might look a little like <strong>figure 2</strong>.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/paste-35.png" class="img-fluid figure-img"></p>
 <figcaption><strong>Figure 2</strong>: Denoising diffusion forward process</figcaption>
 </figure>
 </div>
-<p>A diffusion model uses the, and the value of <span class="math inline">\(t\)</span> to learn to “denoise” the image. It doesn’t denoise ithe image all at once though, it trains to denoise from t=500 to t=499, and t=150 to t=149 etc etc. During braining the images are embedded with their specific timestep <span class="math inline">\(t\)</span> such that the <em>reverse</em> diffusion model (generally a U-Net architecture) can learn weights that are able to optimally estimate (and the subtract) the noise for. given image at time step t.</p>
+<p>A diffusion model uses the, and the value of <span class="math inline">\(t\)</span> to learn to “denoise” the image. It doesn’t denoise the image all at once though, it trains to denoise from t=500 to t=499, and t=150 to t=149 etc etc. During training, the images are embedded with their specific timestep <span class="math inline">\(t\)</span> such that the <em>reverse</em> diffusion model (generally a U-Net architecture) can learn weights that are able to optimally estimate (and the subtract) the noise for. given image at time step t.</p>
 <section id="diffusion-reverse-model-architecture" class="level3" data-number="11.2.1">
 <h3 data-number="11.2.1" class="anchored" data-anchor-id="diffusion-reverse-model-architecture"><span class="header-section-number">11.2.1</span> Diffusion reverse model architecture</h3>
 <p>Each “down block” in a diffusion U-Net starts with a&nbsp;normalization layer, which helps keep the model stable during training by making sure the numbers flowing through the network stay within a reasonable range. Then comes an&nbsp;activation function, like&nbsp;Swish&nbsp;or&nbsp;GELU, which adds flexibility to the model and helps it learn more complex patterns. The core part of the block is a&nbsp;<strong>Conv2D layer</strong>, which looks at small squares of pixels (like 3×3 patches) and learns to summarize what’s in them—kind of like learning to detect edges, textures, or other useful features. A special trick used in diffusion models is the&nbsp;<strong>time embedding</strong>, which tells the model what step of the denoising process it’s on. This time information is turned into numbers and added to the features in the block so the model can behave differently at each step.</p>
-<p>After the main part of the down block, there’s a&nbsp;<strong>downsampling layer</strong>&nbsp;that reduces the size of the image (usually by half) so the next layer can focus on a broader view of the picture. This is often done with a&nbsp;strided convolution, which skips over pixels to shrink the height and width while keeping the most important features. Skip connections pass the feature maps from each downsampling stage directly to the matching upsampling stage on the other side of the U. This helps the model keep important details that might be lost during compression, allowing the decoder to reconstruct sharper and more accurate outputs. The goal of downsamling the image is to tend to the same image at different scales, the fine detail in the early layers, the more global structure int he later layers. In the case of protein contact maps the early layers tend to secondary structure: local spatial conformation of the polypeptide backbone, helices, sheets and loops.</p>
-<p>In the&nbsp;<strong>middle of the U-Net</strong>, after the deepest downsampling layer, there’s often a&nbsp;<strong>self-attention block</strong>. This layer helps the model understand&nbsp;<strong>global relationships</strong>&nbsp;in the image — for example, connecting far-apart pixels that should be related (like opposite ends of a stripe or outline). Since it operates at the most compressed resolution, it’s efficient but powerful, and it benefits from the time embedding just like the ResBlocks. in the context of protein contact diffusion models the attention learn aspects of the tertiary protein structure.</p>
+<p>After the main part of the down block, there’s a&nbsp;<strong>downsampling layer</strong>&nbsp;that reduces the size of the image (usually by half) so the next layer can focus on a broader view of the picture. This is often done with a&nbsp;strided convolution, which skips over pixels to shrink the height and width while keeping the most important features. Skip connections pass the feature maps from each downsampling stage directly to the matching upsampling stage on the other side of the U. This helps the model keep important details that might be lost during compression, allowing the decoder to reconstruct sharper and more accurate outputs. The goal of downsampling the image is to tend to the same image at different scales, the fine detail in the early layers, the more global structure in the later layers. In the case of protein contact maps, the early layers tend to the secondary structure: local spatial conformation of the polypeptide backbone, helices, sheets, and loops.</p>
+<p>In the&nbsp;<strong>middle of the U-Net</strong>, after the deepest downsampling layer, there’s often a&nbsp;<strong>self-attention block</strong>. This layer helps the model understand&nbsp;<strong>global relationships</strong>&nbsp;in the image — for example, connecting far-apart pixels that should be related (like opposite ends of a stripe or outline). Since it operates at the most compressed resolution, it’s efficient but powerful, and it benefits from the time embedding just like the ResBlocks. In the context of protein contact diffusion models, the attention learns aspects of the tertiary protein structure.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-726f52a6c0d95bcd0eab" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-726f52a6c0d95bcd0eab">{"x":{"diagram":"\ndigraph diffusion_unet {\n  graph [layout = dot, rankdir = LR, fontsize = 30]\n\n  // Node styles\n  node [shape=box, style=filled, fontname=Helvetica, fontsize=30]\n\n  // Input and encoder\n  input     [label=\"Input Image\\n(1×128×128)\", fillcolor=lightgray]\n  init_conv [label=\"Init Conv\\n(1 → 64)\", fillcolor=lightgray]\n  down1     [label=\"Down Block 1\\nResBlock ×2\\n(64)\", fillcolor=lightblue]\n  down2     [label=\"Down Block 2\\nResBlock ×2\\n(128)\", fillcolor=lightblue]\n  down3     [label=\"Down Block 3\\nResBlock ×2\\n(256)\", fillcolor=lightblue]\n  down4     [label=\"Down Block 4\\nResBlock ×2\\n(512)\", fillcolor=lightblue]\n\n  // Bottleneck\n  mid1      [label=\"Mid Block 1\\nResBlock\\n(512)\", fillcolor=gold]\n  mid_attn  [label=\"Mid Attention\\nSelf-Attn\\n(512)\", shape=ellipse, fillcolor=orange]\n  mid2      [label=\"Mid Block 2\\nResBlock\\n(512)\", fillcolor=gold]\n\n  // Decoder (upsampling path)\n  up4       [label=\"Up Block 4\\nResBlock ×2\\n(512 → 256)\", fillcolor=lightblue]\n  up3       [label=\"Up Block 3\\nResBlock ×2\\n(256 → 128)\", fillcolor=lightblue]\n  up2       [label=\"Up Block 2\\nResBlock ×2\\n(128 → 64)\", fillcolor=lightblue]\n  up1       [label=\"Up Block 1\\nResBlock ×2\\n(64)\", fillcolor=lightblue]\n  final_res [label=\"Final ResBlock\\n(64)\", fillcolor=lightblue]\n  final_conv[label=\"Final Conv\\n(64 → 1)\", fillcolor=lightblue]\n  output    [label=\"Output Image\\n(1×128×128)\", fillcolor=lightgray]\n\n  // Time embedding\n  time_mlp  [label=\"Time MLP\\nSinusoidal + MLP\\n(→ 64/128/256/512)\", shape=hexagon, fillcolor=pink]\n\n  // Flow (encoder → bottleneck → decoder)\n  input     -> init_conv -> down1 -> down2 -> down3 -> down4\n  down4     -> mid1 -> mid_attn -> mid2 -> up4 -> up3 -> up2 -> up1 -> final_res -> final_conv -> output\n\n  // Time embedding connections to all ResBlocks\n  time_mlp -> down1\n  time_mlp -> down2\n  time_mlp -> down3\n  time_mlp -> down4\n  time_mlp -> mid1\n  time_mlp -> mid2\n  time_mlp -> up4\n  time_mlp -> up3\n  time_mlp -> up2\n  time_mlp -> up1\n  time_mlp -> final_res\n\n  // Skip connections across the U\n  down4 -> up4 [style=dashed, color=darkgray]\n  down3 -> up3 [style=dashed, color=darkgray]\n  down2 -> up2 [style=dashed, color=darkgray]\n  down1 -> up1 [style=dashed, color=darkgray]\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-b865305daee1e25c5228" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-b865305daee1e25c5228">{"x":{"diagram":"\ndigraph diffusion_unet {\n  graph [layout = dot, rankdir = LR, fontsize = 30]\n\n  // Node styles\n  node [shape=box, style=filled, fontname=Helvetica, fontsize=30]\n\n  // Input and encoder\n  input     [label=\"Input Image\\n(1×128×128)\", fillcolor=lightgray]\n  init_conv [label=\"Init Conv\\n(1 → 64)\", fillcolor=lightgray]\n  down1     [label=\"Down Block 1\\nResBlock ×2\\n(64)\", fillcolor=lightblue]\n  down2     [label=\"Down Block 2\\nResBlock ×2\\n(128)\", fillcolor=lightblue]\n  down3     [label=\"Down Block 3\\nResBlock ×2\\n(256)\", fillcolor=lightblue]\n  down4     [label=\"Down Block 4\\nResBlock ×2\\n(512)\", fillcolor=lightblue]\n\n  // Bottleneck\n  mid1      [label=\"Mid Block 1\\nResBlock\\n(512)\", fillcolor=gold]\n  mid_attn  [label=\"Mid Attention\\nSelf-Attn\\n(512)\", shape=ellipse, fillcolor=orange]\n  mid2      [label=\"Mid Block 2\\nResBlock\\n(512)\", fillcolor=gold]\n\n  // Decoder (upsampling path)\n  up4       [label=\"Up Block 4\\nResBlock ×2\\n(512 → 256)\", fillcolor=lightblue]\n  up3       [label=\"Up Block 3\\nResBlock ×2\\n(256 → 128)\", fillcolor=lightblue]\n  up2       [label=\"Up Block 2\\nResBlock ×2\\n(128 → 64)\", fillcolor=lightblue]\n  up1       [label=\"Up Block 1\\nResBlock ×2\\n(64)\", fillcolor=lightblue]\n  final_res [label=\"Final ResBlock\\n(64)\", fillcolor=lightblue]\n  final_conv[label=\"Final Conv\\n(64 → 1)\", fillcolor=lightblue]\n  output    [label=\"Output Image\\n(1×128×128)\", fillcolor=lightgray]\n\n  // Time embedding\n  time_mlp  [label=\"Time MLP\\nSinusoidal + MLP\\n(→ 64/128/256/512)\", shape=hexagon, fillcolor=pink]\n\n  // Flow (encoder → bottleneck → decoder)\n  input     -> init_conv -> down1 -> down2 -> down3 -> down4\n  down4     -> mid1 -> mid_attn -> mid2 -> up4 -> up3 -> up2 -> up1 -> final_res -> final_conv -> output\n\n  // Time embedding connections to all ResBlocks\n  time_mlp -> down1\n  time_mlp -> down2\n  time_mlp -> down3\n  time_mlp -> down4\n  time_mlp -> mid1\n  time_mlp -> mid2\n  time_mlp -> up4\n  time_mlp -> up3\n  time_mlp -> up2\n  time_mlp -> up1\n  time_mlp -> final_res\n\n  // Skip connections across the U\n  down4 -> up4 [style=dashed, color=darkgray]\n  down3 -> up3 [style=dashed, color=darkgray]\n  down2 -> up2 [style=dashed, color=darkgray]\n  down1 -> up1 [style=dashed, color=darkgray]\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <p><strong>Up blocks</strong> in a diffusion U-Net are the mirror of the down blocks—they take the compressed features and gradually rebuild the image to its original size. Each up block typically starts by&nbsp;<strong>upsampling</strong>&nbsp;the feature map, usually with a&nbsp;transpose convolution&nbsp;or&nbsp;nearest-neighbor interpolation followed by a Conv2D, which increases the height and width (often doubling them). After upsampling, the block&nbsp;combines the upsampled features with the skip connection&nbsp;from the matching down block, so it has both high-level context and fine details. It then passes this combined input through one or more&nbsp;ResBlocks, just like in the encoder, using normalization, activation, convolutions, and time embedding again to refine the reconstruction.</p>
@@ -435,145 +439,124 @@ X_{t-1} =  b_0 * X_{t} + b_1 * \mathcal{N}(\mu,\sigma)
 </section>
 <section id="diffusion-model-for-contact-maps" class="level3" data-number="11.2.2">
 <h3 data-number="11.2.2" class="anchored" data-anchor-id="diffusion-model-for-contact-maps"><span class="header-section-number">11.2.2</span> Diffusion model for contact maps</h3>
-<p>As a training set I build 7000 contact maps, based on experimentally validated proteins in the CASP12 set I obtained form the SideChainNet dataset <span class="citation" data-cites="king2021">(<a href="references.html#ref-king2021" role="doc-biblioref">King and Koes 2021</a>)</span>. I do not build strictly binary contact maps, but build images that reflect 9 distances thresholds (see <strong>Figure 3</strong> for an example entry form the training set).</p>
-<p>here is the code I use to download the data, and create the individual images.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>mport os</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sidechainnet <span class="im">as</span> scn</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> denoising_diffusion_pytorch <span class="im">import</span> Unet, GaussianDiffusion</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data <span class="im">import</span> Dataset, DataLoader</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torchvision.transforms <span class="im">as</span> T</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> PIL <span class="im">import</span> Image</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tqdm <span class="im">import</span> tqdm</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># === PARAMETERS ===</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>output_dir <span class="op">=</span> <span class="st">"contact_maps_128"</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>max_residues <span class="op">=</span> <span class="dv">512</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>final_image_size <span class="op">=</span> (<span class="dv">128</span>, <span class="dv">128</span>)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>contact_threshold <span class="op">=</span> <span class="fl">8.0</span>  <span class="co"># only used if you want binary maps</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>scale_to_255 <span class="op">=</span> <span class="va">True</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>distance_clip <span class="op">=</span> <span class="fl">20.0</span>  <span class="co"># max Å distance</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>os.makedirs(output_dir, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># === FUNCTIONS ===</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> make_contact_map(coords, binary<span class="op">=</span><span class="va">False</span>, threshold<span class="op">=</span><span class="fl">8.0</span>):</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co">    Computes a contact or distance map from 3D Cα coordinates.</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co">        coords (np.ndarray): Shape (L, 3) or (L, A, 3), 3D coordinates.</span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co">        binary (bool): Whether to return binary contact map.</span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co">        threshold (float): Å distance cutoff for binary maps.</span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co">        clip_dist (float): Max distance for clipping and scaling.</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co">        np.ndarray: (L, L) contact or scaled distance map in uint8.</span></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># extract only Cα coordinates (atom 0 for each residue)</span></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    ca_coords <span class="op">=</span> coords[:, <span class="dv">0</span>, :]  <span class="co"># shape (L, 3)</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    n_residues <span class="op">=</span> ca_coords.shape[<span class="dv">0</span>]</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    n_missing <span class="op">=</span> np.isnan(ca_coords).<span class="bu">any</span>(axis<span class="op">=</span><span class="dv">1</span>).<span class="bu">sum</span>()</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    frac_missing <span class="op">=</span> n_missing <span class="op">/</span> n_residues</span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> frac_missing <span class="op">&gt;</span> <span class="fl">0.10</span>:</span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>protein_id<span class="sc">}</span><span class="ss"> skipped: </span><span class="sc">{</span>n_missing<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>n_residues<span class="sc">}</span><span class="ss"> Cα coords missing (</span><span class="sc">{</span>frac_missing<span class="sc">:.1%}</span><span class="ss">)"</span>)</span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> np.unique(ca_coords, axis<span class="op">=</span><span class="dv">0</span>).shape[<span class="dv">0</span>] <span class="op">&lt;=</span> <span class="dv">1</span>:</span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>protein_id<span class="sc">}</span><span class="ss"> skipped: collapsed structure (identical Cα)"</span>)</span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span></span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n_residues <span class="op">&lt;</span> <span class="dv">10</span>:</span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>protein_id<span class="sc">}</span><span class="ss"> skipped: too short (</span><span class="sc">{</span>n_residues<span class="sc">}</span><span class="ss"> residues)"</span>)</span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span></span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>    <span class="co"># normalize based on first Cα</span></span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>    ca_coords <span class="op">-=</span> ca_coords[<span class="dv">0</span>]  <span class="co"># shift so residue 0 is at (0, 0, 0)</span></span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>    <span class="co"># compute pairwise distance matrix</span></span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>    dists <span class="op">=</span> np.linalg.norm(ca_coords[:, <span class="va">None</span>, :] <span class="op">-</span> ca_coords[<span class="va">None</span>, :, :], axis<span class="op">=-</span><span class="dv">1</span>)</span>
+<p>As a training set, I build 7000 contact maps, based on experimentally validated proteins in the CASP12 set I obtained from the SideChainNet dataset <span class="citation" data-cites="king2021">(<a href="references.html#ref-king2021" role="doc-biblioref">King and Koes 2021</a>)</span>. I do not build strictly binary contact maps, but build images that reflect 9 distances thresholds (see <strong>Figure 3</strong> for an example entry from the training set).</p>
+<p>Here are 2 functions I used to make contact/distance maps and then crop those to 128x 128 pixels.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># === FUNCTIONS ===</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> make_contact_map(coords, binary<span class="op">=</span><span class="va">False</span>, threshold<span class="op">=</span><span class="fl">8.0</span>):</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Computes a contact or distance map from 3D Cα coordinates.</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">        coords (np.ndarray): Shape (L, 3) or (L, A, 3), 3D coordinates.</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">        binary (bool): Whether to return binary contact map.</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">        threshold (float): Å distance cutoff for binary maps.</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">        clip_dist (float): Max distance for clipping and scaling.</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">        np.ndarray: (L, L) contact or scaled distance map in uint8.</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># extract only Cα coordinates (atom 0 for each residue)</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    ca_coords <span class="op">=</span> coords[:, <span class="dv">0</span>, :]  <span class="co"># shape (L, 3)</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    n_residues <span class="op">=</span> ca_coords.shape[<span class="dv">0</span>]</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    n_missing <span class="op">=</span> np.isnan(ca_coords).<span class="bu">any</span>(axis<span class="op">=</span><span class="dv">1</span>).<span class="bu">sum</span>()</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    frac_missing <span class="op">=</span> n_missing <span class="op">/</span> n_residues</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> frac_missing <span class="op">&gt;</span> <span class="fl">0.10</span>:</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>protein_id<span class="sc">}</span><span class="ss"> skipped: </span><span class="sc">{</span>n_missing<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>n_residues<span class="sc">}</span><span class="ss"> Cα coords missing (</span><span class="sc">{</span>frac_missing<span class="sc">:.1%}</span><span class="ss">)"</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> np.unique(ca_coords, axis<span class="op">=</span><span class="dv">0</span>).shape[<span class="dv">0</span>] <span class="op">&lt;=</span> <span class="dv">1</span>:</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>protein_id<span class="sc">}</span><span class="ss"> skipped: collapsed structure (identical Cα)"</span>)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n_residues <span class="op">&lt;</span> <span class="dv">10</span>:</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>protein_id<span class="sc">}</span><span class="ss"> skipped: too short (</span><span class="sc">{</span>n_residues<span class="sc">}</span><span class="ss"> residues)"</span>)</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># normalize based on first Cα</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    ca_coords <span class="op">-=</span> ca_coords[<span class="dv">0</span>]  <span class="co"># shift so residue 0 is at (0, 0, 0)</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    <span class="co"># compute pairwise distance matrix</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    dists <span class="op">=</span> np.linalg.norm(ca_coords[:, <span class="va">None</span>, :] <span class="op">-</span> ca_coords[<span class="va">None</span>, :, :], axis<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> binary:</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>        contact_map <span class="op">=</span> (dists <span class="op">&lt;</span> threshold).astype(np.uint8) <span class="op">*</span> <span class="dv">255</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> contact_map</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>        levels <span class="op">=</span> [<span class="dv">0</span>,<span class="dv">20</span>,<span class="dv">40</span>,<span class="dv">60</span>,<span class="dv">80</span>,<span class="dv">100</span>,<span class="dv">120</span>,<span class="dv">140</span>,<span class="dv">160</span>,<span class="dv">180</span>]</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>        contact_map <span class="op">=</span> np.zeros_like(dists, dtype<span class="op">=</span>np.uint8) <span class="op">+</span> <span class="dv">255</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Bin 0: d &lt; threshold - 3</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>        mask <span class="op">=</span> dists <span class="op">&lt;</span> (threshold <span class="op">-</span> <span class="dv">3</span>)</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>        contact_map[mask] <span class="op">=</span> levels[<span class="dv">0</span>]</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Bins 1 to 9: 1Å slices</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">9</span>):</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>            lower <span class="op">=</span> threshold <span class="op">-</span> <span class="dv">5</span> <span class="op">+</span> (i) </span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>            upper <span class="op">=</span> lower <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>            mask <span class="op">=</span> (dists <span class="op">&gt;=</span> lower) <span class="op">&amp;</span> (dists <span class="op">&lt;</span> upper)</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>            contact_map[mask] <span class="op">=</span> levels[i]</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> contact_map</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> binary:</span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>        contact_map <span class="op">=</span> (dists <span class="op">&lt;</span> threshold).astype(np.uint8) <span class="op">*</span> <span class="dv">255</span></span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> contact_map</span>
-<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>        levels <span class="op">=</span> [<span class="dv">0</span>,<span class="dv">20</span>,<span class="dv">40</span>,<span class="dv">60</span>,<span class="dv">80</span>,<span class="dv">100</span>,<span class="dv">120</span>,<span class="dv">140</span>,<span class="dv">160</span>,<span class="dv">180</span>]</span>
-<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>        contact_map <span class="op">=</span> np.zeros_like(dists, dtype<span class="op">=</span>np.uint8) <span class="op">+</span> <span class="dv">255</span></span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Bin 0: d &lt; threshold - 3</span></span>
-<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>        mask <span class="op">=</span> dists <span class="op">&lt;</span> (threshold <span class="op">-</span> <span class="dv">3</span>)</span>
-<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>        contact_map[mask] <span class="op">=</span> levels[<span class="dv">0</span>]</span>
-<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Bins 1 to 9: 1Å slices</span></span>
-<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">9</span>):</span>
-<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>            lower <span class="op">=</span> threshold <span class="op">-</span> <span class="dv">5</span> <span class="op">+</span> (i) </span>
-<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>            upper <span class="op">=</span> lower <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>            mask <span class="op">=</span> (dists <span class="op">&gt;=</span> lower) <span class="op">&amp;</span> (dists <span class="op">&lt;</span> upper)</span>
-<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>            contact_map[mask] <span class="op">=</span> levels[i]</span>
-<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> contact_map</span>
-<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a><span class="co"># Or simply crol the first 128 amino-acids (Ca atoms associated witht hose amino-acids)</span></span>
-<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> crop_contact_map(contact_map, crop_size<span class="op">=</span><span class="dv">256</span>, pad_value<span class="op">=</span><span class="dv">255</span>, min_size<span class="op">=</span><span class="dv">20</span>):</span>
-<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a><span class="co">    Crop the top-left corner of the contact map to (crop_size, crop_size).</span></span>
-<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a><span class="co">    Pads with `pad_value` if the map is smaller.</span></span>
-<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a><span class="co">    Skips maps smaller than `min_size`.</span></span>
-<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a>    h, w <span class="op">=</span> contact_map.shape</span>
-<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> h <span class="op">&lt;</span> min_size <span class="kw">or</span> w <span class="op">&lt;</span> min_size:</span>
-<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"Contact map too small: </span><span class="sc">{</span>h<span class="sc">}</span><span class="ss">x</span><span class="sc">{</span>w<span class="sc">}</span><span class="ss"> (min required: </span><span class="sc">{</span>min_size<span class="sc">}</span><span class="ss">)"</span>)</span>
-<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a>    canvas <span class="op">=</span> np.full((crop_size, crop_size), pad_value, dtype<span class="op">=</span>np.uint8)</span>
-<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a>    crop_h <span class="op">=</span> <span class="bu">min</span>(h, crop_size)</span>
-<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a>    crop_w <span class="op">=</span> <span class="bu">min</span>(w, crop_size)</span>
-<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a>    canvas[:crop_h, :crop_w] <span class="op">=</span> contact_map[:crop_h, :crop_w]</span>
-<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Image.fromarray(canvas)</span>
-<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a><span class="co"># === MAIN ===</span></span>
-<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Loading SideChainNet CASP12 dataset..."</span>)</span>
-<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> scn.load(casp_version<span class="op">=</span><span class="dv">12</span>)</span>
-<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Generating contact maps..."</span>)</span>
-<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, sample <span class="kw">in</span> <span class="bu">enumerate</span>(data):</span>
-<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
-<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a>        protein_id <span class="op">=</span> sample.<span class="bu">id</span></span>
-<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a>        coords <span class="op">=</span> sample.coords  <span class="co"># shape: (L, A, 3)</span></span>
-<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-115"><a href="#cb1-115" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> coords <span class="kw">is</span> <span class="va">None</span> <span class="kw">or</span> coords.shape[<span class="dv">0</span>] <span class="op">&lt;</span> <span class="dv">2</span>:</span>
-<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
-<span id="cb1-117"><a href="#cb1-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Compute distance matrix and preprocess</span></span>
-<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a>        distance_map <span class="op">=</span> make_contact_map(coords, binary<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Skip if it's completely empty</span></span>
-<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> np.<span class="bu">all</span>(distance_map <span class="op">==</span> <span class="dv">255</span>):</span>
-<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Skipping </span><span class="sc">{</span>protein_id<span class="sc">}</span><span class="ss">: distance map is all white"</span>)</span>
-<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
-<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Make the final image</span></span>
-<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a>        img <span class="op">=</span> crop_contact_map(distance_map, crop_size<span class="op">=</span><span class="dv">128</span>,pad_value<span class="op">=</span><span class="dv">255</span>)</span>
-<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a>        img.save(os.path.join(output_dir, <span class="ss">f"</span><span class="sc">{</span>protein_id<span class="sc">}</span><span class="ss">.jpg"</span>), <span class="bu">format</span><span class="op">=</span><span class="st">'JPEG'</span>)</span>
-<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> i <span class="op">%</span> <span class="dv">100</span> <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"[</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">] Saved: </span><span class="sc">{</span>protein_id<span class="sc">}</span><span class="ss">.jpg"</span>)</span>
-<span id="cb1-132"><a href="#cb1-132" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
-<span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Skipping </span><span class="sc">{</span>sample<span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss"> due to error: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb1-135"><a href="#cb1-135" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"✅ Done."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This generates a folder with thousands of images of contact maps, where the specific share of grey of the pixel correspond to &lt;4 (black), 5, 6, 7, 8, 9, 10, 11, 12,or &gt;13 (white) Angstrom distances.</p>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="co"># Or simply crop the first 128 amino-acids (Ca atoms associated with those amino-acids)</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> crop_contact_map(contact_map, crop_size<span class="op">=</span><span class="dv">128</span>, pad_value<span class="op">=</span><span class="dv">255</span>, min_size<span class="op">=</span><span class="dv">20</span>):</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="co">    Crop the top-left corner of the contact map to (crop_size, crop_size).</span></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a><span class="co">    Pads with `pad_value` if the map is smaller.</span></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="co">    Skips maps smaller than `min_size`.</span></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>    h, w <span class="op">=</span> contact_map.shape</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> h <span class="op">&lt;</span> min_size <span class="kw">or</span> w <span class="op">&lt;</span> min_size:</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"Contact map too small: </span><span class="sc">{</span>h<span class="sc">}</span><span class="ss">x</span><span class="sc">{</span>w<span class="sc">}</span><span class="ss"> (min required: </span><span class="sc">{</span>min_size<span class="sc">}</span><span class="ss">)"</span>)</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>    canvas <span class="op">=</span> np.full((crop_size, crop_size), pad_value, dtype<span class="op">=</span>np.uint8)</span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>    crop_h <span class="op">=</span> <span class="bu">min</span>(h, crop_size)</span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>    crop_w <span class="op">=</span> <span class="bu">min</span>(w, crop_size)</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>    canvas[:crop_h, :crop_w] <span class="op">=</span> contact_map[:crop_h, :crop_w]</span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Image.fromarray(canvas)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then using the <code>sidechainnet</code> package, I download protein information, save the contact maps as images using the following function:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># === MAIN ===</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Loading SideChainNet CASP12 dataset..."</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> scn.load(casp_version<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Generating contact maps..."</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, sample <span class="kw">in</span> <span class="bu">enumerate</span>(data):</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        protein_id <span class="op">=</span> sample.<span class="bu">id</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        coords <span class="op">=</span> sample.coords  <span class="co"># shape: (L, A, 3)</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> coords <span class="kw">is</span> <span class="va">None</span> <span class="kw">or</span> coords.shape[<span class="dv">0</span>] <span class="op">&lt;</span> <span class="dv">2</span>:</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Compute distance matrix and preprocess</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        distance_map <span class="op">=</span> make_contact_map(coords, binary<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Skip if it's completely empty</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> np.<span class="bu">all</span>(distance_map <span class="op">==</span> <span class="dv">255</span>):</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Skipping </span><span class="sc">{</span>protein_id<span class="sc">}</span><span class="ss">: distance map is all white"</span>)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Make the final image</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        img <span class="op">=</span> crop_contact_map(distance_map, crop_size<span class="op">=</span><span class="dv">128</span>,pad_value<span class="op">=</span><span class="dv">255</span>)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        img.save(os.path.join(output_dir, <span class="ss">f"</span><span class="sc">{</span>protein_id<span class="sc">}</span><span class="ss">.jpg"</span>), <span class="bu">format</span><span class="op">=</span><span class="st">'JPEG'</span>)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> i <span class="op">%</span> <span class="dv">100</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"[</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">] Saved: </span><span class="sc">{</span>protein_id<span class="sc">}</span><span class="ss">.jpg"</span>)</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Skipping </span><span class="sc">{</span>sample<span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss"> due to error: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">" Done."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This generates a folder with thousands of images of contact maps, where the specific shade of gray of the pixel corresponds to &lt;4 (black), 5, 6, 7, 8, 9, 10, 11, 12, or &gt;13 (white) Angstrom distances.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/1KZQ_d1kzqb1.jpg" class="img-fluid figure-img" width="444"></p>
@@ -582,7 +565,7 @@ X_{t-1} =  b_0 * X_{t} + b_1 * \mathcal{N}(\mu,\sigma)
 </div>
 <section id="detailed-parameter-breakdown-by-module-for-our-model" class="level4" data-number="11.2.2.1">
 <h4 data-number="11.2.2.1" class="anchored" data-anchor-id="detailed-parameter-breakdown-by-module-for-our-model"><span class="header-section-number">11.2.2.1</span> <strong>Detailed Parameter Breakdown by Module for our model</strong></h4>
-<p>The table below breaks down the different elements of the U-Net architecture of a tiny diffusion model I trained. The table describes how how many free parameters each part of the model contains. as you can see the decoder <code>ups</code> part of the model has almost half of the parameters. This is where the encoded information, and the skip connections are brought together. You’ll also note the most number of parameters in the <code>time_mlp</code> which is the part of the model which encodes the influences of the specific timestep <code>t</code> though its important to realize the the ResBlocks (both in the encoder and decoder) also contain parameters that map the time specif embedding to the image information, those regulated <em>how</em> the time information influences the image generation at each specific stage.</p>
+<p>The table below breaks down the different elements of the U-Net architecture of a tiny diffusion model I trained. The table describes how many free parameters each part of the model contains. As you can see, the decoder <code>ups</code> part of the model has almost half of the parameters. This is where the encoded information, and the skip connections are brought together. You’ll also note the most number of parameters in the <code>time_mlp</code>, which encodes the influence of the specific timestep <code>t</code>. It’s important to realize that the ResBlocks (both in the encoder and decoder) also contain parameters that map the time-specific embedding to the image information. These regulate <em>how</em> the time information influences image generation at each specific stage.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 33%">
@@ -644,14 +627,210 @@ X_{t-1} =  b_0 * X_{t} + b_1 * \mathcal{N}(\mu,\sigma)
 </tr>
 </tbody>
 </table>
-<p>Once we’ve traned the diffusion model for about 40/60 minutes (though ideally longer and on way more data!) we can sample from it. Sampling form it involves sampling pure gaussian noise (“<code>t - 999</code>”) and pasisng the noise trough the dissuion model a few hundred times (each time updating <code>t</code>). There are speedups and trick that mean you wont have to pass it trought he model 1000 times to get a solid result though more passes (“steps”) generally means a better result. Because protein contact maps are symmetric, but the model doenst know that, I generate a protein but then copy over one of the two halfs. In <strong>Figure 3</strong> I show a particularly convincing looking sample at 5 steps form noise to final protein contact map.</p>
+<p>Once we’ve trained the diffusion model for about 40/60 minutes (though ideally longer and on way more data!) we can sample from it. Sampling from it involves sampling pure Gaussian noise (“<code>t - 999</code>”) and passing the noise through the diffusion model a few hundred times (each time updating <code>t</code>). There are speedups and tricks that mean you won’t have to pass it through the model 1000 times to get a solid result, though more passes (“steps”) generally means a better result. Because protein contact maps are symmetric, but the model doesn’t know that, I generate a protein but then copy over one of the two halves. In <strong>Figure 3</strong> I show a particularly convincing-looking sample at 5 steps from noise to final protein contact map.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/paste-36.png" class="img-fluid figure-img"></p>
 <figcaption><strong>Figure 3:</strong> interim and final stages of a protein contact map sampled from pure noise, after training for a few epochs on 7000 real proteins.</figcaption>
 </figure>
 </div>
-<p>The protein contact map sampled in <strong>Figure 3</strong> is a fiction that, according to the model, fits the distribution of the training data, which while fascinating isn’t very useful yet. To make things useful we must condition the model on not just timestep, but also on condensed, or embedded sequence information.</p>
+<p>The protein contact map sampled in <strong>Figure 3</strong> is a fiction that, according to the model, fits the distribution of the training data, which <strong>while fascinating isn’t very useful yet</strong>. To make things useful, we must condition the model on not just timestep, but also on condensed, or embedded sequence information.</p>
+<p>The next step is to condition the generation of a diffusion model on the amino-acid sequence. This is a very specific multi-modal problem, we want to create an image, based on a sequence of tokens. In order to wrap our head around.</p>
+</section>
+</section>
+</section>
+<section id="from-attention-to-cross-attention" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="from-attention-to-cross-attention"><span class="header-section-number">11.3</span> From attention, to cross-attention</h2>
+<p>In <a href="Chapter4_Proteins.html" class="quarto-xref"><span>Chapter 10</span></a> we discussed the attention mechanism, where each token in a sequence is embedded in <span class="math inline">\(X\)</span>, looks at all other tokens in the same sequence—we can explore something more general:&nbsp;<strong>cross-attention</strong>. Cross-attention (See Figure below) is what allows models to link&nbsp;<em>different modalities</em>&nbsp;together. It is how an image can learn to attend to words, or how a protein contact map can align with an amino acid sequence.</p>
+<p>In technical terms, self-attention happens when the Query, Key, and Value matrices—<span class="math inline">\(Q\)</span>, <span class="math inline">\(K\)</span>, and <span class="math inline">\(V\)</span>—are all derived from the same input. Cross-attention, on the other hand, involves two different sources. One stream generates the queries, <span class="math inline">\(Q_{nxd}\)</span>, where n is the number of tokens in the query source (e.g., the contact map image), and <span class="math inline">\(d_q\)</span> is the learned query dimensionality. The other stream produces the keys <span class="math inline">\(K_{mxd}\)</span> and values <span class="math inline">\(K_{mxd}\)</span>, where <span class="math inline">\(m\)</span> is the number of tokens in the key/value source (e.g., the sequence). In this setup, the queries are essentially asking, “Where in the other modality is the most relevant information for me?”</p>
+<p>Here’s where it gets interesting: even though the inputs—say, a 2D contact map versus a 1D amino acid sequence—might have vastly different shapes and lengths (n ≠ m), attention still works because we project both inputs into a shared space using learned linear transformations. The only requirement is that the inner dimensions match appropriately: the dot product QKᵗ yields an attention score matrix <span class="math inline">\(A_{nxm}\)</span>, which tells each query vector how much to attend to each key. After applying softmax to these scores, the attention weights are used to compute a weighted sum of the values <span class="math inline">\(V\)</span>, resulting in the final output <span class="math inline">\(Z_{n*d}\)</span>.</p>
+<p>So, while the original modalities might differ wildly in format and token count, cross-attention does not require the inputs to be the same size—only that their projections align where it matters: in the shared attention dimensions <span class="math inline">\(d_q\)</span> and <span class="math inline">\(d_v\)</span>.</p>
+<p>In our case, when we say the&nbsp;contact <strong>map diffusion model attends to the sequence</strong>, we mean the image features are used to generate queries, and the sequence provides the keys and values, the final output dimensions are consistent with those of the diffusion model. This lets the contact map image learn where in the sequence there are features that are most relevant to its shape. That might sound abstract, but think of it as one set of data (the image) trying to find the most useful context from another (the sequence).</p>
+<p>This mechanism is central in multimodal transformers like text to image, speech to text, or many others. It is increasingly being used in biological modeling too. It enables not just learning within a sequence, but learning&nbsp;<em>between representations</em>—and that’s a big leap.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="grViz html-widget html-fill-item" id="htmlwidget-332e2a589fe1a13f27fa" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-332e2a589fe1a13f27fa">{"x":{"diagram":"\ndigraph cross_attention_parallel {\n  graph [rankdir=LR, nodesep=1.0, ranksep=0.6, fontsize=12]\n\n  node [shape=box, style=filled, fontname=Helvetica]\n\n  // Inputs\n  img [label=\"Contact map X\", fillcolor=lightblue]\n  txt [label=\"Seq X\", fillcolor=lightblue]\n\n  // Weights\n  Wq [label=\"W_q\", fillcolor=gray]\n  Wk [label=\"W_k\", fillcolor=gray]\n  Wv [label=\"W_v\", fillcolor=gray]\n\n  // QKV blocks\n  Q [label=\"Q\", fillcolor=lavender]\n  K [label=\"K\", fillcolor=lavender]\n  V [label=\"V\", fillcolor=lavender]\n\n  // Attention ops\n  QK [label=\"QKᵀ\", fillcolor=lightcyan]\n  Softmax [label=\"Softmax\", fillcolor=black, fontcolor=white]\n  A [label=\"Cross attention\n(Attn Weights)\", fillcolor=lightcyan]\n  Z [label=\"Z\n(Output)\", fillcolor=pink]\n\n  // Layout helpers\n  { rank = same; img; txt }\n  { rank = same; Q; K; V }\n  { rank = same; QK; Softmax; A }\n\n  // Connections\n  img -> Wq -> Q\n  txt -> Wk -> K\n  txt -> Wv -> V\n\n  Q -> QK\n  K -> QK\n  QK -> Softmax -> A\n\n  A -> Z\n  V -> Z\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="cross-attention-and-a-diffusion-model." class="level2" data-number="11.4">
+<h2 data-number="11.4" class="anchored" data-anchor-id="cross-attention-and-a-diffusion-model."><span class="header-section-number">11.4</span> Cross attention and a diffusion model.</h2>
+<p>Google’s ‘imagen’ architecture implements a diffusion model, which uses cross attention to attend to the final embeddings of a text model. The great news to us is that the ‘imagen’ paper actually showed you don’t really need to train the “text” part of the model with this specific goal in mind, you can just use an existing model! And that is what we are going to do. We are going to use <code>facebook/esm2_t30_150M_UR50D</code> which is an evolution of the Facebook-funded ESM-2 models, to compute embeddings for all CASP 12 proteins, and train a diffusion model <em>conditioned</em> on the image embedding. Recall how U-net diffusion models are already conditioned on the time <code>t1</code> embedding, we are simply going to also condition specific steps in the U-net on the sequence model embedding. As we know from <a href="Chapter4_Proteins.html" class="quarto-xref"><span>Chapter 10</span></a> sequence models do learn latent representations of contact maps, we are going to leverage that information when running the diffusion process.</p>
+<p>I use the script below to download the amino-acid sequences for proteins in the <code>sidechainnet</code> dataset, run the <code>facebook/esm2_t30_150M_UR50D</code> model on these proteins, and save the per amino-acid embeddings generated by the last layer. These embeddings, unlike the input embeddings, are the contextualized (their passed through attention blocks across many layers) embedding of each amino-acid in its context. The output is a 128 by 640 (embedding dimension for this model) matrix that is a numerical representation of the protein according to the <code>facebook/esm2_t30_150M_UR50D</code> model. This is a quite resource-intensive process, so I added code to make sure it only computes embeddings for proteins for which we are able to generate a solid contact map (one without too many missing data points for example).</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a> <span class="op">===</span> embedding_extraction.py <span class="op">===</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sidechainnet <span class="im">as</span> scn</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tqdm <span class="im">import</span> tqdm</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> AutoTokenizer, AutoModel</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># === PARAMETERS ===</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>model_name <span class="op">=</span> <span class="st">"facebook/esm2_t30_150M_UR50D"</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>output_dir <span class="op">=</span> <span class="st">"embeddings_all"</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>valid_ids_path <span class="op">=</span> <span class="st">"valid_proteins.txt"</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>os.makedirs(output_dir, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># === Load Model ===</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> torch.device(<span class="st">"mps"</span> <span class="cf">if</span> torch.backends.mps.is_available() <span class="cf">else</span> <span class="st">"cuda"</span> <span class="cf">if</span> torch.cuda.is_available() <span class="cf">else</span> <span class="st">"cpu"</span>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>tokenizer <span class="op">=</span> AutoTokenizer.from_pretrained(model_name)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> AutoModel.from_pretrained(model_name).to(device).<span class="bu">eval</span>()</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co"># === embedding_extraction.py ===</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>os.makedirs(output_dir, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co"># === Load valid protein IDs from contact map step ===</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(valid_ids_path, <span class="st">"r"</span>) <span class="im">as</span> f:</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    valid_ids <span class="op">=</span> <span class="bu">set</span>(line.strip() <span class="cf">for</span> line <span class="kw">in</span> f <span class="cf">if</span> line.strip())</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_embeddings(sequence):</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>        inputs <span class="op">=</span> tokenizer(sequence, return_tensors<span class="op">=</span><span class="st">"pt"</span>, truncation<span class="op">=</span><span class="va">True</span>, padding<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>        inputs <span class="op">=</span> {k: v.to(device) <span class="cf">for</span> k, v <span class="kw">in</span> inputs.items()}</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>        outputs <span class="op">=</span> model(<span class="op">**</span>inputs)</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>        seq_emb <span class="op">=</span> outputs.last_hidden_state[<span class="dv">0</span>].cpu().numpy()  <span class="co"># (L, D)</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>        seq_len, emb_dim <span class="op">=</span> seq_emb.shape</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Pad to 128 if needed</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> seq_len <span class="op">&lt;</span> <span class="dv">128</span>:</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>            pad <span class="op">=</span> np.zeros((<span class="dv">128</span> <span class="op">-</span> seq_len, emb_dim), dtype<span class="op">=</span>np.float32)</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>            seq_emb <span class="op">=</span> np.vstack([seq_emb, pad])</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>            seq_emb <span class="op">=</span> seq_emb[:<span class="dv">128</span>]</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> seq_emb  <span class="co"># shape: (128, D)</span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> main():</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>    casp_versions <span class="op">=</span> [<span class="dv">12</span>]</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f" Loading SideChainNet CASP datasets: </span><span class="sc">{</span>casp_versions<span class="sc">}</span><span class="ss">..."</span>)</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Combine all samples</span></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>    all_samples <span class="op">=</span> []</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> casp_version <span class="kw">in</span> casp_versions:</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> scn.load(casp_version<span class="op">=</span>casp_version, casp_thinning<span class="op">=</span><span class="dv">70</span>)</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>        all_samples.extend(data)</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">" Extracting embeddings only for valid proteins..."</span>)</span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> sample <span class="kw">in</span> tqdm(all_samples):</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>        protein_id <span class="op">=</span> sample.<span class="bu">id</span></span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> protein_id <span class="kw">not</span> <span class="kw">in</span> valid_ids:</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>            sequence <span class="op">=</span> sample.sequence</span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> sequence <span class="kw">is</span> <span class="va">None</span> <span class="kw">or</span> <span class="bu">len</span>(sequence) <span class="op">&lt;</span> <span class="dv">10</span>:</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>                <span class="cf">continue</span></span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>            cropped_sequence <span class="op">=</span> sequence[:<span class="dv">128</span>]</span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>            emb <span class="op">=</span> get_embeddings(cropped_sequence)</span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>            np.save(os.path.join(output_dir, <span class="ss">f"</span><span class="sc">{</span>protein_id<span class="sc">}</span><span class="ss">.npy"</span>), emb)</span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f" Skipping </span><span class="sc">{</span>protein_id<span class="sc">}</span><span class="ss"> due to error: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">" Embedding extraction complete."</span>)</span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a>    main()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="training-the-imagen-model" class="level2" data-number="11.5">
+<h2 data-number="11.5" class="anchored" data-anchor-id="training-the-imagen-model"><span class="header-section-number">11.5</span> Training the imagen model</h2>
+<p>The high-level library <code>huggingface</code> provides for image models, called <code>diffusion</code>, isn’t as fully developed as their <code>transformers</code> library. Therefore, we’re going to use a library maintained by GitHub user <code>lucidrains</code> who I guess is a scientist in biomedical science but also someone who builds these amazing implementations of AI models from papers. The repo we’ll use is <a href="https://github.com/lucidrains/imagen-pytorch"><code>imagen-pythorch</code></a> which you can just install using pip: <code>pip install imagen-pytorch</code>.</p>
+<p>What we’ll effectively end up doing to predict protein contact maps is run a two-model sequence: 1. run a protein language model to transform sequences into embeddings, encoding a lot of information using a pre-trained 150m parameter language model, and 2. use those embeddings, and the contact maps of the same protein to train a ~31 million parameter Unet image generation model, where every so often there is a cross-attention layer where the image attends to the sequence embedding. You can find the full script here, but below we can have a look at the core components, a U-net diffusion model, and an <code>imagen</code> model which contains it.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># === Define U-Nets for Imagen Cascade ===</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>unet1 <span class="op">=</span> Unet(</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    dim<span class="op">=</span><span class="dv">64</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    cond_dim<span class="op">=</span>embedding_dim,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    dim_mults<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    channels<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    num_resnet_blocks<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    layer_attns<span class="op">=</span>(<span class="va">False</span>, <span class="va">False</span>, <span class="va">True</span>),</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    layer_cross_attns<span class="op">=</span>(<span class="va">False</span>, <span class="va">True</span>, <span class="va">True</span>),</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co"># === Imagen ===</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>imagen <span class="op">=</span> Imagen(    </span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    unets<span class="op">=</span>(unet1),</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    image_sizes<span class="op">=</span>(<span class="dv">128</span>),</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    timesteps<span class="op">=</span><span class="dv">1000</span>,</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    cond_drop_prob<span class="op">=</span><span class="fl">0.1</span>,</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    text_embed_dim<span class="op">=</span><span class="dv">640</span>,</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    channels<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>).to(device)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We’ll have to do a little model work, because we can use Hugging Face’s <code>Trainer</code> library here. Though the repo we use here is still fairly high-level, so it provides a trainer, etc. the data loading process is abstracted away here, but of course, all scripts are available in full on GitHub.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># === ImagenTrainer ===</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize the trainer</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>trainer <span class="op">=</span> ImagenTrainer(imagen,fp16<span class="op">=</span><span class="va">True</span>).to(device)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># FIX: Wrap with cond_images_dataset so (cond, image) is handled correctly</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>trainer.add_train_dataset(train_subset, batch_size<span class="op">=</span>batch_size, shuffle<span class="op">=</span><span class="va">True</span>, num_workers<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>trainer.add_valid_dataset(eval_subset, batch_size<span class="op">=</span>batch_size, shuffle<span class="op">=</span><span class="va">True</span>, num_workers<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># set up eval...</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>eval_losses <span class="op">=</span> []  <span class="co"># store losses for plotting later</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>eval_every <span class="op">=</span> <span class="dv">100</span>  <span class="co"># steps</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>steps_per_epoch <span class="op">=</span> <span class="bu">len</span>(train_subset) <span class="op">//</span> batch_size</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co"># === Training Loop ===</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">" Starting training..."</span>)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    total_loss <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> step <span class="kw">in</span> tqdm(<span class="bu">range</span>(steps_per_epoch)):</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>        loss1 <span class="op">=</span> trainer.train_step(unet_number<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>        total_loss <span class="op">+=</span> loss1</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> step <span class="op">%</span> <span class="dv">50</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Step </span><span class="sc">{</span>step<span class="sc">}</span><span class="ss"> | Loss: </span><span class="sc">{</span>loss1<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> step <span class="op">%</span> eval_every <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>            eval_loss <span class="op">=</span> trainer.valid_step(unet_number<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>            eval_losses.append((epoch, step, eval_loss))</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f" Eval Loss @ Epoch </span><span class="sc">{</span>epoch<span class="sc">}</span><span class="ss">, Step </span><span class="sc">{</span>step<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>eval_loss<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"[Epoch </span><span class="sc">{</span>epoch <span class="op">+</span> <span class="dv">1</span><span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>epochs<span class="sc">}</span><span class="ss">]  Loss: </span><span class="sc">{</span>total_loss <span class="op">/</span> steps_per_epoch<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (epoch<span class="op">+</span><span class="dv">1</span>) <span class="op">%</span> <span class="dv">5</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>        trainer.save(<span class="ss">f"imagen_cont/imagen_protein_epoch</span><span class="sc">{</span>epoch <span class="op">+</span> <span class="dv">1</span><span class="sc">}</span><span class="ss">.pt"</span>)</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Training complete."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>A training loop can be fairly simple, especially with great out-of-the-box pre-built models like the one provided by <code>lucidrains</code>. It’s essentially two Python loops, the outer loop loops over epochs, the inner loop over steps. In each inner loop, we’ll take a single training step, computing the derivatives of all parameters wrt the loss over a batch of data, and updating all parameters:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> step <span class="kw">in</span> tqdm(<span class="bu">range</span>(steps_per_epoch)):</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>        loss1 <span class="op">=</span> trainer.train_step(unet_number<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This particular training loop still abstracts a fair bit away from the user, in later chapters we’ll likely have to open up that training loop even further. We train the imagen model on 16,000 contact maps and embedded sequences, for 80 epochs (image models need way more epochs than sequence models). After training, the model is able to fairly accurately reconstruct protein contact maps, see <strong>Figure 5</strong>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/imagen_contact_maps.png" class="img-fluid figure-img"></p>
+<figcaption><strong>Figure 5</strong>: true vs generated protein contact maps generated by diffusion conditional on protein language model embeddings.</figcaption>
+</figure>
+</div>
+<p>To understand the pros and cons of this model relative to the attention-based protein contact map prediction we performed in <a href="Chapter4_Proteins.html" class="quarto-xref"><span>Chapter 10</span></a>, we can do some visual inspection. While these generations on the right are sharp, crisp, and often very accurate, Generation 10889 has some clear “<strong>hallucinations</strong>”, or contacts that seem very confident and real, but aren’t in the ground truth at all! While if you go back to Figure 2 of <a href="Chapter4_Proteins.html" class="quarto-xref"><span>Chapter 10</span></a> you’d see far more “noisy” error in predictions. Hallucinations are a very pernicious kind of noise, they look clean, convincing, plausible, because the diffusion model just turned some early noise into a very slick processed convincing-looking result, which noise in statistical predictions in the last chapter are far more recognizable as noise!</p>
+<p>Alphafold3, and AlphaFold2 before it, had a specific feature to guard against convincing-looking hallucinations. Both models had confidence modules, a neural network that predicts the model’s confidence in each predicted structure/residue. But it also used double conditional diffusion, where the diffusion was conditioned on both the sequence embeddings, and on the embedding of the proteins pair representations (similar to the attention maps we discussed in <a href="Chapter4_Proteins.html" class="quarto-xref"><span>Chapter 10</span></a>, a 2D representation of which amino-acids attend to each other).</p>
+</section>
+<section id="conclussion" class="level2" data-number="11.6">
+<h2 data-number="11.6" class="anchored" data-anchor-id="conclussion"><span class="header-section-number">11.6</span> Conclussion</h2>
+<p>So in this chapter we trained, and discussed, a model that is abstraction fo AF3, it is like AF3 int he sense that we use diffusion, conditional on sequence information to estimate a representation of a protein. Obviosluyit is missing all kind of keye part of the AF3 model. in the next chapter we’ll slightly expand our abstraction of AF3. We’ll train diffusion model hat is conditioned on the amino-acid sequence embedding AND on the protein map as predicted based on the 2D presentation of the attention maps.</p>
+<p>To prepare, you can try the two self-study assignments below, they pull in things we learned in the last two chapters to basically make protein predictions that adhere to the noisy, but mostly accurate outlines we could generate based on attention maps, and then use diffusion modeling to predict the local details, preventing strong hallucinations. If you’re more of a reader, skip to the next chapter, where I’ll take a stab at these two assignments myself.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In order from beginner to advanced project, consider these self-study exercises, all of which share a common goal, to see if we can further condition the diffusion model on the noisy but hallucination-free attention-based predictions we made in the last chapter, the hallucinations reduce.</p>
+<p><strong>1. (easy)</strong> Run contact map prediction like in <a href="Chapter4_Proteins.html" class="quarto-xref"><span>Chapter 10</span></a>. That is, extract the attention maps when running <code>facebook/esm2_t30_150M_UR50D</code> for ~20 genes, predict their contact maps with those, store and average the prediction weights and use those to predict contact maps for further proteins in the <code>imagen</code> validation set. Then when sampling from your <code>imagen</code> model, give the attention-based prediction the argument <code>init_image</code>, along with the embeddings. This will start the denoising from the attention-based prediction, you can experiment with <code>skip_steps = xxx</code> because as the model now starts from a prediction, not pure noise, you might want to a portion of the 1000 steps for optimal results</p>
+<p><strong>2. (medium)</strong> Run contact map prediction like in <a href="Chapter4_Proteins.html" class="quarto-xref"><span>Chapter 10</span></a>. That is, extract the attention maps when running <code>facebook/esm2_t30_150M_UR50D</code> for ~20 genes, predict their contact maps with those, store and average the prediction weights and use those to predict contact maps for further proteins in the <code>imagen</code> <strong>training</strong> set. Then when training your <code>imagen</code> model, give the attention-based prediction the argument <code>cond_images</code>, along with the text embeddings. This will train an <code>imagen</code> model that is conditioned on the faint outlines of the protein structure generated based on the attention maps, which are less likely to be hallucinations.</p>
+</div>
+</div>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
@@ -665,8 +844,6 @@ Abramson, Josh, Jonas Adler, Jack Dunger, Richard Evans, Tim Green, Alexander Pr
 King, Jonathan Edward, and David Ryan Koes. 2021. <span>“SidechainNet: An All<span>-</span>Atom Protein Structure Dataset for Machine Learning.”</span> <em>Proteins: Structure, Function, and Bioinformatics</em> 89 (11): 1489–96. <a href="https://doi.org/10.1002/prot.26169">https://doi.org/10.1002/prot.26169</a>.
 </div>
 </div>
-</section>
-</section>
 </section>
 
 </main> <!-- /main -->

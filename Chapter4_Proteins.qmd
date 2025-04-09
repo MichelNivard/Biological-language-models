@@ -1,4 +1,4 @@
-# Protein contact maps from attention maps
+# Protein contact maps from attention maps {#sec-AttentionProt}
 
 ::: callout-tip
 ## Abstract
@@ -8,31 +8,38 @@ In this chapter, we'll discuss how self-attention works and how it latently enco
 
 ## 
 
-One way to construct a scaffold for protein 3d structure learning is to first learn the distances (2d) between all amino-acids, or between atoms within those amino acids. Contact maps have been extensively used as a simplified representation of protein structures. Contact maps "capture most important features of a protein's fold, being preferred by a number of researchers for the description and study of protein structures"[@duarte2010]. 
+One way to construct a scaffold for protein 3d structure learning is to first learn the distances (2d) between all amino-acids, or between atoms within those amino acids. Contact maps have been extensively used as a simplified representation of protein structures. Contact maps capture the most important features of a protein's fold and are preferred by a number of researchers for the description and study of protein structures"[@duarte2010].
 
-A protein’s amino acid sequence is one-dimensional (1D) information – the linear order of residues. The functional three-dimensional (3D) structure is how that chain folds in space, bringing certain residues into contact. **Contact maps** serve as a two-dimensional (2D) bridge between sequence and structure. A contact map is essentially a matrix that encodes which pairs of residues are close together in the folded 3D structure​. Specifically, it’s a binary $N \times N$ matrix (for an $N$-residue protein) where an entry is 1 if two residues are within a distance threshold (e.g. 12 Å) in the 3D structure, and 0 if they are not​ This 2D representation captures key structural relationships (who-neighbors-whom) without specifying exact coordinates. In protein structure prediction, one common approach is: **1D sequence ⇒ predicted 2D contact map ⇒ inferred 3D structure**. The contact map, derived from sequence-based predictions (such as co-evolution analysis or machine learning), provides constraints that guide how the chain can fold​. Note however, when converting a full 3D structure into a simplified 2D contact map, some information is inevitably lost. The contact map is a binary (or at best, thresholded distance) representation – it tells us whether a pair of residues is within a certain cutoff distance, but not the exact distance beyond that or their relative orientation. A dramatic illustration is that a protein’s mirror-image (reflected) structure yields an identical contact map, since all pairwise distances are the same​. The map alone cannot distinguish a right-handed fold from its left-handed enantiomer – chirality information is lost. Nevertheless, contact maps can serve as relevant information, or constraints when trying to infer 3D structure. Contact maps can act as a powerful but imperfect intermediate blueprint, translating linear sequence information into spatial relationships that approximate the final folded structure. **Figure 1** is an example contact map based on a distance threshold of 12 Angstrom between C_a atoms (Carbon atoms that are part of the protein backbone ) in the AlphaFold 2 model of the protein structure (PDB format) of a human GRPC protein.
+A protein's amino acid sequence is one-dimensional (1D) information: the linear order of residues. The functional three-dimensional (3D) structure is how that chain folds in space, bringing certain residues into contact. **Contact maps** serve as a two-dimensional (2D) bridge between sequence and structure. Specifically, it is a binary $N \times N$ matrix (for an $N$-residue protein) where an entry is 1 if two residues are within a distance threshold (e.g., 12 Å) in the 3D structure, and 0 if they are not. This 2D representation captures key structural relationships (who-neighbors-whom) without specifying exact coordinates.
 
-![**Figure 1:** Example of a protein contact map where "contact is defined as \< 12A distance between Ca](images/paste-26.png){fig-align="center"}
+In protein structure prediction, one common approach is: **1D sequence ⇒ predicted 2D contact map ⇒ inferred 3D structure**. The contact map, derived from sequence-based predictions (such as co-evolution analysis or machine learning), provides constraints that guide how the chain can fold. Note, however, when converting a full 3D structure into a simplified 2D contact map, some information is inevitably lost. The contact map is a binary (or at best, thresholded distance) representation: it tells us whether a pair of residues is within a certain cutoff distance, but not the exact distance beyond that or their relative orientation. A dramatic illustration is that a protein's mirror-image (reflected) structure yields an identical contact map, since all pairwise distances are the same. The map alone cannot distinguish a right-handed fold from its left-handed enantiomer: chirality information is lost.
 
-Below we'll study how we can estimate contact maps from the self-attention networks, or maps, that are latently encoded in protein language models, based on ideas developed by Roa et al. [@rao2020] and others[@vig2020]. This is frankly like magic, just by training to predict protein sequences, the model learns the 2D structure of the protein, and because we know 2D structure relates to 3D structure we can prove protein language models learn (elements of) the 3D structure of proteins.
+Contact maps can act as a powerful but imperfect intermediate blueprint, translating linear sequence information into spatial relationships that approximate the final folded structure. **Figure 1** is an example contact map based on a distance threshold of 12 Angstroms between Cα atoms (carbon atoms that are part of the protein backbone) in the AlphaFold 2 model of the protein structure (PDB format) of a human GRPC protein.
 
-Though to be able to predict contact maps, we need to break open the models we have been training and study what attention is, and what attention maps are. Frankly understanding attention, and I don't think I really did utill I had to dig in deep to write this chapter, is a key step to understanding *what* transformer like models are learning.
+![**Figure 1:** Example of a protein contact map where "contact is defined as < 12A distance between Cα](images/paste-26.png){fig-align="center"}
+
+Below we'll study how we can estimate contact maps from the self-attention networks, or maps, that are latently encoded in protein language models, based on ideas developed by Roa et al. [@rao2020] and others [@vig2020]. This is frankly like magic, just by training to predict protein sequences, the model learns the 2D structure of the protein, and because we know 2D structure relates to 3D structure we can prove protein language models learn (elements of) the 3D structure of proteins.
+
+To be able to predict contact maps, we need to examine the models we have been training and study what attention is and what attention maps are. Frankly, understanding attention (and I don't think I really did until I had to dig in deep to write this chapter) is a key step to understanding *what* transformer-like models are learning.
 
 ## What is attention *exactly*?
 
-Attention can be thought of as a **more flexible, learned version of correlation**—but one that dynamically changes based on context.
+Attention can be thought of as a **more flexible, learned version of correlation** but one that dynamically changes based on context.
 
 In a traditional correlation or covariance matrix, each entry tells us how strongly two variables (or two positions in a sequence) are related, on average across an entire dataset. If we were studying DNA, for example, a correlation matrix might tell us which nucleotide positions tend to mutate together across many species. However, correlation is static—it does not adapt to the specific sequence we are analyzing at any given moment.
 
 Attention, by contrast, is like a learned, dynamic correlation matrix that changes depending on the sequence it is applied to. Instead of capturing a single, global pattern, it can learn to recognize many different ways in which elements of a sequence relate to one another, depending on context.
 
-For example: - In DNA analysis, attention can learn to recognize when certain nucleotides influence each other in one evolutionary context but not another. - In proteins, attention can capture long-range interactions between amino acids that affect folding, even if they are far apart in the sequence. - In language, attention allows a model to understand that a pronoun like "it" refers to different things in different sentences, based on context.
+For example:
+- In DNA analysis, attention can learn to recognize when certain nucleotides influence each other in one evolutionary context but not another.
+- In proteins, attention can capture long-range interactions between amino acids that affect folding, even if they are far apart in the sequence.
+- In language, attention allows a model to understand that a pronoun like "it" refers to different things in different sentences, based on context.
 
-Mathematically, attention produces an attention map, which is similar to a covariance matrix but is computed on-the-fly for each sequence. This means that instead of assuming a fixed set of relationships, the model can learn multiple different interaction patterns and decide which are relevant based on the input it sees.
+Mathematically, attention produces an attention map, which is similar to a covariance matrix but is computed on-the-fly for each sequence. This means that, instead of assuming a fixed set of relationships, the model can learn multiple different interaction patterns and decide which are relevant based on the input it sees.
 
 ### Multi-Head Attention: Learning Many Correlation Patterns
 
-A key advantage of multi-headed, multi-layer attention is that it does not learn just one correlation pattern—it learns many at the same time. Multiple parallel attention heads in a transformer layer model act like an independent correlation matrix, capturing different kinds of dependencies. Some heads might focus on local relationships (like adjacent words in a sentence or nearby mutations in DNA), while others capture long-range dependencies (like structural dependencies in proteins or distant but functionally linked words in a text). Moreover, because attention is stacked in series across layers, each layer refines and builds on the patterns learned by previous layers. This allows transformers to discover complex, hierarchical relationships that are impossible to capture with a simple, static correlation matrix.
+A key advantage of multi-headed, multi-layer attention is that it does not learn just one correlation pattern—it learns many at the same time. Multiple parallel attention heads in a transformer layer model act like independent correlation matrices, capturing different kinds of dependencies. Some heads might focus on local relationships (like adjacent words in a sentence or nearby mutations in DNA), while others capture long-range dependencies (like structural dependencies in proteins or distant but functionally linked words in a text). Moreover, because attention is stacked in series across layers, each layer refines and builds on the patterns learned by previous layers. This allows transformers to build hierarchical feature representations, capturing complex relationships that simple, shallow models cannot.
 
 ### The core Attention Equation
 
@@ -46,11 +53,11 @@ The Query ($Q$), Key ($K$), and Value ($V$) matrices are derived from the input 
 
 $$Q = X W_Q, \quad K = X W_K, \quad V = X W_V$$
 
-Since ($W_Q$, $W_K$, $W_V$) are learned parameters, they do not change per sequence after training, but the values of $Q$, $K$, and $V$ do change since they depend on the specific embedding ($X$) of the input sequence. The **input-dependents** of $Q$, $K$, and $V$ allows the model to flexibly compute attention maps for different sequences while maintaining a consistent learned transformation process.
+Since ($W_Q$, $W_K$, $W_V$) are learned parameters, they do not change per sequence after training, but the values of $Q$, $K$, and $V$ do change because they depend on the specific embedding ($X$) of the input sequence. The **input-dependence** of $Q$, $K$, and $V$ allows the model to flexibly compute attention maps for different sequences while maintaining a consistent learned transformation process.
 
 ### Mathematical Link Between Attention and Correlation
 
-Lets expand slightly on the conceptual analogy between attention and "covariance". The core self-attention mechanism:
+Let's expand slightly on the conceptual analogy between attention and "covariance". The core self-attention mechanism:
 
 $$A = \text{softmax} \left(\frac{QK^T}{\sqrt{d_k}} \right)$$
 
@@ -60,11 +67,11 @@ where:
 -   ( $A$ ) is the **attention map**, which determines how much each element in the sequence attends to others.
 -   The denominator ( $\sqrt{d_k}$ ) is a scaling factor to stabilize gradients.
 
-The term ( $QK^T = (X W_Q) (X W_K)^T$ ) computes a similarity measure between elements of ( $X$ ) after transformation. If ( $W_Q = W_K$ ), this resembles the covariance matrix of a linear transformation of ( $X$ ), and $QK^T$ can be re-written as:
+The term ($QK^T = (X W_Q) (X W_K)^T$) computes a similarity measure between elements of ($X$) after transformation. If ($W_Q = W_K$), this resembles the covariance matrix of a linear transformation of ($X$), and $QK^T$ can be rewritten as:
 
 $$QK^T = X W_Q W_K^T X^T$$
 
-This is structurally similar to the sample covariance matrix, where Z is an n people by m variables data matrix:
+This is structurally similar to the sample covariance matrix, where Z is an n (people) by m (variables) data matrix:
 
 $$\text{Cov}(Z) = Z^T Z$$
 
@@ -190,7 +197,7 @@ If you make it to the hard exercise, you are essentially training a "adapter" to
 
 ## The wonder of attention, and beyond
 
-The best summary of the amazing properties of attention I came across was in Poli et al.[@poli2023]. They,summarize years of mechanistic studies that abstract the essential features in attention that make it so highly effective at token sequence learning.
+The best summary of the amazing properties of attention I came across was in Poli et al.[@poli2023]. They, summarize years of mechanistic studies that abstract the essential features in attention that make it so highly effective at token sequence learning.
 
 1.  Attention is highly expressive, responsive to, and controlled by, the input data. It can see a new sequence, and from its training abstract (imperfectly) the interactions and relations between elements in that sequence.
 2.  While the model size (in terms of \# parameters) scales with sequences length, the parameter size of the attention weight matrices themselves do not! The weight matrices ($W_Q$, $W_K$, $W_V$) are of dimension embedding size, by key/query/value vector length.
