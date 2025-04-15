@@ -270,7 +270,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Scaling_training.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Scale up Training {.unnumbered}</span></span></a>
+ <span class="menu-text">Scale up Training</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -285,31 +285,31 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter1_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Proteins: from sequence to structure</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Proteins: from sequence to structure</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter2_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Selecting and curating protein sequences</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Selecting and curating protein sequences</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter3_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Training our first Protein Language Model</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Training our first Protein Language Model</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter4_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Protein contact maps from attention maps</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Protein contact maps from attention maps</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter5_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Integrated protein diffusion language models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Integrated protein diffusion language models</span></span></a>
   </div>
 </li>
       </ul>
@@ -321,7 +321,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -576,7 +576,7 @@ Important
 <p>The embedding layers design is intimately related to the nature of the data, here we simply use a standard BERT embedding layer but in Chapter 4 &amp; 5 we’ll dive deep into researchers efforts to design embedding layers for DNA specifically.</p>
 </div>
 </div>
-<p>A <strong>transformer layer</strong> consists of two key components: a <strong>self-attention mechanism</strong> (discussed in great detail <a href="Chapter4_Proteins.html" class="quarto-xref"><span>Chapter 11</span></a> <strong>)</strong> and a <strong>feed-forward neural network</strong>. The self-attention mechanism allows the model to dynamically weigh the importance of every other token in the sequence when predicting a given token, helping it learn relationships across different parts of the sequence — whether those are between neighboring amino acids or between distant regulatory elements in a long DNA strand. After the self-attention step, the <strong>feed-forward neural network</strong> processes each token’s representation independently, applying a small multi-layer perceptron (MLP) to transform the token’s internal representation. This helps the model refine and enrich the learned features, capturing nonlinear combinations of the attention-derived information. While self-attention captures interactions across the sequence, the feed-forward layer focuses on how to represent each token itself in a biologically meaningful way, helping the model identify local biochemical properties, sequence motifs, or structural preferences. The <strong>number of transformer layers</strong> (<strong><code>num_hidden_layers</code></strong>) determines how deep the model is, with more layers giving the model more capacity to learn complex biological relationships, but also increasing training time and data requirements.</p>
+<p>A <strong>transformer layer</strong> consists of two key components: a <strong>self-attention mechanism</strong> (discussed in great detail <a href="Chapter4_Proteins.html" class="quarto-xref"><span>Chapter 10</span></a> <strong>)</strong> and a <strong>feed-forward neural network</strong>. The self-attention mechanism allows the model to dynamically weigh the importance of every other token in the sequence when predicting a given token, helping it learn relationships across different parts of the sequence — whether those are between neighboring amino acids or between distant regulatory elements in a long DNA strand. After the self-attention step, the <strong>feed-forward neural network</strong> processes each token’s representation independently, applying a small multi-layer perceptron (MLP) to transform the token’s internal representation. This helps the model refine and enrich the learned features, capturing nonlinear combinations of the attention-derived information. While self-attention captures interactions across the sequence, the feed-forward layer focuses on how to represent each token itself in a biologically meaningful way, helping the model identify local biochemical properties, sequence motifs, or structural preferences. The <strong>number of transformer layers</strong> (<strong><code>num_hidden_layers</code></strong>) determines how deep the model is, with more layers giving the model more capacity to learn complex biological relationships, but also increasing training time and data requirements.</p>
 <p>Within each transformer layer, there are multiple <strong>attention heads</strong> (<strong><code>num_attention_heads</code></strong>), each focusing on different types of relationships within the data. In a natural language example, one attention head might capture subject-verb relationships, while another tracks adjective-noun pairs. In biological sequences, one attention head might learn to link binding motifs in promoters to transcription start sites, while another might focus on co-evolving residues in proteins that contribute to structural stability. The <strong>hidden size</strong> (<strong><code>hidden_size</code></strong>) refers to the dimensionality of these internal vector representations, defining how much information the model can store at each position. Larger hidden sizes allow the model to capture richer biological context, but they also increase computational cost. By combining deep transformer stacks, multiple attention heads, and flexible embeddings, biological language models can develop a powerful and nuanced understanding of biological sequences, helping researchers uncover new regulatory elements, predict protein folding, or study the effects of mutations.</p>
 </section>
 <section id="defining-the-bert-model-for-dna-sequences" class="level3" data-number="2.5.4">
@@ -703,7 +703,7 @@ Important
 <p><strong>Python Code:</strong></p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>model.push_to_hub(repo_id<span class="op">=</span><span class="st">"MichelNivard/DNABert-CDS-13Species-v0.1"</span>,use_auth_token<span class="op">=</span><span class="st">""</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>hf_tokenizer.push_to_hub(repo_id<span class="op">=</span><span class="st">"MichelNivard/DNABert-CDS-13Species-v0.1"</span>,use_auth_token<span class="op">=</span><span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Because we used a standard BERT model (<strong><code>BertModern</code></strong>), it’s super easy for others to pull the model weights from the hub into a model configured for use on their machine, using the Hugging Face <strong><code>Transformers</code></strong> library. If you’d want to train a sate of the art model you’d bviousnely need to scale training (see <a href="Scaling_training.html" class="quarto-xref"><span>Chapter 7</span></a> for guidance).</p>
+<p>Because we used a standard BERT model (<strong><code>BertModern</code></strong>), it’s super easy for others to pull the model weights from the hub into a model configured for use on their machine, using the Hugging Face <strong><code>Transformers</code></strong> library. If you want to train a state of the art model you’d obviously need to scale training well beyond what I did here. We’ll cover how to in the chapter on <a href="https://michelnivard.github.io/Biological-language-models/Scaling_training.html">scaling</a>.</p>
 </section>
 <section id="summary" class="level3" data-number="2.5.10">
 <h3 data-number="2.5.10" class="anchored" data-anchor-id="summary"><span class="header-section-number">2.5.10</span> Summary</h3>

@@ -348,7 +348,7 @@ model.push_to_hub(repo_id="MichelNivard/DNABert-CDS-13Species-v0.1",use_auth_tok
 hf_tokenizer.push_to_hub(repo_id="MichelNivard/DNABert-CDS-13Species-v0.1",use_auth_token="")
 ```
 
-Because we used a standard BERT model (**`BertModern`**), it's super easy for others to pull the model weights from the hub into a model configured for use on their machine, using the Hugging Face **`Transformers`** library. If you'd want to train a sate of the art model you'd bviousnely need to scale training (see @sec-scale for guidance).
+Because we used a standard BERT model (**`BertModern`**), it's super easy for others to pull the model weights from the hub into a model configured for use on their machine, using the Hugging Face **`Transformers`** library. If you want to train a state of the art model you'd obviously need to scale training well beyond what I did here. We'll cover how to in the chapter on [scaling](https://michelnivard.github.io/Biological-language-models/Scaling_training.html).
 
 ### Summary
 

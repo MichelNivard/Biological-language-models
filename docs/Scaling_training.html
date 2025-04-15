@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>7&nbsp; Scale up Training {.unnumbered} – Biological Language Models &amp; Neural Networks</title>
+<title>Scale up Training – Biological Language Models &amp; Neural Networks</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -184,7 +184,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Scaling_training.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Scale up Training {.unnumbered}</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Scaling_training.html">Scale up Training</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -270,7 +270,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Scaling_training.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Scale up Training {.unnumbered}</span></span></a>
+ <span class="menu-text">Scale up Training</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -285,31 +285,31 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter1_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Proteins: from sequence to structure</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Proteins: from sequence to structure</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter2_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Selecting and curating protein sequences</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Selecting and curating protein sequences</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter3_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Training our first Protein Language Model</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Training our first Protein Language Model</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter4_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Protein contact maps from attention maps</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Protein contact maps from attention maps</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter5_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Integrated protein diffusion language models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Integrated protein diffusion language models</span></span></a>
   </div>
 </li>
       </ul>
@@ -321,7 +321,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -340,21 +340,21 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#dont-try-to-win-the-compute-race" id="toc-dont-try-to-win-the-compute-race" class="nav-link active" data-scroll-target="#dont-try-to-win-the-compute-race"><span class="header-section-number">7.1</span> Don’t Try to Win the Compute Race</a></li>
-  <li><a href="#focus-on-a-specific-question" id="toc-focus-on-a-specific-question" class="nav-link" data-scroll-target="#focus-on-a-specific-question"><span class="header-section-number">7.2</span> Focus on a specific question</a></li>
-  <li><a href="#smart-architectures" id="toc-smart-architectures" class="nav-link" data-scroll-target="#smart-architectures"><span class="header-section-number">7.3</span> Smart Architectures</a></li>
-  <li><a href="#get-most-out-of-your-gpu" id="toc-get-most-out-of-your-gpu" class="nav-link" data-scroll-target="#get-most-out-of-your-gpu"><span class="header-section-number">7.4</span> Get most out of your GPU</a>
+  <li><a href="#dont-try-to-win-the-compute-race" id="toc-dont-try-to-win-the-compute-race" class="nav-link active" data-scroll-target="#dont-try-to-win-the-compute-race">Don’t Try to Win the Compute Race</a></li>
+  <li><a href="#focus-on-a-specific-question" id="toc-focus-on-a-specific-question" class="nav-link" data-scroll-target="#focus-on-a-specific-question">Focus on a specific question</a></li>
+  <li><a href="#smart-architectures" id="toc-smart-architectures" class="nav-link" data-scroll-target="#smart-architectures">Smart Architectures</a></li>
+  <li><a href="#get-most-out-of-your-gpu" id="toc-get-most-out-of-your-gpu" class="nav-link" data-scroll-target="#get-most-out-of-your-gpu">Get most out of your GPU</a>
   <ul class="collapse">
-  <li><a href="#optimisation-steps-anyone-should-take" id="toc-optimisation-steps-anyone-should-take" class="nav-link" data-scroll-target="#optimisation-steps-anyone-should-take"><span class="header-section-number">7.4.1</span> Optimisation steps anyone should take</a></li>
-  <li><a href="#batch-processing" id="toc-batch-processing" class="nav-link" data-scroll-target="#batch-processing"><span class="header-section-number">7.4.2</span> Batch processing</a></li>
-  <li><a href="#lower-numerical-precision-quantize" id="toc-lower-numerical-precision-quantize" class="nav-link" data-scroll-target="#lower-numerical-precision-quantize"><span class="header-section-number">7.4.3</span> Lower numerical precision (quantize)</a></li>
-  <li><a href="#optimizer-choice" id="toc-optimizer-choice" class="nav-link" data-scroll-target="#optimizer-choice"><span class="header-section-number">7.4.4</span> Optimizer choice</a></li>
+  <li><a href="#optimisation-steps-anyone-should-take" id="toc-optimisation-steps-anyone-should-take" class="nav-link" data-scroll-target="#optimisation-steps-anyone-should-take">Optimisation steps anyone should take</a></li>
+  <li><a href="#batch-processing" id="toc-batch-processing" class="nav-link" data-scroll-target="#batch-processing">Batch processing</a></li>
+  <li><a href="#lower-numerical-precision-quantize" id="toc-lower-numerical-precision-quantize" class="nav-link" data-scroll-target="#lower-numerical-precision-quantize">Lower numerical precision (quantize)</a></li>
+  <li><a href="#optimizer-choice" id="toc-optimizer-choice" class="nav-link" data-scroll-target="#optimizer-choice">Optimizer choice</a></li>
   </ul></li>
-  <li><a href="#parallel-training" id="toc-parallel-training" class="nav-link" data-scroll-target="#parallel-training"><span class="header-section-number">7.5</span> Parallel Training</a>
+  <li><a href="#parallel-training" id="toc-parallel-training" class="nav-link" data-scroll-target="#parallel-training">Parallel Training</a>
   <ul class="collapse">
-  <li><a href="#different-kinds-of-parallel" id="toc-different-kinds-of-parallel" class="nav-link" data-scroll-target="#different-kinds-of-parallel"><span class="header-section-number">7.5.1</span> Different kinds of parallel</a></li>
+  <li><a href="#different-kinds-of-parallel" id="toc-different-kinds-of-parallel" class="nav-link" data-scroll-target="#different-kinds-of-parallel">Different kinds of parallel</a></li>
   </ul></li>
-  <li><a href="#aim-for-the-stars.." id="toc-aim-for-the-stars.." class="nav-link" data-scroll-target="#aim-for-the-stars.."><span class="header-section-number">7.6</span> Aim for the stars..</a></li>
+  <li><a href="#aim-for-the-stars.." id="toc-aim-for-the-stars.." class="nav-link" data-scroll-target="#aim-for-the-stars..">Aim for the stars..</a></li>
   </ul>
 </nav>
     </div>
@@ -363,7 +363,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-scale" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Scale up Training {.unnumbered}</span></span></h1>
+<h1 class="title">Scale up Training</h1>
 </div>
 
 
@@ -381,28 +381,28 @@ window.Quarto = {
 
 
 <p>This chapter isn’t a part of the “DNA” section of the book, because the lessons are really quite general, but it comes after because we needed a little bit of experience with language model training before even considering training a serious model. This is also a somewhat awkward chapter for me to write, especially for the part of the readership that has a background in ML. See, I am a psychologist by training (though I have worked in genetic epidemiology for years and years), and while a lot of my academic work is fairly computational, I am not an expert in language model scaling by any means! Remember, the preamble to the book explains that this book is an account of me learning about biological language models and taking others along for the ride, not an authoritative text!</p>
-<section id="dont-try-to-win-the-compute-race" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="dont-try-to-win-the-compute-race"><span class="header-section-number">7.1</span> Don’t Try to Win the Compute Race</h2>
+<section id="dont-try-to-win-the-compute-race" class="level2">
+<h2 class="anchored" data-anchor-id="dont-try-to-win-the-compute-race">Don’t Try to Win the Compute Race</h2>
 <p>Among the DNA models I could find on Hugging Face are 7B parameter models like <a href="https://huggingface.co/genbio-ai/AIDO.DNA-7B" class="uri">https://huggingface.co/genbio-ai/AIDO.DNA-7B</a>. AIDO is trained on “256 H100 GPUs” in “8 days”. The training data consisted of 10.6 billion bases. That’s not even a particularly large model in the grand scheme of things, but if you consider a cost of approximately $2 per hour per H100, you are going to spend $100k. Obviously, there are academic compute resources you can get access to by appointment or based on fair use at your institute, university, or through collaborative national infrastructure, but even those are finite.</p>
 <p>You have to consider feasibility. Today (March 2025), the Dutch national computer cluster for research (Snellius at SURF Sara) has 88 nodes with 4 H100 GPUs and 72 nodes with 4 A100 GPUs. TACC, the University of Texas at Austin compute provider, has approximately 80 A100 nodes (each with 3 GPUs). Those are two examples of reasonably well-funded HPC providers in academia. In my experience, you could get time reserved for your research at your local academic HPC provider at steep discounts, and these systems are likely large enough to train that 7B model I linked to. However, note how on either TACC or Snellius, 256 GPUs for 8 days would block the entire system for over a week. Perhaps you could apply for access to larger national research clusters, like <a href="https://www.bristol.ac.uk/news/2023/november/supercomputer-announcement.html">Isambard-AI</a> in the UK (being built in Bristol right now, a motivation for me to write this) which has 5,000 H100 GPUs. However, in general, it is likely you are going to be relatively limited by compute resources. Don’t be discouraged though—most breakthroughs are not going to be compute-based, and there are immense efficiency gains to be made that will level the playing field.</p>
 </section>
-<section id="focus-on-a-specific-question" class="level2" data-number="7.2">
-<h2 data-number="7.2" class="anchored" data-anchor-id="focus-on-a-specific-question"><span class="header-section-number">7.2</span> Focus on a specific question</h2>
+<section id="focus-on-a-specific-question" class="level2">
+<h2 class="anchored" data-anchor-id="focus-on-a-specific-question">Focus on a specific question</h2>
 <p>It is tempting to train a model on all DNA in the known universe, but honestly, there is actually more DNA than people have even started training on. The models discussed so far often train on the reference sequence/genome, a sort of modal or consensus genome, but individual people’s genomes are different from that reference. You could consider thousands of species, or (tens/hundreds of) thousands of individual human genomes. That would require a lot of bioinformatics, which if your background is in bio might set you apart from other ML/AI researchers. You’d have to phase the genomes to untangle the maternal and paternal strand, you’d have to decide whether you want to get rid of the reference entirely and build a specific reference/genome for each individual, you might require some reference, or a graph genome? It’s also worth considering whether your task really requires the whole genome. Are you performing gene-centric tasks (mutation consequence prediction, gene expression prediction, alternative splice modeling)? If your specific tasks don’t require the whole genome, why not consider training on coding sequences only or the sequences of genes and a few thousand bases around them?</p>
 </section>
-<section id="smart-architectures" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="smart-architectures"><span class="header-section-number">7.3</span> Smart Architectures</h2>
+<section id="smart-architectures" class="level2">
+<h2 class="anchored" data-anchor-id="smart-architectures">Smart Architectures</h2>
 <p>In Chapter 4, we studied smarter, DNA-specific model architectures. The GPN model inspired by <span class="citation" data-cites="Benegas2024">Benegas et al. (<a href="references.html#ref-Benegas2024" role="doc-biblioref">2023</a>)</span> that we introduced can outperform a standard BERT in an hour of training on my 2022 MacBook Air (the BERT we trained and compared to our GPN-BERT trained for approximately 8 hours on a strong GPU). The massive efficiency gain may mean you can beat the 7B BERT-like model we took as an example of compute costs with a fraction of the compute! As briefly remarked on in Chapter 6, researchers have designed alternatives for the transformer module in order to expand its context window up to 1 million bases, with far less compute requirement than the transformer <span class="citation" data-cites="nguyen2023">(<a href="references.html#ref-nguyen2023" role="doc-biblioref">Nguyen et al. 2023</a>)</span>. If you are to design and run your own model, it will likely pay off if you implement some of these architectural innovations.</p>
 </section>
-<section id="get-most-out-of-your-gpu" class="level2" data-number="7.4">
-<h2 data-number="7.4" class="anchored" data-anchor-id="get-most-out-of-your-gpu"><span class="header-section-number">7.4</span> Get most out of your GPU</h2>
+<section id="get-most-out-of-your-gpu" class="level2">
+<h2 class="anchored" data-anchor-id="get-most-out-of-your-gpu">Get most out of your GPU</h2>
 <p>There is a healthy culture of extreme optimization. A good early example of this is the paper “Craamming: training a language model on a Single GPU in a Day” <span class="citation" data-cites="geiping2022">(<a href="references.html#ref-geiping2022" role="doc-biblioref">Geiping and Goldstein 2022</a>)</span>. Other neat examples are this GitHub repo of repeated attempts at training a GPT-2 equivalent (the OG OpenAI model that sort of set the LLM hype cycle in motion) as fast as possible (now in under 3 minutes on 8 H100 GPUs) (<a href="https://github.com/KellerJordan/modded-nanogpt" class="uri">https://github.com/KellerJordan/modded-nanogpt</a>). Some of the innovation people made cramming these models won’t generalize to your model, but consider giving their Muon optimizer a go (for GPT-2 it’s a serious efficiency gain), spend time finding optimal learning rates, or consider spending a few extra days/weeks cleaning data. If you do all these things before your big run, it’ll save some serious compute, which means you can push more data through the model in the same compute budget.</p>
-<section id="optimisation-steps-anyone-should-take" class="level3" data-number="7.4.1">
-<h3 data-number="7.4.1" class="anchored" data-anchor-id="optimisation-steps-anyone-should-take"><span class="header-section-number">7.4.1</span> Optimisation steps anyone should take</h3>
+<section id="optimisation-steps-anyone-should-take" class="level3">
+<h3 class="anchored" data-anchor-id="optimisation-steps-anyone-should-take">Optimisation steps anyone should take</h3>
 <p>Optimization doesn’t have to be a full-time job though, there are some easy steps anyone can take to get more training out of the same hardware. Full writeups on simple optimizations are found <a href="https://huggingface.co/docs/transformers/en/perf_train_gpu_one">here</a>, <a href="https://www.digitalocean.com/community/tutorials/find-optimal-batch-size">here</a> and <a href="https://neptune.ai/blog/optimizing-gpu-usage-during-model-training-with-neptune">here</a>. But I’ll cover the low-hanging fruit right here. Follow these steps and you’ll likely get nearly the same results in half the compute.</p>
 </section>
-<section id="batch-processing" class="level3" data-number="7.4.2">
-<h3 data-number="7.4.2" class="anchored" data-anchor-id="batch-processing"><span class="header-section-number">7.4.2</span> Batch processing</h3>
+<section id="batch-processing" class="level3">
+<h3 class="anchored" data-anchor-id="batch-processing">Batch processing</h3>
 <p>Transformers are designed with batch processing in mind. All the weight matrices have an extra (second or third, depending on which matrix) dimension to hold multiple sequences in parallel and apply the training step over all of them. We can very easily change the batch size in the training arguments:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>training_args <span class="op">=</span> TrainingArguments(..., </span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                                  per_device_train_batch_size<span class="op">=</span><span class="dv">16</span>,</span>
@@ -411,8 +411,8 @@ window.Quarto = {
 <pre><code>RuntimeError: CUDA out of memory. Tried to allocate X MiB ...</code></pre>
 <p>We do so because many elements of a GPU, tensor core, shader units, CUDA cores come in powers of 2, and if your batch is 17, and you happen to have 16 tensor cores (or whatever element in the stack), that means processing 16, then 1, then 16 etc. You can go all the way until you run out of memory, but I wouldn’t. Training is bound by the limits of compute (as of writing, perhaps NVIDIA or AMD innovates rapidly in 2025, and this might change). So, once you find a batch size that hits 100% GPU use during training (you can check with the <code>nvidia-smi</code> command line tool or <code>rocm-smi</code> for AMD GPUs).</p>
 </section>
-<section id="lower-numerical-precision-quantize" class="level3" data-number="7.4.3">
-<h3 data-number="7.4.3" class="anchored" data-anchor-id="lower-numerical-precision-quantize"><span class="header-section-number">7.4.3</span> Lower numerical precision (quantize)</h3>
+<section id="lower-numerical-precision-quantize" class="level3">
+<h3 class="anchored" data-anchor-id="lower-numerical-precision-quantize">Lower numerical precision (quantize)</h3>
 <p>Lower numerical precision. Numbers are stored in 32-bit, which effectively means you have 6-9 significant digits, and the number can be zero or can range from <span class="math inline">\(-3.4*10^{38}\)</span> to <span class="math inline">\(-1.2*10^{-38}\)</span>, or from <span class="math inline">\(1.2*10^{-38}\)</span> to <span class="math inline">\(3.4*10^{38}\)</span>. It’s not entirely uncommon for scientific computations to run into numbers that can’t be represented well in 32-bits, but in order to speed up large models, people have actually gone down to <a href="https://en.wikipedia.org/wiki/Bfloat16_floating-point_format">16-bit numbers</a>.</p>
 <p>In <code>transformers</code> training arguments you can specify 16-bit training, but with 32-bit parameter accumulation (storage) of results where higher precision is needed, so-called mixed precision training with a simple command:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>training_args <span class="op">=</span> TrainingArguments(..., </span>
@@ -433,8 +433,8 @@ window.Quarto = {
 <p>The combination of <code>bf16</code> and <code>tf32</code> can result in 4x to 12x speedups, though as <code>tf32</code> is often already activated as a default the advantage is baked in. There are ways to take this further, use 8-bit numerical representations on modern hardware. The advantage of 8-bit models is greatest for really big models, if you have the means and skills to train those kinds of models, you have no need for this book.</p>
 <p><strong>Final recommendation:</strong> use <code>bf16</code> with <code>tf32</code> unless you are training models that are so large as to require 8-bit data formats, unheard of in biological deep learning so far.</p>
 </section>
-<section id="optimizer-choice" class="level3" data-number="7.4.4">
-<h3 data-number="7.4.4" class="anchored" data-anchor-id="optimizer-choice"><span class="header-section-number">7.4.4</span> Optimizer choice</h3>
+<section id="optimizer-choice" class="level3">
+<h3 class="anchored" data-anchor-id="optimizer-choice">Optimizer choice</h3>
 <p>We haven’t really spoken about the optimizer itself, the default optimizers used these days are almost always variations of <code>adam</code> <span class="citation" data-cites="kingma2014">(<a href="references.html#ref-kingma2014" role="doc-biblioref">Kingma and Ba 2014</a>)</span>. Adam, and a modern implementation of it, like <code>adamW</code> are workhorses. Because they store a rolling average of recent gradients, they are robust if the gradients are very noisy. Because they don’t rely on 2nd order derivatives they are able to deal with very large models, and they are relatively efficient (when optimizing a model with <code>adamW</code> we store 8 bits per parameter). Papers that promise to beat <code>adamW</code>, to then fail, are a bit of a running gag in machine learning. However, you can in fact do better, both in terms of speed and in terms of memory utilization.</p>
 <p><u><strong><code>adafactor</code>:</strong></u> adafactor is slower, but far more memory efficient. Where <code>adam</code> stores rolling averages of the gradients of weight matrices, <code>adafactor</code> stores row and column averages of those, meaning it only requires 4 bytes per parameter, significantly reducing the memory usage. This optimizer is a drop-in replacement and while slightly less efficient (takes longer to get to the same minimum) a great option if you are short on memory.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>training_args <span class="op">=</span> TrainingArguments(..., </span>
@@ -465,30 +465,30 @@ window.Quarto = {
 <p><strong>Final recommendation:</strong> Stick with <code>adamW</code> unless you are training a mid-size (&gt; 300m parameters) foundational model and risk running out of training data.</p>
 </section>
 </section>
-<section id="parallel-training" class="level2" data-number="7.5">
-<h2 data-number="7.5" class="anchored" data-anchor-id="parallel-training"><span class="header-section-number">7.5</span> Parallel Training</h2>
+<section id="parallel-training" class="level2">
+<h2 class="anchored" data-anchor-id="parallel-training">Parallel Training</h2>
 <p>After you have squeezed every drop out of your GPUs, the next performance step is training a model on multiple GPUs. Huggingface has a <a href="https://huggingface.co/docs/transformers/v4.49.0/en/perf_train_gpu_many">great read-me on training across multiple GPUs</a> you should check out, below I cover the basics. If you stick with Huggingface <code>transformers</code> library it’s actually quite simple! Their <code>accelerate</code> library enables us to launch a single script across multiple GPUs in one machine, or even multiple GPUs in multiple machines. It’s truly as simple as writing a training script (say <code>train.py</code>) and launching it with the accelerate command line tool from the terminal:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">accelerate</span> launch <span class="at">--multi-gpu</span> train.py</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>If your model is a model that comes with the Huggingface <code>transformers</code> library this command should just find the GPUs, and get going. Though you’ll very likely want a bit more control. In my case, for example, this command kept trying to start a job on my 2 GPUs, AND on the internal GPU in the computer’s CPU package… That built-in GPU is of a different nature altogether and would only slow things down, so I had to specify the specific two GPUs I wanted to use:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="va">CUDA_VISIBLE_DEVICES</span><span class="op">=</span><span class="st">"0,1"</span> <span class="ex">accelerate</span> launch {script_name.py} </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This level of control can also come in handy if you want separate GPUs to run separate experiments. It is remarkable how plug-and-play <code>accelerate</code> really is. If you have one machine with multiple GPUs, and your model fits in the GPUs’ memory. In a few test runs on a cloud machine with 8 A100 GPUs, or 8 H100 GPUs I got my Protein language model running across 8 GPUs, munging through 500+ proteins a second (so ±500,000 tokens a second) without any script modifications.</p>
-<section id="different-kinds-of-parallel" class="level3" data-number="7.5.1">
-<h3 data-number="7.5.1" class="anchored" data-anchor-id="different-kinds-of-parallel"><span class="header-section-number">7.5.1</span> Different kinds of parallel</h3>
-<section id="data-parallelism" class="level4" data-number="7.5.1.1">
-<h4 data-number="7.5.1.1" class="anchored" data-anchor-id="data-parallelism"><span class="header-section-number">7.5.1.1</span> data parallelism</h4>
+<section id="different-kinds-of-parallel" class="level3">
+<h3 class="anchored" data-anchor-id="different-kinds-of-parallel">Different kinds of parallel</h3>
+<section id="data-parallelism" class="level4">
+<h4 class="anchored" data-anchor-id="data-parallelism">data parallelism</h4>
 <p>There are a few different kinds of parallelism. There are data parallel (DP) and distributed data parallel (DDP), where each GPU has a copy of the model, and a unique batch of data (this is why the trainer argument is: <code>per_device_train_batch_size</code> each GPU gets a batch) and the loss, and gradients are averaged or pooled across GPUs after each training step.</p>
 <p>Data parallelism requires your model, and a reasonable batch of data to fit on each GPU. If they do, then DDP and DP are the most straightforward option. If you model doesn’t fit your GPU (and large models frequently won’t!) you’ll need a different strategy. If you need to pick between DP and DDP consider that DP is less communication-heavy but slightly less optimal. So if you have 4 GPUs on a slow motherboard PCIe connection, I’d go with DP, but if you have the GPUs linked via NVlink or similar high-speed card-to-card connections, then DDP might be faster. You could inquire which might be best for you with your HPC team, but I find it easier to just try DDP and DP and see which is fastest over a 100-500 step trial run.</p>
 <p>The most advanced version of data parallelism is “Fully sharded data parallelism” where a copy of the model isn’t kept on each GPU but the model is distributed across all GPUs, minimizing memory use, but increasing communication overhead. It’s a great option for large models on modern GPUs with fast (nvlink) interconnects) you can read more about its implementation in <code>accelerate</code> <a href="https://huggingface.co/docs/transformers/v4.49.0/en/fsdp">here</a>.</p>
 </section>
-<section id="modeltensor-parallelism" class="level4" data-number="7.5.1.2">
-<h4 data-number="7.5.1.2" class="anchored" data-anchor-id="modeltensor-parallelism"><span class="header-section-number">7.5.1.2</span> model/tensor parallelism</h4>
+<section id="modeltensor-parallelism" class="level4">
+<h4 class="anchored" data-anchor-id="modeltensor-parallelism">model/tensor parallelism</h4>
 <p>Once a model exceeds the size of the GPU, you have no choice but to distribute layers of the some across multiple GPUs. you could do so naively, say layer 1-4 GPU1, 5-8 GPU2 etc etc. The GPUs would have to wait for the GPU before it to finish, meaning you’d have a log of GPUs idling waiting for layers to be called on. But usually, there are smarter ways to pack things, companies like Google pioneered <a href="https://research.google/blog/introducing-gpipe-an-open-source-library-for-efficiently-training-large-scale-neural-network-models/">Gpipe</a>. There are <a href="https://pytorch.org/tutorials/intermediate/TP_tutorial.html">Pytorch</a> and Huggingface tutorials on model parallel training.</p>
 <p><strong>Final recommendation:</strong> If you are in the audience for this book, then you might be ready for training, or fine-tuning a model in the 200m to 600m parameter range. You should be able to do that on a single machine with 4 or ideally 8 powerful GPUs. Stick with data parallel strategies that are easy to implement while you figure out the thousands of other choices you need to make to arrive at an optimal model. The reason to work your way up from smaller to larger models. The reason to start with smaller models is that there are always new surprises behind each corner. I just trained a protein language model where the data become progressively richer for mammalian proteins, and considered increasingly similar proteins. I thought that would enhance some application on human proteins, but it didn’t in a 45 million parameter and then 70 million parameter model. Had I trained a 300m parameter model on commercial hardware as I intended to without testing, I would have been out $1500 and would have ended up with a “meh” model at best. I did the math on training a 150M or 300M model on 8Xa6000 GPUs, or 8XA100 GPUs. In ~40 hours, and using the suggestions outlined above, you could train a near cutting-edge DNA/protein language model on one of these machines, and more powerful 8xH100 machines are coming online everywhere. Distributed data parallel training across 2,4 or 8 GPUs in one machine should be sufficient for the kind of learning you need to do at this stage, once you are ready to scale further there are serious resources.</p>
 </section>
 </section>
 </section>
-<section id="aim-for-the-stars.." class="level2" data-number="7.6">
-<h2 data-number="7.6" class="anchored" data-anchor-id="aim-for-the-stars.."><span class="header-section-number">7.6</span> Aim for the stars..</h2>
+<section id="aim-for-the-stars.." class="level2">
+<h2 class="anchored" data-anchor-id="aim-for-the-stars..">Aim for the stars..</h2>
 <p>Should you get to the point where you exceed what’s feasible on a single very powerful machine with 8 GPUs, then you can move to a cluster. Tools like <code>accelerate</code> will work across multiple machines, and that is likely sufficient compute for almost anyone. But, if you ever get to this stage it’s good to read up on “ultra-scale’ training there are two great manuals you should flick through.</p>
 <p>Google deep mind <a href="https://jax-ml.github.io/scaling-book/index">wrote a guide</a> to scaling large language models on TPU/Jax, but it covers all the math and concepts you’ll need in any framework in great detail.</p>
 <p>Huggingface wrote an <a href="https://huggingface.co/spaces/nanotron/ultrascale-playbook?section=memory_usage_in_transformers">interactive playbook</a> on ultra-scale training which is more practical.</p>
@@ -938,7 +938,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
   <div class="nav-page nav-page-next">
       <a href="./Chapter1_Proteins.html" class="pagination-link" aria-label="Proteins: from sequence to structure">
-        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Proteins: from sequence to structure</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Proteins: from sequence to structure</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
