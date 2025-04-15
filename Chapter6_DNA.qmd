@@ -1,7 +1,4 @@
----
-title: "A Review of Current DNA Language Models"
-format: html
----
+# A Review of Current DNA Language Models {#sec-DNAreview}
 
 This is not an academic review; those are obviously far more comprehensive. See @benegas2025 for a review I really liked.
 
@@ -18,7 +15,7 @@ A second innovation was necessitated by the need to model long-range dependence 
 Below is a summary table of several prominent DNA language models with innovative architectures, along with links to their corresponding paper and GitHub (or related resource) repositories:
 
 | Model | Description | Paper Link | GitHub / Resource Link |
-|-----------------|----------------------|-----------------|-----------------|
+|-----------------|--------------------|-----------------|-----------------|
 | **DNABERT** | A transformer-based model that learns bidirectional representations from DNA sequences using k-mer tokenization. | [DNABERT Paper](https://doi.org/10.1093/bioinformatics/btab083) | [GitHub](https://github.com/jerryji1993/DNABERT) |
 | **Nucleotide Transformer (NT‑v2)** | A large transformer pretrained on massive human genomic data to learn robust DNA representations for various downstream tasks. | [Nucleotide Transformer v2](https://doi.org/10.1038/s41592-024-02523-z) | [GitHub](https://github.com/instadeepai/nucleotide-transformer)/[HuggingFace](https://huggingface.co/collections/InstaDeepAI/nucleotide-transformer-65099cdde13ff96230f2e592) |
 | **GPN** | The Genomic Pre-trained Network that leverages unsupervised DNA language modeling to predict genome-wide variant effects. | [GPN Paper (PNAS 2023)](https://doi.org/10.1073/pnas.2311219120) | [GitHub](https://github.com/songlab-cal/gpn) |
@@ -36,4 +33,6 @@ These models have demonstrated state-of-the-art performance across multiple down
 
 ## Challenges and Future Directions
 
-Despite impressive progress, challenges remain in tokenization choices, computational efficiency, and interpretability of learned representations. Future work is likely to focus on integrating multimodal data (e.g., epigenomic signals), enhancing model scalability, and further bridging the gap between genomic sequences and cellular function—paving the way toward a “virtual cell.”
+There are some interesting immediate challenges that become apparent form the literature. One very obvious one is a better grasp of the relation between training data (multi-species sequences vs intra human variation) and model performance. The nucleotide transformer paper [@dalla-torre2024] highlights how as things stand training on human sequences does not improve the model over multi-species training. Its obviously true that most bases are identical for most people, and so the human training data has low variability, which might adversely impact the model. It could also be that for the specific validation tests evolutionary constraint convey's more information than the limited human variation in 1000-genomes.
+
+one specific avenue for exploration could therefore be to deeply consider the order in which training data is presented (first train across species, then train within humans) and the effect of learning rate on specific segments of training. YOu could imagine training at a high learning rate using the high variance intra-species data and then train at a lower learning rate with the low variance sequences, only modestly updating the model in that phase. Alternatively you could consider "low rank training", where the model is first trained on multi-species data and then ony fine-tuned on human data, restricting the degrees of freedom in that second phase trough low rank matrix approximation (LoRa)[@hu2021] which learns less, burt also forgets less from previous training epochs[@biderman2024].

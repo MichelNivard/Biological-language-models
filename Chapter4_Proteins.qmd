@@ -6,9 +6,7 @@
 In this chapter, we'll discuss how self-attention works and how it latently encodes a protein's structure. All scripts for this chapter, and the 5 PDB files used, are found here: <https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Proteins/Chapter10>
 :::
 
-## 
-
-One way to construct a scaffold for protein 3d structure learning is to first learn the distances (2d) between all amino-acids, or between atoms within those amino acids. Contact maps have been extensively used as a simplified representation of protein structures. Contact maps capture the most important features of a protein's fold and are preferred by a number of researchers for the description and study of protein structures"[@duarte2010].
+One way to construct a scaffold for protein 3D structure learning is to first learn the distances (2d) between all amino-acids, or between atoms within those amino acids. Contact maps have been extensively used as a simplified representation of protein structures. Contact maps capture the most important features of a protein's fold and are preferred by a number of researchers for the description and study of protein structures"[@duarte2010].
 
 A protein's amino acid sequence is one-dimensional (1D) information: the linear order of residues. The functional three-dimensional (3D) structure is how that chain folds in space, bringing certain residues into contact. **Contact maps** serve as a two-dimensional (2D) bridge between sequence and structure. Specifically, it is a binary $N \times N$ matrix (for an $N$-residue protein) where an entry is 1 if two residues are within a distance threshold (e.g., 12 Å) in the 3D structure, and 0 if they are not. This 2D representation captures key structural relationships (who-neighbors-whom) without specifying exact coordinates.
 
@@ -16,7 +14,7 @@ In protein structure prediction, one common approach is: **1D sequence ⇒ predi
 
 Contact maps can act as a powerful but imperfect intermediate blueprint, translating linear sequence information into spatial relationships that approximate the final folded structure. **Figure 1** is an example contact map based on a distance threshold of 12 Angstroms between Cα atoms (carbon atoms that are part of the protein backbone) in the AlphaFold 2 model of the protein structure (PDB format) of a human GRPC protein.
 
-![**Figure 1:** Example of a protein contact map where "contact is defined as < 12A distance between Cα](images/paste-26.png){fig-align="center"}
+![**Figure 1:** Example of a protein contact map where "contact is defined as \< 12A distance between Cα](images/paste-26.png){fig-align="center"}
 
 Below we'll study how we can estimate contact maps from the self-attention networks, or maps, that are latently encoded in protein language models, based on ideas developed by Roa et al. [@rao2020] and others [@vig2020]. This is frankly like magic, just by training to predict protein sequences, the model learns the 2D structure of the protein, and because we know 2D structure relates to 3D structure we can prove protein language models learn (elements of) the 3D structure of proteins.
 
@@ -30,10 +28,7 @@ In a traditional correlation or covariance matrix, each entry tells us how stron
 
 Attention, by contrast, is like a learned, dynamic correlation matrix that changes depending on the sequence it is applied to. Instead of capturing a single, global pattern, it can learn to recognize many different ways in which elements of a sequence relate to one another, depending on context.
 
-For example:
-- In DNA analysis, attention can learn to recognize when certain nucleotides influence each other in one evolutionary context but not another.
-- In proteins, attention can capture long-range interactions between amino acids that affect folding, even if they are far apart in the sequence.
-- In language, attention allows a model to understand that a pronoun like "it" refers to different things in different sentences, based on context.
+For example: - In DNA analysis, attention can learn to recognize when certain nucleotides influence each other in one evolutionary context but not another. - In proteins, attention can capture long-range interactions between amino acids that affect folding, even if they are far apart in the sequence. - In language, attention allows a model to understand that a pronoun like "it" refers to different things in different sentences, based on context.
 
 Mathematically, attention produces an attention map, which is similar to a covariance matrix but is computed on-the-fly for each sequence. This means that, instead of assuming a fixed set of relationships, the model can learn multiple different interaction patterns and decide which are relevant based on the input it sees.
 
@@ -95,11 +90,11 @@ The intuition here is that the attention maps are amino-acid by amino-acid maps 
 
 Fortunately, the attention maps are generally an element we can export from language models using standard libraries like `transfomers` so we can write a function to extract all attention maps from a protein language model. These will become the predictors (`x`) in our logistic regression later.
 
-Since the model we trained in @sec-PLM is too small, and a larger model is still in the works (I am running all the compute for this book on my MacBook and an old gaming GPU) we'll work with `"facebook/esm2_t33_650M_UR50D"` an advanced PLM developed by Standford and Facebook. This particular version has 20 attention heads and 33 layers, so that's $20*30 = 660$ attention maps to use for prediction.
+Since the model we trained in @sec-PLM is too small, and a larger model is still in the works (I am running all the compute for this book on my MacBook and an old gaming GPU) we'll work with `"facebook/esm2_t30_150M_UR50D"` an advanced PLM developed by Standford and Facebook. This particular version has 20 attention heads and 33 layers, so that's $20*30 = 660$ attention maps to use for prediction.
 
 ``` python
 # Load model and tokenizer
-model_name = "facebook/esm2_t33_650M_UR50D"
+model_name = "facebook/esm2_t30_150M_UR50D"
 config = AutoConfig.from_pretrained(model_name, output_attentions=True)
 model = AutoModelForMaskedLM.from_pretrained(model_name, config=config)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -193,7 +188,7 @@ In sequence from beginner to advanced project consider these exercises:
 **3. (hard)** Finetune a medium size PLM on a joint masked language model loss, and contact map prediction loss based on the attention maps, jointly optimizing the model as a PLM and a contact map prediction model. Youd have to grab a pre-trained PLM (say: `facebook/esm2_t30_150M_UR50D` on huggingface) add code to 1. produce the attention maps during the model's forward pass, related the attention maps (non-linearly) to the observed distances using MSE loss (of cross entropy if you keep the contact map dichotomous), and finetune the model on the combined loss: $\alpha * MSEloss + \beta * MLMLoss$ YOu'd likely have to do some evaluating of optimal values alpha ans beta. You'd be training a model that concurrently is a great masked protein language model and optimizes the attention matrices such that their maps become an optimal predictor of the molecular distances in the protein.
 :::
 
-If you make it to the hard exercise, you are essentially training a "adapter" to fit on top of your PLM. This is common practice in machine learning with language models, add parts to an existing model, either freezing the exciting model in place, or letting it optimize along with he adapter, to excel at a specific task. One of the best performing protein folding PLMs, ESMfold[@lin2023a], is such an adapter, though that adapter is more sophisticated then the one you'd train here.
+If you make it to the hard exercise, you are essentially training a "adapter" to fit on top of your PLM. This is common practice in machine learning with language models, add parts to an existing model, either freezing the exciting model in place, or letting it optimize along with he adapter, to excel at a specific task. One of the best performing protein folding PLMs, ESMfold[@lin2023], is such an adapter, though that adapter is more sophisticated then the one you'd train here.
 
 ## The wonder of attention, and beyond
 
@@ -207,4 +202,4 @@ These amazing features come at a cost, the computational cost of attention scale
 
 ## Conclussion
 
-So what did we learn here? we learned that within the unsupervised PLM, which is trained on 1-D sequences, we uncover "knowledge" of 2D protein structure. What I did here is by no means an optimal protein contact prediction but others have build on this idea and done so successfully[@lin2023]. In the next chapter we'll discuss how we can append models onto PLMs first to predict 2D contact maps, and then to go above and beyond and predict 3D protein structure. To do so we'll build a model that has conceptual similarities to alphafold3[@abramson2024a] which means we'll need to learn about diffusion image models, and about cross-attention between sequences and molecules. With Alphafold3 we'll also step into the world of model closed off for commercial reasons. It obvious why google deepmind would want to retain an edge, but its less clear why Nature published the Alphafold3 paper and accepted it without code[@2024], which makes studying it a lot harder.
+So what did we learn here? we learned that within the unsupervised PLM, which is trained on 1-D sequences, we uncover "knowledge" of 2D protein structure. What I did here is by no means an optimal protein contact prediction but others have build on this idea and done so successfully[@lin2023]. In the next chapter we'll discuss how we can append models onto PLMs first to predict 2D contact maps, and then to go above and beyond and predict 3D protein structure. To do so we'll build a model that has conceptual similarities to alphafold3[@abramson2024] which means we'll need to learn about diffusion image models, and about cross-attention between sequences and molecules. With Alphafold3 we'll also step into the world of model closed off for commercial reasons. It obvious why google deepmind would want to retain an edge, but its less clear why Nature published the Alphafold3 paper and accepted it without code [@2024], which makes studying it a lot harder.

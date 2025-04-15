@@ -125,7 +125,7 @@ We will use a pre-existing dataset, **Human-genome-CDS-GRCh38**, which contains 
 
 ### Tokenizing the Dataset
 
-To prepare the dataset for training, we must **apply the tokenizer to each sequence** while ensuring:
+To prepare the dataset for training, we must apply the tokenizer to each sequence while ensuring:
 
 -   Sequences are truncated or padded to a fixed length (512 tokens)
 -   Unwanted columns are removed
@@ -161,13 +161,13 @@ tokenized_dataset.save_to_disk("tokenized_dna_dataset")
 
 ### What is BERT?
 
-BERT (**Bidirectional Encoder Representations from Transformers**) is a powerful transformer-based language model. Unlike traditional left-to-right models, BERT **learns bidirectional context**, allowing it to understand sequences more effectively.
+BERT (**Bidirectional Encoder Representations from Transformers**) is a powerful transformer-based language model. Unlike traditional left-to-right models, BERT learns bidirectional context, allowing it to understand sequences more effectively. for genomics, bidirectional models have proven more effective, while for natural language it appears auto-regressive "next work prediction" models appear most effective.
 
 Returning to our earlier example sentence:
 
 > "The quick brown fox jumps over the lazy dog"
 
-BERT does not process words one at a time but instead considers the entire sequence simultaneously. This bidirectional approach allows BERT to infer missing words based on context from both directions.
+BERT does not process words one at a time but instead considers the entire sequence simultaneously. This bidirectional approach allows BERT to infer missing words based on context from both directions. Te inference is effectively a predicting of a specific token, in genomics models a base or amino-acid, and since the predicting results in a probability for each possible token, this fairly naturally translates into predicting the probability of a mutation, or th probability of the presence of a regulatory sequence motif near a specific gene.
 
 ### What is Masked Language Modeling (MLM)?
 
@@ -194,11 +194,11 @@ A transformer model, like those used for DNA, RNA, or protein sequences, starts 
 The embedding layers design is intimately related to the nature of the data, here we simply use a standard BERT embedding layer but in Chapter 4 & 5 we'll dive deep into researchers efforts to design embedding layers for DNA specifically.
 :::
 
-A **transformer layer** consists of two key components: a **self-attention mechanism** and a **feed-forward neural network**. The self-attention mechanism allows the model to dynamically weigh the importance of every other token in the sequence when processing a given token, helping it learn relationships across different parts of the sequence — whether those are between neighboring amino acids or between distant regulatory elements in a long DNA strand. After the self-attention step, the **feed-forward neural network** processes each token’s representation independently, applying a small multi-layer perceptron (MLP) to transform the token’s internal representation. This helps the model refine and enrich the learned features, capturing nonlinear combinations of the attention-derived information. While self-attention captures interactions across the sequence, the feed-forward layer focuses on how to represent each token itself in a biologically meaningful way, helping the model identify local biochemical properties, sequence motifs, or structural preferences. The **number of transformer layers** (**`num_hidden_layers`**) determines how deep the model is, with more layers giving the model more capacity to learn complex biological relationships, but also increasing training time and data requirements.
+A **transformer layer** consists of two key components: a **self-attention mechanism** (discussed in great detail @sec-AttentionProt **)** and a **feed-forward neural network**. The self-attention mechanism allows the model to dynamically weigh the importance of every other token in the sequence when predicting a given token, helping it learn relationships across different parts of the sequence — whether those are between neighboring amino acids or between distant regulatory elements in a long DNA strand. After the self-attention step, the **feed-forward neural network** processes each token’s representation independently, applying a small multi-layer perceptron (MLP) to transform the token’s internal representation. This helps the model refine and enrich the learned features, capturing nonlinear combinations of the attention-derived information. While self-attention captures interactions across the sequence, the feed-forward layer focuses on how to represent each token itself in a biologically meaningful way, helping the model identify local biochemical properties, sequence motifs, or structural preferences. The **number of transformer layers** (**`num_hidden_layers`**) determines how deep the model is, with more layers giving the model more capacity to learn complex biological relationships, but also increasing training time and data requirements.
 
 Within each transformer layer, there are multiple **attention heads** (**`num_attention_heads`**), each focusing on different types of relationships within the data. In a natural language example, one attention head might capture subject-verb relationships, while another tracks adjective-noun pairs. In biological sequences, one attention head might learn to link binding motifs in promoters to transcription start sites, while another might focus on co-evolving residues in proteins that contribute to structural stability. The **hidden size** (**`hidden_size`**) refers to the dimensionality of these internal vector representations, defining how much information the model can store at each position. Larger hidden sizes allow the model to capture richer biological context, but they also increase computational cost. By combining deep transformer stacks, multiple attention heads, and flexible embeddings, biological language models can develop a powerful and nuanced understanding of biological sequences, helping researchers uncover new regulatory elements, predict protein folding, or study the effects of mutations.
 
-Defining the BERT Model for DNA Sequences
+### Defining the BERT Model for DNA Sequences
 
 While the "quick brown fox" example helps us understand how BERT processes natural language, our goal is to apply the same principles to DNA sequences. Instead of predicting missing words in a sentence, we want our model to learn biological patterns and genomic structure by predicting masked nucleotides within DNA sequences.
 
@@ -228,9 +228,9 @@ config.pad_token_id = dna_vocab["[PAD]"]
 model = ModernBertForMaskedLM(config)
 ```
 
-The keenly eyed among you see a lot of powers of 2, 8 is 2\^3, 256, 512 are also powers of two, etc. Computer memory encodes in bits and bytes, and is designed around powers of two. Building matrices that are powers of 2, 16, 32, 64, etc. makes them fit in memory more efficiently, and this can have serious consequences for training efficiency (see **Figure 2.1**).
+The keenly eyed among you see a lot of powers of 2, 8 is 2\^3, 256, 512 are also powers of two, etc. Computer memory encodes in bits and bytes, and is designed around powers of two. Building matrices that are powers of 2, 16, 32, 64, etc. makes them fit in memory more efficiently, and this can have serious consequences for training efficiency (see **Figure 1**).
 
-![**Figure 2.1** the power of powers of two.](images/paste-19.png){fig-align="center"}
+![**Figure 1** the power of powers of two.](images/paste-19.png){fig-align="center"}
 
 ### Configuring Training for DNA BERT
 
@@ -314,9 +314,11 @@ trainer = Trainer(
 trainer.train()
 ```
 
-If you have set up a free wandb account, you can track your training runs, wherever they are running, on a central dashboard. You then get a dashboard full of pretty loss vs progress plots like the one below, which I screencapped about ± 30 minutes into training a tiny version of the model on my MacBook.
+If you have set up a free wandb account, you can track your training runs, wherever they are running, on a central dashboard. You then get a dashboard full of pretty loss vs progress plots like the one below in **figure 2**, which I screencapped about ± 30 minutes into training a tiny version of the model on my MacBook.
 
-![](images/paste-4.png)
+![**Figure 2:** a training loss curve screen capped from wandb.com during training](images/paste-4.png)
+
+I't valuable to consider the meaning of the loss. In this case the cross entropy loss can be transformed into a probability: $e^{-loss} = p$ the predicted masked token is the true token in the training data. So as you can see in DNA data that is absolutely dominated by the tokens for G,C,T and A 9and has no, or very few ambiguous nucleotide tokens) the loss almost immediately drops to below \~ -1.4, which is very close too random guess in of those four nocleotides: $e^{-1.4}  = 0.25$. In other words it takes the model 1 iteration to learn almost all bases are G,C,T or A in the FASTA. after half an hour the loss is near 1.2, which corresponds to a probability of predicting the masked token correctly of: $e^{-1.2}  = 0.30$. We'll dig deeper into the meaning of the loss in @sec-DNAeval.
 
 ### Saving the Trained Model
 
@@ -339,12 +341,14 @@ print(" Training complete! Model saved to ./bert-dna")
 
 If you intend to use, and re-use your model repeatedly, on different machines, or share it with others, it's very convenient to save it to Hugging Face. If you have an account, you can do so for free using their internal tools. You'll need to include an API token, I have omitted mine, and so should you when sharing code, because the API token lets people write to your account!
 
+**Python Code:**
+
 ``` python
 model.push_to_hub(repo_id="MichelNivard/DNABert-CDS-13Species-v0.1",use_auth_token="")
 hf_tokenizer.push_to_hub(repo_id="MichelNivard/DNABert-CDS-13Species-v0.1",use_auth_token="")
 ```
 
-Because we used a standard BERT model (**`BertModern`**), it's super easy for others to pull the model weights from the hub into a model configured for use on their machine, using the Hugging Face **`Transformers`** library.
+Because we used a standard BERT model (**`BertModern`**), it's super easy for others to pull the model weights from the hub into a model configured for use on their machine, using the Hugging Face **`Transformers`** library. If you'd want to train a sate of the art model you'd bviousnely need to scale training (see @sec-scale for guidance).
 
 ### Summary
 

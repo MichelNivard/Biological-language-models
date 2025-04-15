@@ -1,24 +1,28 @@
-# Integrated protein diffusion language models
+# Integrated protein diffusion language models {#sec-ProtDiff}
 
 ::: callout-tip
 ## Abstract
 
 In this chapter, we'll discuss AlphaFold3 and its joint sequence (language model like) & diffusion (Image generation model like) architecture. But because AF3 is a truly complex model, we'll use a far simpler protein contact diffusion model, guided by a protein language model.
 
-In doing so we'll cover and study three core deep learning concepts, 1. denoising diffusion, 2. cross-attentions and 3. sequence guided diffusion (the actual link between sequences and 2D or 3D representations of molecules). The code used for this chapter is found here: [https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Proteins/Chapter11](https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Proteins/Chapter11)
+In doing so we'll cover and study three core deep learning concepts, 1. denoising diffusion, 2. cross-attentions and 3. sequence guided diffusion (the actual link between sequences and 2D or 3D representations of molecules). The code used for this chapter is found here: <https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/Proteins/Chapter11>
 :::
 
-## Alphafold3
+## Alphafold3 & RFdiffusion
 
-Alphafold3[@abramson2024a] has what initially looks like a very complex architecture (See **Figure 1**), at least it did to me for the longest time.
+Alphafold3[@abramson2024] has what initially looks like a very complex architecture (See **Figure 1**), at least it did to me for the longest time.
 
-![**Figure 1:** (source: Figure 1d Alphafold paper[@abramson2024b]) which abstracts the model architecture used in Alphafold3. We'll talk through things step by step below.](images/paste-33.png)
+![**Figure 1:** (source: Figure 1d Alphafold paper[@abramson2024]) which abstracts the model architecture used in Alphafold3. We'll talk through things step by step below.](images/paste-33.png)
 
-One important new aspect to the architecture is the "Diffusion module" on the bottom right. It has 3 inputs, the results from three other model elements feed into it (blue paths) and a weird little point cloud. The actual architecture of AF3 is really remarkably complex, I feel in no way competent to teach it. One of the best overviews I saw is a [blog post by Elena Simon & Jake Silberg](https://elanapearl.github.io/blog/2024/the-illustrated-alphafold/). Like AF2 before it, AF3 is a model that imposes evolutionarily sensible (the multiple sequence alignments) and geometric (triangle rules) constraints that mean their models are tailored/specific/supervised/slower but often better than pure protein language models (at the expense of speed and efficiency).
+One important new aspect to the architecture is the "Diffusion module" on the bottom right. It has 3 inputs, the results from three other model elements feed into it (blue paths) and a weird little point cloud. The actual architecture of AF3 is really remarkably complex, I feel in no way competent to teach it. One of the best overviews I saw is a [blog post by Elena Simon & Jake Silberg](https://elanapearl.github.io/blog/2024/the-illustrated-alphafold/). Like AF2 before it, AF3 is a model that searches and integrates evolutionary sensible (the multiple sequence alignments) and template based (structures of similar proteins) refinements of the input, internally maintains concurrent token and atom resolution representations of the molecule with their own attention mechanisms, and subsequently imposes geometric (triangle rules) constraints, this means the alphafold3 model is significantly more tailored/specific/supervised and slower, but often better than pure protein language models (at the expense of speed and efficiency).
 
-Because I can't do the full complexity of AF3 justice, but I think I can get people up to speed on how you'd begin to think about bridging protein sequence models, and 2D and 3D representation of proteins, we are going to train a protein diffusion model, that is guided by the inputs with a generic protein language model (`EvolutionaryScale/esmc-300m-2024-12` to be precise, ESM2's successor) and attaches a diffusion model to it.
+Because I can't do the full complexity of AF3 justice, but I think I can get people up to speed on how you'd begin to think about bridging protein sequence models, and 2D and 3D representation of proteins, we are going to train a protein diffusion model, that is guided by the inputs with a generic protein language model (`facebook/esm2_t30_150M_UR50D`) and attaches a diffusion model to it. As we are going to focus on diffusiom i'ts important to note AF3 want the dirst protein diffusion model, others like RFdiffusion[@watson2023] preceded it, and are architecturally a little more like our current toy model.
 
 Now since I don't have the compute that Google DeepMind has (and neither do you...), we'll train a 2D diffusion model that, guided by a pre-existing protein language model, generates protein contact maps. The reason to again work on predicting contact maps is that 1. the image-like illustrations contact maps are help me effectively convey the concept of diffusion and 2. abstracting away the highly effective MSA and physics-based architecture in AF3 lets me focus on something fairly profound (I think): **cross-attention**. To my simple statistics/numerically minded brain, the fact that through encoding and attention we can capture the correlations between sequences of tokens is already a huge leap. When I think about how to capture two entirely separate (but related) modalities, a sequence of tokenized amino acids, and the 3-D (or 2D) structure of the molecule, my brain breaks a little. Cross-attention is how ChatGPT can relate your written command ("make a picture of a dog strapped to the roof of Mitt Romney's car, in the style of Studio Ghibli") and produce an image of just that scene, to the incredible annoyance and in some cases despair of artists who's work they pirated for that! Fortunately for us, in Genomics, the data is actually in the public domain! and so there are no moral compromises to what we are about to do in that respect!
+
+::: callout-caution
+A critical requirement for 3D protein models is that they are invariant to transformations (rotations, translations, and reflections), rotations of a molecule obviously change the coordinates of all the atoms against an arbitrary axis, but protein models should be immune to those, which is a tall order. By working with contact maps I abstract away the problems that arise from arbitrary scale transformations, as contact , or distance maps, are invariant if rotated 9the distances remain the same). I am restricting myself to the coordinates of the central C-alpha atom, further abstracting away side-chains which makes modeling considerably easier but less faithful. For a review of how different (diffusion based) deep learning model deal with equivariance see this comprehensive review of the literature: <https://doi.org/10.1016/j.csbj.2024.06.021> [@soleymani2024].
+:::
 
 ## Diffusion models
 
@@ -418,7 +422,7 @@ if __name__ == "__main__":
     main()
 ```
 
-## Training the imagen model
+## Training the `imagen` model
 
 The high-level library `huggingface` provides for image models, called `diffusion`, isn't as fully developed as their `transformers` library. Therefore, we're going to use a library maintained by GitHub user `lucidrains` who I guess is a scientist in biomedical science but also someone who builds these amazing implementations of AI models from papers. The repo we'll use is [`imagen-pythorch`](https://github.com/lucidrains/imagen-pytorch) which you can just install using pip: `pip install imagen-pytorch`.
 

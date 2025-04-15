@@ -1,4 +1,4 @@
-# Scale up Training {.unnumbered}
+# Scale up Training {.unnumbered} {#sec-scale}
 
 This chapter isn't a part of the "DNA" section of the book, because the lessons are really quite general, but it comes after because we needed a little bit of experience with language model training before even considering training a serious model. This is also a somewhat awkward chapter for me to write, especially for the part of the readership that has a background in ML. See, I am a psychologist by training (though I have worked in genetic epidemiology for years and years), and while a lot of my academic work is fairly computational, I am not an expert in language model scaling by any means! Remember, the preamble to the book explains that this book is an account of me learning about biological language models and taking others along for the ride, not an authoritative text!
 

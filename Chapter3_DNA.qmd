@@ -76,10 +76,15 @@ This step is crucial in genomics, where we often want to prioritize functional v
 
 I have a preference for R myself, so I wrote this specific job in R. We provide the gene sequence, starting at the start codon; I use the dopamine receptor gene DRD2. Based on the genetic code, which translates DNA to the amino acids that eventually are produced, we then write code to mutate each codon in a gene.
 
+FOr the demo we'll manually imput the gene:
+
 ``` r
 DRD2 <- "ATGGATCCACTGAATCTGTCCTGGTATGATGATGATCTGGAGAGGCAGAACTGGAGCCGGCCCTTCAACGGGTCAGACGGGAAGGCGGACAGACCCCACTACAACTACTATGCCACACTGCTCACCCTGCTCATCGCTGTCATCGTCTTCGGCAACGTGCTGGTGTGCATGGCTGTGTCCCGCGAGAAGGCGCTGCAGACCACCACCAACTACCTGATCGTCAGCCTCGCAGTGGCCGACCTCCTCGTCGCCACACTGGTCATGCCCTGGGTTGTCTACCTGGAGGTGGTAGGTGAGTGGAAATTCAGCAGGATTCACTGTGACATCTTCGTCACTCTGGACGTCATGATGTGCACGGCGAGCATCCTGAACTTGTGTGCCATCAGCATCGACAGGTACACAGCTGTGGCCATGCCCATGCTGTACAATACGCGCTACAGCTCCAAGCGCCGGGTCACCGTCATGATCTCCATCGTCTGGGTCCTGTCCTTCACCATCTCCTGCCCACTCCTCTTCGGACTCAATAACGCAGACCAGAACGAGTGCATCATTGCCAACCCGGCCTTCGTGGTCTACTCCTCCATCGTCTCCTTCTACGTGCCCTTCATTGTCACCCTGCTGGTCTACATCAAGATCTACATTGTCCTCCGCAGACGCCGCAAGCGAGTCAACACCAAACGCAGCAGCCGAGCTTTCAGGGCCCACCTGAGGGCTCCACTAAAGGAGGCTGCCCGGCGAGCCCAGGAGCTGGAGATGGAGATGCTCTCCAGCACCAGCCCACCCGAGAGGACCCGGTACAGCCCCATCCCACCCAGCCACCACCAGCTGACTCTCCCCGACCCGTCCCACCATGGTCTCCACAGCACTCCCGACAGCCCCGCCAAACCAGAGAAGAATGGGCATGCCAAAGACCACCCCAAGATTGCCAAGATCTTTGAGATCCAGACCATGCCCAATGGCAAAACCCGGACCTCCCTCAAGACCATGAGCCGTAGGAAGCTCTCCCAGCAGAAGGAGAAGAAAGCCACTCAGATGCTCGCCATTGTTCTCGGCGTGTTCATCATCTGCTGGCTGCCCTTCTTCATCACACACATCCTGAACATACACTGTGACTGCAACATCCCGCCTGTCCTGTACAGCGCCTTCACGTGGCTGGGCTATGTCAACAGCGCCGTGAACCCCATCATCTACACCACCTTCAACATTGAGTTCCGCAAGGCCTTCCTGAAGATCCTCCACTGCTGA"
 nchar(DRD2)/3
+```
+Thewn we'll need to encode the genertic code, to translate between nucleotides and amino-acids:
 
+``` r
 # Genetic code table (Standard Code)
 genetic_code <- c(
   "TTT"="F", "TTC"="F", "TTA"="L", "TTG"="L",
@@ -99,7 +104,11 @@ genetic_code <- c(
   "GAT"="D", "GAC"="D", "GAA"="E", "GAG"="E",
   "GGT"="G", "GGC"="G", "GGA"="G", "GGG"="G"
 )
+```
 
+Then we define a function, which for a codon, in a gene, applied all mutations (e.g. each of the 3 based is mutated to G,C,T and A). It stores a whole bunch of info on the mutation, essential is that it also encodes whether the mutation is synonymous, or missense, but also which amino-acid is changed to which other amino-acid. This could allow you to later go back 
+
+``` r 
 # Function to get all mutations for a codon
 mutate_codon <- function(codon, codon_index, full_sequence) {
   nucleotides <- c("A", "T", "C", "G")
@@ -139,7 +148,11 @@ mutate_codon <- function(codon, codon_index, full_sequence) {
   }
   return(mutations)
 }
+```
 
+Then we define the main function, which applies the mutations to the whole sequence, storing all possible single base mutations:
+
+``` r
 # Main function to process the whole sequence
 mutate_sequence <- function(dna_sequence) {
   codons <- strsplit(dna_sequence, "")[[1]]
@@ -153,7 +166,11 @@ mutate_sequence <- function(dna_sequence) {
   }
   return(all_mutations)
 }
+```
 
+We apply these functionsto the DRD2 sequence, and we store all mutated sequences and a bunch of meta data.
+
+``` r
 # Example usage
 sequence <- DRD2
 mutations <- mutate_sequence(sequence)
@@ -167,6 +184,7 @@ source <- c(NA,"wildtype",DRD2)
 output <- rbind(source,mutations[,7:9])
 
 write.csv(file="DRD2_mutations.csv",output)
+```
 
 ## Evaluating base position likelihoods with a BERT Model
 
@@ -178,13 +196,13 @@ The lower this value, the better the model’s confidence matches reality — in
 
 When we compute the **pseudo-log-likelihood (PLL)** for an entire sequence, we mask and score each position, adding up these log probabilities:
 
-$$log⁡P(nucleotide_1)+log⁡P(nucleotide_2)+⋯+log⁡P(nucleotide_n)​$$
+$$log⁡P(nucleotide_1)+log⁡P(nucleotide_2)+ ⋯ +log⁡P(nucleotide_n)​$$
 
 This sum is the **total log likelihood** of the sequence under the model — it quantifies how natural the model thinks the sequence is.
 
 First we load the model I trained in Chapter 2, if you trained your own on more data, or for longer, or want to evaluate a different model you can load those yourself easily.
 
-```python
+``` python
 from transformers import AutoTokenizer, AutoModelForMaskedLM
 import torch
 import pandas as pd
@@ -262,7 +280,7 @@ def compute_mutant_log_likelihood_ratio(wild_type, mutant, position, tokenizer, 
 
 ### The Likelihood Ratio to evaluate mutations
 
-The log-likelihood ratio (LLR) compares how much more (or less) likely the wild-type sequence is compared to a mutant sequence, given the DNA language model. Specifically, we compare the log likelihood of the correct wild-type nucleotide to the log likelihood of the mutant nucleotide at the mutated position only.
+The log-likelihood ratio (LLR) compares how much more (or less) likely the wild-type sequence is compared to a mutant sequence, given the DNA language model. Specifically, we compare the log-likelihood of the correct wild-type nucleotide to the log likelihood of the mutant nucleotide at the mutated position only.
 
 $$LLR = log ⁡ P ( wild-type nucleotide ∣ context ) − log ⁡ P ( mutant nucleotide ∣ context )$$
 
@@ -331,6 +349,7 @@ Why do we care about these log likelihoods and log likelihood ratios? Because th
 To explore our result here, we can plot the LLR versus the position within the DRD2 gene, this can give us insight into the location within the coding sequence where we find unlikely (and therefore potentially damaging) mutations. in the plot below a LOW LLR means the variant is unlikely. Most variants cluster around a neutral LLR, consistent with some statistical noise.
 
 ``` python
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -362,6 +381,7 @@ plt.ylabel('Log Likelihood Ratio (LLR)')
 plt.legend(title='Mutation Type', bbox_to_anchor=(1.02, 1), loc='upper left')
 plt.grid(True, linestyle='--', alpha=0.5)
 plt.show()
+
 ```
 
 ![**Figure 3.2** The LLR for the mutation (y-axis) give the position in the DRD2 gene (x-axis). High values indicate the reference, or wild, type sequence is far more likely than the mutation. Very high LLR values are almost exclusively missense mutations, consistent with a DNA model able to pick up deleterious variants based on its training](images/paste-14.png){fig-align="center"}
@@ -372,16 +392,16 @@ It's important to not get overconfident in our predictions! Remember this is a r
 
 ![**Figure 3.3** The probability of the base in the reference, or wild type, sequence given the DNABert model we trained. The model clearly performed above random (random guessing would be 1 in 4, or 25%).](images/paste-10.png){fig-align="center"}
 
-## Exercises
+## Self-Study Exercises
 
-You have reached a key point where you now are a "consumer" of DNA language models. If you have followed along you should be able to run them on a sequence of our choosing. But to become a savvy or discerning consumer (let that [cabernet](https://en.wikipedia.org/wiki/Cabernet_Sauvignon) breath, roll it aroud the glass...) of DNA language models, you'll have to evaluate them on a benchmark that matches your application. The exercises below are meant to give you a taste of evaluating a few models. The hard exercises also set us up for the next few chapters by pulling in external evolutionary salient data. There are people who think long and hard about model evaluation [@patel2024; @tang2024] and if you are to do rigorous evaluation for an academic project/paper it'll pay off to catch up on the l;iterature.
+You have reached a key point where you now are a "consumer" of DNA language models. If you have followed along you should be able to run them on a sequence of our choosing. But to become a savvy or discerning consumer (let that [cabernet](https://en.wikipedia.org/wiki/Cabernet_Sauvignon) breath, roll it around the glass...) of DNA language models, you'll have to evaluate them on a benchmark that matches your application. The exercises below are meant to give you a taste of evaluating a few models. The hard exercises also set us up for the next few chapters by pulling in external evolutionary salient data. There are people who think long and hard about model evaluation [@patel2024; @tang2024] and if you are to do rigorous evaluation for an academic project/paper it'll pay off to catch up on the literature.
 
 ::: callout-tip
 If you want a good Masters/PhD term project with limited compute demands, or optimal self-study try some of the following excersizes:
 
-**1. (easy)** Evaluate about 100 genes split the variants into synonymous, missense, start-lost (the start coding is changed by the mutation), stop-gained (a specific amino-acid is mutated to a stop coding) and reproduce those 4 rows in [@benegas2023] figure 4. Think critically whether you want to consider alternate metrics for "fit" we used LLR in this chapter, but others used cosine distance, or dot-product between wildtype and mutated sequence embedding as a measure of deleteriousness. Dot he other metrics more clearly separate stop-gained from missense from synonymous?
+**1. (easy)** Evaluate about 100 genes split the variants into synonymous, missense, start-lost (the start coding is changed by the mutation), stop-gained (a specific amino-acid is mutated to a stop coding) and reproduce those 4 rows in [@benegas2023] figure 4. Think critically whether you want to consider alternate metrics for "fit" we used LLR in this chapter, but others used cosine distance, or dot-product between wild-type and mutated sequence embedding as a measure of deleteriousness. Do the other metrics more clearly separate stop-gained from missense from synonymous?
 
-**2. (medium)** Evaluate about 100 genes split the synthetic variants into synonymous, missense, start-lost , stop-gained and reproduce those 4 rows in [@benegas2023] figure 4. Do so for 3 DNA language models, the one we trained in Chapter2 ( use your own, or if you didn't train one the one I made available: <https://huggingface.co/MichelNivard/DNABert-CDS-13Species-v0.1> ) a medium sized (500m parameters) nucleotide transformer [@dalla-torre2024] (<https://huggingface.co/InstaDeepAI/nucleotide-transformer-v2-500m-multi-species>) and DNABERT-2 [@zhou2023] (<https://huggingface.co/zhihan1996/DNABERT-2-117M>).
+**2. (medium)** Evaluate about 100 genes split the synthetic variants into synonymous, missense, start-lost, stop-gained and reproduce those 4 rows in [@benegas2023] figure 4. Do so for 3 DNA language models, the one we trained in Chapter 2 (use your own, or if you didn't train one the one I made available: <https://huggingface.co/MichelNivard/DNABert-CDS-13Species-v0.1> ) a medium sized (500m parameters) nucleotide transformer [@dalla-torre2024] (<https://huggingface.co/InstaDeepAI/nucleotide-transformer-v2-500m-multi-species>) and DNABERT-2 [@zhou2023] (<https://huggingface.co/zhihan1996/DNABERT-2-117M>).
 
 **3. (hard)** Evaluate about 100 genes split the synthetic variants into synonymous, missense, start-lost , stop-gained and reproduce those 4 rows in [@benegas2023] figure 4. Do so for 3 DNA language models, the one we trained in Chapter2 ( use your own, or if you didn't train one the one I made available: <https://huggingface.co/MichelNivard/DNABert-CDS-13Species-v0.1> ) a medium sized (500m parameters) nucleotide transformer [@dalla-torre2024] (<https://huggingface.co/InstaDeepAI/nucleotide-transformer-v2-500m-multi-species>) and DNABERT-2 [@zhou2023] (<https://huggingface.co/zhihan1996/DNABERT-2-117M>). Allign the DNA sequences with at least one external track form the UCSC genome browser, for example the allele frequencies in 1000 genomes, or the 100 way alignment across species (<https://hgdownload.soe.ucsc.edu/goldenPath/hg38/multiz100way/>). Establish whether mutations to bases that are rarely variant(MAF \< 5%), or variants that are never observed (freq = 0%), or those to bases that are less conserved are less likely according to the model.
 :::

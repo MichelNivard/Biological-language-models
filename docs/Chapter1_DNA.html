@@ -207,7 +207,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter5_DNA.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Weaving Together Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Comparing Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -221,7 +221,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Scaling_training.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Scale up Training</span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Scale up Training {.unnumbered}</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -236,31 +236,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter1_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Proteins: from sequence to structure</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Proteins: from sequence to structure</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter2_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Selecting and curating protein sequences</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Selecting and curating protein sequences</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter3_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Training our first Protein Language Model</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Training our first Protein Language Model</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter4_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Protein contact maps from attention maps</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Protein contact maps from attention maps</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter5_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Integrated protein diffusion language models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Integrated protein diffusion language models</span></span></a>
   </div>
 </li>
       </ul>
@@ -272,7 +272,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -308,7 +308,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_DNA.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter1_DNA.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Preparing DNA data for training</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Preparing DNA data for training</span></h1>
+<h1 class="title"><span id="sec-DNAdata" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Preparing DNA data for training</span></span></h1>
 </div>
 
 
@@ -345,10 +345,10 @@ Abstract
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://cdn-uploads.huggingface.co/production/uploads/61c141342aac764ce1654e43/QqXOM8h_ZjjhuCv71xmV7.png" class="img-fluid figure-img"></p>
-<figcaption>Relative training efficiency using a high-quality dataset like fineweb-edu and other massive datasets of English language texts. Image obtained from: https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu</figcaption>
+<figcaption><strong>Figure 1:</strong> Relative training efficiency using a high-quality dataset like fineweb-edu and other massive datasets of English language texts. Image obtained from: <a href="https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu" class="uri">https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu</a></figcaption>
 </figure>
 </div>
-<p>Those with experience in <strong>genetics</strong> will know most of what I am about to explain when it comes to the sources of genetic data and the file formats these come in. Those with an <strong>ML</strong> background will be very familiar with Huggingface and the amazing data/model/training integration their libraries offer. Assembling high-quality genomics datasets for language modeling requires familiarity with both. When working with DNA, RNA, and protein sequences, the authoritative sources of data are specialized databases and infrastructures rather than data scraped from the internet. If you want to learn to train DNA/RNA/Protein-based language models, we must learn how, and where, to retrieve data and convert it into a structured format.</p>
+<p>Those with experience in <strong>genetics/genomics</strong> will know most of what I am about to explain when it comes to the sources of genetic data and the file formats these come in. Those with an <strong>ML</strong> background will be very familiar with Huggingface and the amazing data/model/training integration their libraries offer. Assembling high-quality genomics datasets for language modeling requires familiarity with both. When working with DNA, RNA, and protein sequences, the authoritative sources of data are specialized databases and infrastructures rather than data scraped from the internet. If you want to learn to train DNA/RNA/Protein-based language models, we must learn how, and where, to retrieve data and convert it into a structured format.</p>
 <p>In this tutorial, we will begin by collecting coding DNA sequences (CDS) from the human genome using the Ensembl database via BioMart. The goal is to store these sequences in a format suitable for training a DNA-based language model. We will then upload the processed data to <a href="https://huggingface.co">Huggingface</a>, a platform for hosting datasets and models for machine learning tasks.</p>
 <p>This chapter will introduce key biological and computational concepts, ensuring that both biology newcomers and those unfamiliar with language modeling tools can follow along.</p>
 </section>
@@ -359,8 +359,8 @@ Abstract
 <section id="what-are-fasta-files" class="level3" data-number="1.2.1">
 <h3 data-number="1.2.1" class="anchored" data-anchor-id="what-are-fasta-files"><span class="header-section-number">1.2.1</span> What Are FASTA Files?</h3>
 <p>A <strong>FASTA file</strong> is a simple text-based format used for storing biological sequences. Each entry in a FASTA file consists of: 1. A <strong>header line</strong> (starting with <code>&gt;</code>), which contains metadata such as gene IDs and chromosome locations. 2. A <strong>sequence</strong> line, which contains the nucleotide or protein sequence.</p>
-<p>There is a very comprehensive Wikipedia entry on the FASTA format.</p>
-<p>“Sequences may be protein sequences or nucleic acid sequences, and they can contain gaps or alignment characters (see sequence alignment). Sequences are expected to be represented in the standard IUB/IUPAC amino acid and nucleic acid codes, with these exceptions: lower-case letters are accepted and are mapped into upper-case; a single hyphen or dash can be used to represent a gap character; and in amino acid sequences, U and * are acceptable letters (see below). Numerical digits are not allowed but are used in some databases to indicate the position in the sequence.” ((source: <a href="https://en.wikipedia.org/wiki/FASTA_format" class="uri">https://en.wikipedia.org/wiki/FASTA_format</a>))</p>
+<p>There is a very comprehensive Wikipedia entry on the FASTA format: “Sequences may be protein sequences or nucleic acid sequences, and they can contain gaps or alignment characters (see sequence alignment). Sequences are expected to be represented in the standard IUB/IUPAC amino acid and nucleic acid codes, with these exceptions: lower-case letters are accepted and are mapped into upper-case; a single hyphen or dash can be used to represent a gap character; and in amino acid sequences, U and * are acceptable letters (see below). Numerical digits are not allowed but are used in some databases to indicate the position in the sequence.” (source: <a href="https://en.wikipedia.org/wiki/FASTA_format" class="uri">https://en.wikipedia.org/wiki/FASTA_format</a>)</p>
+<p>The nucleic-acid code specification of FASTA:</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -462,7 +462,7 @@ Abstract
 </tr>
 </tbody>
 </table>
-<p>The amino acid codes supported (22 amino acids and 3 special codes) are:</p>
+<p>The amino acid codes specification (22 amino acids and 3 special codes) of FASTA:</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -602,8 +602,8 @@ Abstract
 </section>
 <section id="why-upload-dna-data-to-hugging-face" class="level2" data-number="1.3">
 <h2 data-number="1.3" class="anchored" data-anchor-id="why-upload-dna-data-to-hugging-face"><span class="header-section-number">1.3</span> Why Upload DNA Data to Hugging Face?</h2>
-<p>Hugging Face provides a robust ecosystem for hosting and sharing datasets, particularly for machine learning applications. Some key advantages include: - <strong>Easy accessibility</strong>: Researchers and models can easily retrieve datasets. - <strong>Standardized format</strong>: Datasets are structured for seamless integration with deep learning frameworks. - <strong>Direct integration with Hugging Face tools</strong>: The data on the Hugging Face Hub integrates seamlessly with their <strong>Transformers</strong> and <strong>Trainer</strong> Python libraries, making it easy to load datasets and train models. - <strong>Version control and updates</strong>: Data can be refined and expanded over time.</p>
-<p>By storing our dataset on Hugging Face, we enable efficient training and collaboration for DNA language modeling.</p>
+<p>Hugging Face provides a robust ecosystem for hosting and sharing datasets, particularly for machine learning applications. Some key advantages include: - <strong>Easy accessibility</strong>: Researchers and models can easily retrieve datasets. - <strong>Standardized format</strong>: Datasets are structured for seamless integration with deep learning frameworks. - <strong>Direct integration with Hugging Face tools</strong>: The data on the Hugging Face Hub integrates seamlessly with their <strong>Transformers</strong> and <strong>Trainer</strong> Python libraries, during training you can can stream data directly from the hub which means you dont have to wait for a massive download. - <strong>Version control and updates</strong>: Data is hosted on reporsitories, and can be refined and expanded over time.</p>
+<p>By storing our dataset on Hugging Face, we can facilitate efficient training and collaboration.</p>
 </section>
 <section id="the-script-downloading-and-formatting-human-cds-data" class="level2" data-number="1.4">
 <h2 data-number="1.4" class="anchored" data-anchor-id="the-script-downloading-and-formatting-human-cds-data"><span class="header-section-number">1.4</span> The Script: Downloading and Formatting Human CDS Data</h2>
@@ -665,12 +665,12 @@ Abstract
 <span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="co"># Print sample data</span></span>
 <span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(metadata_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>You can run the script yourself, but I have also gone ahead and uploaded it to Huggingface: <a href="https://huggingface.co/datasets/MichelNivard/Human-genome-CDS-GRCh38" class="uri">https://huggingface.co/datasets/MichelNivard/Human-genome-CDS-GRCh38</a></p>
+<p>You can run the script yourself, but I have also gone ahead and uploaded this particular dataset to Huggingface: <a href="https://huggingface.co/datasets/MichelNivard/Human-genome-CDS-GRCh38" class="uri">https://huggingface.co/datasets/MichelNivard/Human-genome-CDS-GRCh38</a></p>
 </section>
 <section id="summary" class="level2" data-number="1.5">
 <h2 data-number="1.5" class="anchored" data-anchor-id="summary"><span class="header-section-number">1.5</span> Summary</h2>
-<p>In this chapter, we: - Introduced <strong>Ensembl</strong> and <strong>BioMart</strong> as tools for retrieving genomic data. - Explained <strong>FASTA files</strong> and <strong>human CDS</strong>, which form the core of our dataset. - Discussed the advantages of <strong>uploading datasets to Hugging Face</strong>, emphasizing its integration with <strong>Transformers</strong> and <strong>Trainer</strong> libraries. - Provided an <strong>R script</strong> to download, process, and store human CDS in a structured format.</p>
-<p>In the next chapter, we will explore <strong>preprocessing techniques like tokenization</strong> and strategies for encoding DNA sequences into a format suitable for training a deep learning language model, and we use Huggingface Transformers and Trainer library to train our first little DNA language model!</p>
+<p>In this chapter, we: - Introduced Ensembl and BioMart as tools for retrieving genomic data. - Explained FASTA files and human CDS, which form the core of our dataset. - Discussed the advantages of uploading datasets to Hugging Face, emphasizing its integration with <code>Transformers</code> and <code>Trainer</code> python libraries. - Provided an R script to download, process, and store human CDS in a structured format.</p>
+<p>In the next chapter, we will explore preprocessing techniques like tokenization and strategies for encoding DNA sequences into a format suitable for training a deep learning language model, and we use Huggingface Transformers and Trainer library to train our first little DNA language model!</p>
 
 
 </section>

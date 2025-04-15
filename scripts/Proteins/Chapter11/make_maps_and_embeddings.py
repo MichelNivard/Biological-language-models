@@ -35,12 +35,12 @@ def make_contact_map(coords, protein_id, binary=False, threshold=8.0):
     if binary:
         return (dists < threshold).astype(np.uint8) * 255
     else:
-        levels = [0, 20, 40, 60, 80, 100, 120, 140, 160, 180]
+        levels = [0,5,10,15,20,25,30,35, 40,50, 60,70, 80,90, 100,110, 120,130, 140,150, 160,170, 180,190,200,210,220,230,240]
         contact_map = np.full_like(dists, 255, dtype=np.uint8)
-        mask = dists < (threshold - 3)
+        mask = dists < (2)
         contact_map[mask] = levels[0]
-        for i in range(1, 9):
-            lower = threshold - 5 + i
+        for i in range(1, 29):
+            lower = 1 + i
             upper = lower + 1
             mask = (dists >= lower) & (dists < upper)
             contact_map[mask] = levels[i]
@@ -108,7 +108,7 @@ from tqdm import tqdm
 from transformers import AutoTokenizer, AutoModel
 
 # === PARAMETERS ===
-model_name = "facebook/esm2_t30_150M_UR50D"
+model_name = "facebook/esm2_t33_650M_UR50D"
 output_dir = "embeddings_all"
 valid_ids_path = "valid_proteins.txt"
 os.makedirs(output_dir, exist_ok=True)
@@ -128,7 +128,7 @@ with open(valid_ids_path, "r") as f:
 
 def get_embeddings(sequence):
     with torch.no_grad():
-        inputs = tokenizer(sequence, return_tensors="pt", truncation=True, padding=True)
+        inputs = tokenizer(sequence, return_tensors="pt", truncation=True, padding=True,max_length=128)
         inputs = {k: v.to(device) for k, v in inputs.items()}
         outputs = model(**inputs)
         seq_emb = outputs.last_hidden_state[0].cpu().numpy()  # (L, D)

@@ -193,7 +193,7 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter5_DNA.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Weaving Together Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Comparing Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -207,7 +207,7 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Scaling_training.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Scale up Training</span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Scale up Training {.unnumbered}</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -222,31 +222,31 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter1_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Proteins: from sequence to structure</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Proteins: from sequence to structure</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter2_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Selecting and curating protein sequences</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Selecting and curating protein sequences</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter3_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Training our first Protein Language Model</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Training our first Protein Language Model</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter4_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Protein contact maps from attention maps</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Protein contact maps from attention maps</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter5_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Integrated protein diffusion language models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Integrated protein diffusion language models</span></span></a>
   </div>
 </li>
       </ul>
@@ -258,7 +258,7 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -289,7 +289,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_DNA.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter6_DNA.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></h1>
+<h1 class="title"><span id="sec-DNAreview" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></span></h1>
 </div>
 
 
@@ -384,12 +384,22 @@ div.csl-indent {
 </section>
 <section id="challenges-and-future-directions" class="level2" data-number="6.4">
 <h2 data-number="6.4" class="anchored" data-anchor-id="challenges-and-future-directions"><span class="header-section-number">6.4</span> Challenges and Future Directions</h2>
-<p>Despite impressive progress, challenges remain in tokenization choices, computational efficiency, and interpretability of learned representations. Future work is likely to focus on integrating multimodal data (e.g., epigenomic signals), enhancing model scalability, and further bridging the gap between genomic sequences and cellular function—paving the way toward a “virtual cell.”</p>
+<p>There are some interesting immediate challenges that become apparent form the literature. One very obvious one is a better grasp of the relation between training data (multi-species sequences vs intra human variation) and model performance. The nucleotide transformer paper <span class="citation" data-cites="dalla-torre2024">(<a href="references.html#ref-dalla-torre2024" role="doc-biblioref">Dalla-Torre et al. 2024</a>)</span> highlights how as things stand training on human sequences does not improve the model over multi-species training. Its obviously true that most bases are identical for most people, and so the human training data has low variability, which might adversely impact the model. It could also be that for the specific validation tests evolutionary constraint convey’s more information than the limited human variation in 1000-genomes.</p>
+<p>one specific avenue for exploration could therefore be to deeply consider the order in which training data is presented (first train across species, then train within humans) and the effect of learning rate on specific segments of training. YOu could imagine training at a high learning rate using the high variance intra-species data and then train at a lower learning rate with the low variance sequences, only modestly updating the model in that phase. Alternatively you could consider “low rank training”, where the model is first trained on multi-species data and then ony fine-tuned on human data, restricting the degrees of freedom in that second phase trough low rank matrix approximation (LoRa)<span class="citation" data-cites="hu2021">(<a href="references.html#ref-hu2021" role="doc-biblioref">Hu et al. 2021</a>)</span> which learns less, burt also forgets less from previous training epochs<span class="citation" data-cites="biderman2024">(<a href="references.html#ref-biderman2024" role="doc-biblioref">Biderman et al. 2024</a>)</span>.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-benegas2025" class="csl-entry" role="listitem">
 Benegas, Gonzalo, Chengzhong Ye, Carlos Albors, Jianan Canal Li, and Yun S. Song. 2025. <span>“Genomic Language Models: Opportunities and Challenges.”</span> <em>Trends in Genetics</em>, January. <a href="https://doi.org/10.1016/j.tig.2024.11.013">https://doi.org/10.1016/j.tig.2024.11.013</a>.
+</div>
+<div id="ref-biderman2024" class="csl-entry" role="listitem">
+Biderman, Dan, Jacob Portes, Jose Javier Gonzalez Ortiz, Mansheej Paul, Philip Greengard, Connor Jennings, Daniel King, et al. 2024. <span>“LoRA Learns Less and Forgets Less.”</span> <a href="https://doi.org/10.48550/ARXIV.2405.09673">https://doi.org/10.48550/ARXIV.2405.09673</a>.
+</div>
+<div id="ref-dalla-torre2024" class="csl-entry" role="listitem">
+Dalla-Torre, Hugo, Liam Gonzalez, Javier Mendoza-Revilla, Nicolas Lopez Carranza, Adam Henryk Grzywaczewski, Francesco Oteri, Christian Dallago, et al. 2024. <span>“Nucleotide Transformer: Building and Evaluating Robust Foundation Models for Human Genomics.”</span> <em>Nature Methods</em> 22 (2): 287–97. <a href="https://doi.org/10.1038/s41592-024-02523-z">https://doi.org/10.1038/s41592-024-02523-z</a>.
+</div>
+<div id="ref-hu2021" class="csl-entry" role="listitem">
+Hu, Edward J., Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang, Lu Wang, and Weizhu Chen. 2021. <span>“LoRA: Low-Rank Adaptation of Large Language Models.”</span> <a href="https://doi.org/10.48550/ARXIV.2106.09685">https://doi.org/10.48550/ARXIV.2106.09685</a>.
 </div>
 </div>
 </section>
@@ -816,13 +826,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./Chapter5_DNA.html" class="pagination-link" aria-label="Weaving Together Models">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Weaving Together Models</span></span>
+      <a href="./Chapter5_DNA.html" class="pagination-link" aria-label="Comparing Models">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Comparing Models</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./Scaling_training.html" class="pagination-link" aria-label="Scale up Training">
-        <span class="nav-page-text">Scale up Training</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./Scaling_training.html" class="pagination-link" aria-label="Scale up Training {.unnumbered}">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Scale up Training {.unnumbered}</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

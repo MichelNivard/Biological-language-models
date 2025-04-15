@@ -1,7 +1,6 @@
 # Selecting and curating protein sequences {#sec-ProtData}
 
-
-Protein data comes from multiple sources, each providing different types of information useful for training machine learning models and protein language models. Here’s the revised version with links added at the top of each paragraph:
+Protein data comes from multiple sources, each providing different types of information useful for training machine learning models and protein language models. Here’s the revised version with links added at the top of each paragraph. Given we can "convert" DNA to proteins using the genetic code, it also makes sense to consider sources of DNA data we discussed in @sec-DNAdata for training protein models.
 
 ## **Protein Sequence Data**
 
@@ -37,7 +36,7 @@ Several datasets have been specifically designed for training ML models and prot
 
 When training protein sequence models, there is a risk of "overtraining" on abundantly measured, or frequently observed protein sequences. Not all protein families (characterized by a common evolutionary origin) are equally represented, and so uniform sampling from UniProt will skew towards certain types of proteins while undersampling others.
 
-Various empirical projects consider sequencing diversity in training protein (language) models. The ESM-1 paper [@rives2021] evaluated 3 different levels of sequence diversity. The low-diversity dataset (UR100) consists of UniRef100 representative sequences, which are all proteins in UniProt removing identical copies (clustering sequences that share 100% identity). This dataset will have many near-identical sequences. The high-diversity sparse dataset (UR50/S) is derived from UniRef50 representative sequences; it's going to have many unique sequences, but limited variation in similar sequences as all sequences with > 50% shared identity are collapsed into a single cluster from which 1 representative sequence is retained. The high-diversity dense dataset (UR50/D) achieves broader coverage by uniformly sampling UniRef100 sequences across all UniRef50 clusters, mixing uniform representation and dense coverage. When models were compared using the exponentiated cross-entropy (ECE) metric, the sense diverse data performed best (see Table 1).
+Various empirical projects consider sequencing diversity in training protein (language) models. The ESM-1 paper [@rives2021] evaluated 3 different levels of sequence diversity. The low-diversity dataset (UR100) consists of UniRef100 representative sequences, which are all proteins in UniProt removing identical copies (clustering sequences that share 100% identity). This dataset will have many near-identical sequences. The high-diversity sparse dataset (UR50/S) is derived from UniRef50 representative sequences; it's going to have many unique sequences, but limited variation in similar sequences as all sequences with \> 50% shared identity are collapsed into a single cluster from which 1 representative sequence is retained. The high-diversity dense dataset (UR50/D) achieves broader coverage by uniformly sampling UniRef100 sequences across all UniRef50 clusters, mixing uniform representation and dense coverage. When models were compared using the exponentiated cross-entropy (ECE) metric, the sense diverse data performed best (see Table 1).
 
 | Model       | Variant  | Params  | Training data               | ECE   |
 |-------------|----------|---------|-----------------------------|-------|

@@ -123,6 +123,35 @@ div.csl-indent {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -227,7 +256,7 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter5_DNA.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Weaving Together Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Comparing Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -241,7 +270,7 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Scaling_training.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Scale up Training</span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Scale up Training {.unnumbered}</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -256,31 +285,31 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter1_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Proteins: from sequence to structure</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Proteins: from sequence to structure</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter2_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Selecting and curating protein sequences</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Selecting and curating protein sequences</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter3_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Training our first Protein Language Model</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Training our first Protein Language Model</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter4_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Protein contact maps from attention maps</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Protein contact maps from attention maps</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter5_Proteins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Integrated protein diffusion language models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Integrated protein diffusion language models</span></span></a>
   </div>
 </li>
       </ul>
@@ -292,7 +321,7 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -330,12 +359,13 @@ div.csl-indent {
   <li><a href="#what-is-bert" id="toc-what-is-bert" class="nav-link" data-scroll-target="#what-is-bert"><span class="header-section-number">2.5.1</span> What is BERT?</a></li>
   <li><a href="#what-is-masked-language-modeling-mlm" id="toc-what-is-masked-language-modeling-mlm" class="nav-link" data-scroll-target="#what-is-masked-language-modeling-mlm"><span class="header-section-number">2.5.2</span> What is Masked Language Modeling (MLM)?</a></li>
   <li><a href="#understanding-the-model-transformer-layers-attention-heads-and-hidden-size" id="toc-understanding-the-model-transformer-layers-attention-heads-and-hidden-size" class="nav-link" data-scroll-target="#understanding-the-model-transformer-layers-attention-heads-and-hidden-size"><span class="header-section-number">2.5.3</span> Understanding the model: Transformer Layers, Attention Heads, and Hidden Size</a></li>
-  <li><a href="#configuring-training-for-dna-bert" id="toc-configuring-training-for-dna-bert" class="nav-link" data-scroll-target="#configuring-training-for-dna-bert"><span class="header-section-number">2.5.4</span> Configuring Training for DNA BERT</a></li>
-  <li><a href="#setting-training-parameters" id="toc-setting-training-parameters" class="nav-link" data-scroll-target="#setting-training-parameters"><span class="header-section-number">2.5.5</span> Setting Training Parameters</a></li>
-  <li><a href="#preparing-for-masked-language-modeling-mlm" id="toc-preparing-for-masked-language-modeling-mlm" class="nav-link" data-scroll-target="#preparing-for-masked-language-modeling-mlm"><span class="header-section-number">2.5.6</span> Preparing for Masked Language Modeling (MLM)</a></li>
-  <li><a href="#training-the-dna-bert-model" id="toc-training-the-dna-bert-model" class="nav-link" data-scroll-target="#training-the-dna-bert-model"><span class="header-section-number">2.5.7</span> Training the DNA BERT Model</a></li>
-  <li><a href="#saving-the-trained-model" id="toc-saving-the-trained-model" class="nav-link" data-scroll-target="#saving-the-trained-model"><span class="header-section-number">2.5.8</span> Saving the Trained Model</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">2.5.9</span> Summary</a></li>
+  <li><a href="#defining-the-bert-model-for-dna-sequences" id="toc-defining-the-bert-model-for-dna-sequences" class="nav-link" data-scroll-target="#defining-the-bert-model-for-dna-sequences"><span class="header-section-number">2.5.4</span> Defining the BERT Model for DNA Sequences</a></li>
+  <li><a href="#configuring-training-for-dna-bert" id="toc-configuring-training-for-dna-bert" class="nav-link" data-scroll-target="#configuring-training-for-dna-bert"><span class="header-section-number">2.5.5</span> Configuring Training for DNA BERT</a></li>
+  <li><a href="#setting-training-parameters" id="toc-setting-training-parameters" class="nav-link" data-scroll-target="#setting-training-parameters"><span class="header-section-number">2.5.6</span> Setting Training Parameters</a></li>
+  <li><a href="#preparing-for-masked-language-modeling-mlm" id="toc-preparing-for-masked-language-modeling-mlm" class="nav-link" data-scroll-target="#preparing-for-masked-language-modeling-mlm"><span class="header-section-number">2.5.7</span> Preparing for Masked Language Modeling (MLM)</a></li>
+  <li><a href="#training-the-dna-bert-model" id="toc-training-the-dna-bert-model" class="nav-link" data-scroll-target="#training-the-dna-bert-model"><span class="header-section-number">2.5.8</span> Training the DNA BERT Model</a></li>
+  <li><a href="#saving-the-trained-model" id="toc-saving-the-trained-model" class="nav-link" data-scroll-target="#saving-the-trained-model"><span class="header-section-number">2.5.9</span> Saving the Trained Model</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">2.5.10</span> Summary</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -478,7 +508,7 @@ Abstract
 </section>
 <section id="tokenizing-the-dataset" class="level3" data-number="2.4.2">
 <h3 data-number="2.4.2" class="anchored" data-anchor-id="tokenizing-the-dataset"><span class="header-section-number">2.4.2</span> Tokenizing the Dataset</h3>
-<p>To prepare the dataset for training, we must <strong>apply the tokenizer to each sequence</strong> while ensuring:</p>
+<p>To prepare the dataset for training, we must apply the tokenizer to each sequence while ensuring:</p>
 <ul>
 <li>Sequences are truncated or padded to a fixed length (512 tokens)</li>
 <li>Unwanted columns are removed</li>
@@ -508,12 +538,12 @@ Abstract
 <h2 data-number="2.5" class="anchored" data-anchor-id="understanding-bert-and-masked-language-modeling-mlm"><span class="header-section-number">2.5</span> Understanding BERT and Masked Language Modeling (MLM)</h2>
 <section id="what-is-bert" class="level3" data-number="2.5.1">
 <h3 data-number="2.5.1" class="anchored" data-anchor-id="what-is-bert"><span class="header-section-number">2.5.1</span> What is BERT?</h3>
-<p>BERT (<strong>Bidirectional Encoder Representations from Transformers</strong>) is a powerful transformer-based language model. Unlike traditional left-to-right models, BERT <strong>learns bidirectional context</strong>, allowing it to understand sequences more effectively.</p>
+<p>BERT (<strong>Bidirectional Encoder Representations from Transformers</strong>) is a powerful transformer-based language model. Unlike traditional left-to-right models, BERT learns bidirectional context, allowing it to understand sequences more effectively. for genomics, bidirectional models have proven more effective, while for natural language it appears auto-regressive “next work prediction” models appear most effective.</p>
 <p>Returning to our earlier example sentence:</p>
 <blockquote class="blockquote">
 <p>“The quick brown fox jumps over the lazy dog”</p>
 </blockquote>
-<p>BERT does not process words one at a time but instead considers the entire sequence simultaneously. This bidirectional approach allows BERT to infer missing words based on context from both directions.</p>
+<p>BERT does not process words one at a time but instead considers the entire sequence simultaneously. This bidirectional approach allows BERT to infer missing words based on context from both directions. Te inference is effectively a predicting of a specific token, in genomics models a base or amino-acid, and since the predicting results in a probability for each possible token, this fairly naturally translates into predicting the probability of a mutation, or th probability of the presence of a regulatory sequence motif near a specific gene.</p>
 </section>
 <section id="what-is-masked-language-modeling-mlm" class="level3" data-number="2.5.2">
 <h3 data-number="2.5.2" class="anchored" data-anchor-id="what-is-masked-language-modeling-mlm"><span class="header-section-number">2.5.2</span> What is Masked Language Modeling (MLM)?</h3>
@@ -546,9 +576,11 @@ Important
 <p>The embedding layers design is intimately related to the nature of the data, here we simply use a standard BERT embedding layer but in Chapter 4 &amp; 5 we’ll dive deep into researchers efforts to design embedding layers for DNA specifically.</p>
 </div>
 </div>
-<p>A <strong>transformer layer</strong> consists of two key components: a <strong>self-attention mechanism</strong> and a <strong>feed-forward neural network</strong>. The self-attention mechanism allows the model to dynamically weigh the importance of every other token in the sequence when processing a given token, helping it learn relationships across different parts of the sequence — whether those are between neighboring amino acids or between distant regulatory elements in a long DNA strand. After the self-attention step, the <strong>feed-forward neural network</strong> processes each token’s representation independently, applying a small multi-layer perceptron (MLP) to transform the token’s internal representation. This helps the model refine and enrich the learned features, capturing nonlinear combinations of the attention-derived information. While self-attention captures interactions across the sequence, the feed-forward layer focuses on how to represent each token itself in a biologically meaningful way, helping the model identify local biochemical properties, sequence motifs, or structural preferences. The <strong>number of transformer layers</strong> (<strong><code>num_hidden_layers</code></strong>) determines how deep the model is, with more layers giving the model more capacity to learn complex biological relationships, but also increasing training time and data requirements.</p>
+<p>A <strong>transformer layer</strong> consists of two key components: a <strong>self-attention mechanism</strong> (discussed in great detail <a href="Chapter4_Proteins.html" class="quarto-xref"><span>Chapter 11</span></a> <strong>)</strong> and a <strong>feed-forward neural network</strong>. The self-attention mechanism allows the model to dynamically weigh the importance of every other token in the sequence when predicting a given token, helping it learn relationships across different parts of the sequence — whether those are between neighboring amino acids or between distant regulatory elements in a long DNA strand. After the self-attention step, the <strong>feed-forward neural network</strong> processes each token’s representation independently, applying a small multi-layer perceptron (MLP) to transform the token’s internal representation. This helps the model refine and enrich the learned features, capturing nonlinear combinations of the attention-derived information. While self-attention captures interactions across the sequence, the feed-forward layer focuses on how to represent each token itself in a biologically meaningful way, helping the model identify local biochemical properties, sequence motifs, or structural preferences. The <strong>number of transformer layers</strong> (<strong><code>num_hidden_layers</code></strong>) determines how deep the model is, with more layers giving the model more capacity to learn complex biological relationships, but also increasing training time and data requirements.</p>
 <p>Within each transformer layer, there are multiple <strong>attention heads</strong> (<strong><code>num_attention_heads</code></strong>), each focusing on different types of relationships within the data. In a natural language example, one attention head might capture subject-verb relationships, while another tracks adjective-noun pairs. In biological sequences, one attention head might learn to link binding motifs in promoters to transcription start sites, while another might focus on co-evolving residues in proteins that contribute to structural stability. The <strong>hidden size</strong> (<strong><code>hidden_size</code></strong>) refers to the dimensionality of these internal vector representations, defining how much information the model can store at each position. Larger hidden sizes allow the model to capture richer biological context, but they also increase computational cost. By combining deep transformer stacks, multiple attention heads, and flexible embeddings, biological language models can develop a powerful and nuanced understanding of biological sequences, helping researchers uncover new regulatory elements, predict protein folding, or study the effects of mutations.</p>
-<p>Defining the BERT Model for DNA Sequences</p>
+</section>
+<section id="defining-the-bert-model-for-dna-sequences" class="level3" data-number="2.5.4">
+<h3 data-number="2.5.4" class="anchored" data-anchor-id="defining-the-bert-model-for-dna-sequences"><span class="header-section-number">2.5.4</span> Defining the BERT Model for DNA Sequences</h3>
 <p>While the “quick brown fox” example helps us understand how BERT processes natural language, our goal is to apply the same principles to DNA sequences. Instead of predicting missing words in a sentence, we want our model to learn biological patterns and genomic structure by predicting masked nucleotides within DNA sequences.</p>
 <p>In DNA modeling, understanding sequence context is just as critical as in language modeling. Just as BERT learns that “fox” fits within a given sentence structure, our model should learn that specific nucleotide sequences appear in biologically meaningful patterns. This could involve recognizing gene coding regions, regulatory motifs, or conserved sequence elements across different genomes.</p>
 <p>To accomplish this, we define a custom BERT model designed specifically for processing DNA sequences. Unlike traditional text-based models, our DNA BERT model uses a character-level vocabulary of nucleotides (A, T, C, G) and special tokens to represent sequence structure. By leveraging masked language modeling (MLM), the model will learn to predict missing nucleotides based on surrounding context, allowing it to capture meaningful genomic features.</p>
@@ -568,21 +600,21 @@ Important
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>config.pad_token_id <span class="op">=</span> dna_vocab[<span class="st">"[PAD]"</span>]</span>
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> ModernBertForMaskedLM(config)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>The keenly eyed among you see a lot of powers of 2, 8 is 2^3, 256, 512 are also powers of two, etc. Computer memory encodes in bits and bytes, and is designed around powers of two. Building matrices that are powers of 2, 16, 32, 64, etc. makes them fit in memory more efficiently, and this can have serious consequences for training efficiency (see <strong>Figure 2.1</strong>).</p>
+<p>The keenly eyed among you see a lot of powers of 2, 8 is 2^3, 256, 512 are also powers of two, etc. Computer memory encodes in bits and bytes, and is designed around powers of two. Building matrices that are powers of 2, 16, 32, 64, etc. makes them fit in memory more efficiently, and this can have serious consequences for training efficiency (see <strong>Figure 1</strong>).</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/paste-19.png" class="img-fluid figure-img"></p>
-<figcaption><strong>Figure 2.1</strong> the power of powers of two.</figcaption>
+<figcaption><strong>Figure 1</strong> the power of powers of two.</figcaption>
 </figure>
 </div>
 </section>
-<section id="configuring-training-for-dna-bert" class="level3" data-number="2.5.4">
-<h3 data-number="2.5.4" class="anchored" data-anchor-id="configuring-training-for-dna-bert"><span class="header-section-number">2.5.4</span> Configuring Training for DNA BERT</h3>
+<section id="configuring-training-for-dna-bert" class="level3" data-number="2.5.5">
+<h3 data-number="2.5.5" class="anchored" data-anchor-id="configuring-training-for-dna-bert"><span class="header-section-number">2.5.5</span> Configuring Training for DNA BERT</h3>
 <p>Now that we have defined our BERT model for DNA sequences, we need to set up the training process. This involves specifying various training hyperparameters, handling masked language modeling (MLM) data, and preparing for efficient learning.</p>
 <p>Unlike traditional NLP tasks where models are trained on massive text corpora, training on DNA sequences presents unique challenges. The structure of genomic data, sequence length, and biological patterns all influence how the model learns. Our configuration is again rather general and not yet tuned to DNA or biological data. If you would scale this model, you’d likely have to drop the learning rate down, for example. In “production” hyperparameter optimization becomes super important when you train a large model on all your data; each run might be costly, and setting optimal hyperparameters can lead to serious gains in training results.</p>
 </section>
-<section id="setting-training-parameters" class="level3" data-number="2.5.5">
-<h3 data-number="2.5.5" class="anchored" data-anchor-id="setting-training-parameters"><span class="header-section-number">2.5.5</span> Setting Training Parameters</h3>
+<section id="setting-training-parameters" class="level3" data-number="2.5.6">
+<h3 data-number="2.5.6" class="anchored" data-anchor-id="setting-training-parameters"><span class="header-section-number">2.5.6</span> Setting Training Parameters</h3>
 <p>To train our DNA BERT model, we use the Hugging Face <strong><code>TrainingArguments</code></strong> class, which allows us to define key training settings. These include:</p>
 <ul>
 <li><strong>Batch size:</strong> We set a batch size (<strong><code>per_device_train_batch_size</code></strong>) of <code>16</code> for both training and evaluation. This determines how many sequences are processed at once.</li>
@@ -609,8 +641,8 @@ Important
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>While I have enabled it here, I can recommend tracking your training runs on wandb. Go to <a href="www.wandb.ai">wandb.ai</a> (w and b meaning weights and biases, the core parameters in AI models) to make a free account. Now to some extent, this is like Strava but for AI, and there is a risk of obsessing over the training metadata. But if you find yourself with a limited amount of compute, or expensive compute paid per minute, it makes a lot of sense to track big training runs in real time so you can intervene. If the run crashes, you can restart, or abort the node so you aren’t paying for an expensive GPU node that’s no longer training.</p>
 </section>
-<section id="preparing-for-masked-language-modeling-mlm" class="level3" data-number="2.5.6">
-<h3 data-number="2.5.6" class="anchored" data-anchor-id="preparing-for-masked-language-modeling-mlm"><span class="header-section-number">2.5.6</span> Preparing for Masked Language Modeling (MLM)</h3>
+<section id="preparing-for-masked-language-modeling-mlm" class="level3" data-number="2.5.7">
+<h3 data-number="2.5.7" class="anchored" data-anchor-id="preparing-for-masked-language-modeling-mlm"><span class="header-section-number">2.5.7</span> Preparing for Masked Language Modeling (MLM)</h3>
 <p>Since we are training our DNA BERT model using <strong>masked language modeling (MLM)</strong>, we need to handle introducing masked tokens properly. This is done using the <strong><code>DataCollatorForLanguageModeling</code></strong>, which:</p>
 <ul>
 <li><strong>Randomly masks nucleotides</strong> in the training sequences.</li>
@@ -625,8 +657,8 @@ Important
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    mlm_probability<span class="op">=</span><span class="fl">0.05</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="training-the-dna-bert-model" class="level3" data-number="2.5.7">
-<h3 data-number="2.5.7" class="anchored" data-anchor-id="training-the-dna-bert-model"><span class="header-section-number">2.5.7</span> Training the DNA BERT Model</h3>
+<section id="training-the-dna-bert-model" class="level3" data-number="2.5.8">
+<h3 data-number="2.5.8" class="anchored" data-anchor-id="training-the-dna-bert-model"><span class="header-section-number">2.5.8</span> Training the DNA BERT Model</h3>
 <p>With our configuration and data collator in place, we now train the model. We use the Hugging Face <strong><code>Trainer</code></strong> API, which simplifies the training process by handling:</p>
 <ul>
 <li><strong>Dataset iteration:</strong> Automatically loads and batches training sequences.</li>
@@ -644,11 +676,17 @@ Important
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>trainer.train()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>If you have set up a free wandb account, you can track your training runs, wherever they are running, on a central dashboard. You then get a dashboard full of pretty loss vs progress plots like the one below, which I screencapped about ± 30 minutes into training a tiny version of the model on my MacBook.</p>
-<p><img src="images/paste-4.png" class="img-fluid"></p>
+<p>If you have set up a free wandb account, you can track your training runs, wherever they are running, on a central dashboard. You then get a dashboard full of pretty loss vs progress plots like the one below in <strong>figure 2</strong>, which I screencapped about ± 30 minutes into training a tiny version of the model on my MacBook.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/paste-4.png" class="img-fluid figure-img"></p>
+<figcaption><strong>Figure 2:</strong> a training loss curve screen capped from wandb.com during training</figcaption>
+</figure>
+</div>
+<p>I’t valuable to consider the meaning of the loss. In this case the cross entropy loss can be transformed into a probability: <span class="math inline">\(e^{-loss} = p\)</span> the predicted masked token is the true token in the training data. So as you can see in DNA data that is absolutely dominated by the tokens for G,C,T and A 9and has no, or very few ambiguous nucleotide tokens) the loss almost immediately drops to below ~ -1.4, which is very close too random guess in of those four nocleotides: <span class="math inline">\(e^{-1.4}  = 0.25\)</span>. In other words it takes the model 1 iteration to learn almost all bases are G,C,T or A in the FASTA. after half an hour the loss is near 1.2, which corresponds to a probability of predicting the masked token correctly of: <span class="math inline">\(e^{-1.2}  = 0.30\)</span>. We’ll dig deeper into the meaning of the loss in <a href="Chapter3_DNA.html" class="quarto-xref"><span>Chapter 3</span></a>.</p>
 </section>
-<section id="saving-the-trained-model" class="level3" data-number="2.5.8">
-<h3 data-number="2.5.8" class="anchored" data-anchor-id="saving-the-trained-model"><span class="header-section-number">2.5.8</span> Saving the Trained Model</h3>
+<section id="saving-the-trained-model" class="level3" data-number="2.5.9">
+<h3 data-number="2.5.9" class="anchored" data-anchor-id="saving-the-trained-model"><span class="header-section-number">2.5.9</span> Saving the Trained Model</h3>
 <p>After training completes, we save both the model and tokenizer so they can be used for future predictions or fine-tuning.</p>
 <ul>
 <li>The model weights are stored in <code>./bert-dna</code>, allowing us to reload the trained model.</li>
@@ -662,12 +700,13 @@ Important
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">" Training complete! Model saved to ./bert-dna"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>If you intend to use, and re-use your model repeatedly, on different machines, or share it with others, it’s very convenient to save it to Hugging Face. If you have an account, you can do so for free using their internal tools. You’ll need to include an API token, I have omitted mine, and so should you when sharing code, because the API token lets people write to your account!</p>
+<p><strong>Python Code:</strong></p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>model.push_to_hub(repo_id<span class="op">=</span><span class="st">"MichelNivard/DNABert-CDS-13Species-v0.1"</span>,use_auth_token<span class="op">=</span><span class="st">""</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>hf_tokenizer.push_to_hub(repo_id<span class="op">=</span><span class="st">"MichelNivard/DNABert-CDS-13Species-v0.1"</span>,use_auth_token<span class="op">=</span><span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Because we used a standard BERT model (<strong><code>BertModern</code></strong>), it’s super easy for others to pull the model weights from the hub into a model configured for use on their machine, using the Hugging Face <strong><code>Transformers</code></strong> library.</p>
+<p>Because we used a standard BERT model (<strong><code>BertModern</code></strong>), it’s super easy for others to pull the model weights from the hub into a model configured for use on their machine, using the Hugging Face <strong><code>Transformers</code></strong> library. If you’d want to train a sate of the art model you’d bviousnely need to scale training (see <a href="Scaling_training.html" class="quarto-xref"><span>Chapter 7</span></a> for guidance).</p>
 </section>
-<section id="summary" class="level3" data-number="2.5.9">
-<h3 data-number="2.5.9" class="anchored" data-anchor-id="summary"><span class="header-section-number">2.5.9</span> Summary</h3>
+<section id="summary" class="level3" data-number="2.5.10">
+<h3 data-number="2.5.10" class="anchored" data-anchor-id="summary"><span class="header-section-number">2.5.10</span> Summary</h3>
 <p>In this section, we:</p>
 <ul>
 <li>Defined training hyperparameters such as batch size, learning rate, and training steps.</li>

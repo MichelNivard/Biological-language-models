@@ -1,6 +1,5 @@
----
-title: "Evolution-Aware Encoders"
----
+# Evolution-Aware Encoders {#sec-DNAMSA}
+
 
 ::: callout-tip
 ## Abstract

@@ -1,7 +1,4 @@
----
-title: "Preparing DNA data for training"
-format: html
----
+# Preparing DNA data for training {#sec-DNAdata}
 
 ::: callout-tip
 ## Abstract
@@ -15,9 +12,9 @@ Scripts for this chapter are found here: <https://github.com/MichelNivard/Biolog
 
 High-quality data is essential for training effective machine learning models. In natural language processing (NLP), researchers invest significant effort in curating clean datasets from raw internet text. For example, a dataset like 'fineweb-edu' contains English text that is of very high quality. Models trained on fineweb-edu (and similar high-quality datasets) will improve much faster than the equivalent model trained on other less carefully processed and evaluated datasets.
 
-![Relative training efficiency using a high-quality dataset like fineweb-edu and other massive datasets of English language texts. Image obtained from: https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu](https://cdn-uploads.huggingface.co/production/uploads/61c141342aac764ce1654e43/QqXOM8h_ZjjhuCv71xmV7.png){fig-align="center"}
+![**Figure 1:** Relative training efficiency using a high-quality dataset like fineweb-edu and other massive datasets of English language texts. Image obtained from: <https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu>](https://cdn-uploads.huggingface.co/production/uploads/61c141342aac764ce1654e43/QqXOM8h_ZjjhuCv71xmV7.png){fig-align="center"}
 
-Those with experience in **genetics** will know most of what I am about to explain when it comes to the sources of genetic data and the file formats these come in. Those with an **ML** background will be very familiar with Huggingface and the amazing data/model/training integration their libraries offer. Assembling high-quality genomics datasets for language modeling requires familiarity with both. When working with DNA, RNA, and protein sequences, the authoritative sources of data are specialized databases and infrastructures rather than data scraped from the internet. If you want to learn to train DNA/RNA/Protein-based language models, we must learn how, and where, to retrieve data and convert it into a structured format.
+Those with experience in **genetics/genomics** will know most of what I am about to explain when it comes to the sources of genetic data and the file formats these come in. Those with an **ML** background will be very familiar with Huggingface and the amazing data/model/training integration their libraries offer. Assembling high-quality genomics datasets for language modeling requires familiarity with both. When working with DNA, RNA, and protein sequences, the authoritative sources of data are specialized databases and infrastructures rather than data scraped from the internet. If you want to learn to train DNA/RNA/Protein-based language models, we must learn how, and where, to retrieve data and convert it into a structured format.
 
 In this tutorial, we will begin by collecting coding DNA sequences (CDS) from the human genome using the Ensembl database via BioMart. The goal is to store these sequences in a format suitable for training a DNA-based language model. We will then upload the processed data to [Huggingface](https://huggingface.co), a platform for hosting datasets and models for machine learning tasks.
 
@@ -33,9 +30,9 @@ If we want to work with the data in a language model, it's efficient to store it
 
 A **FASTA file** is a simple text-based format used for storing biological sequences. Each entry in a FASTA file consists of: 1. A **header line** (starting with `>`), which contains metadata such as gene IDs and chromosome locations. 2. A **sequence** line, which contains the nucleotide or protein sequence.
 
-There is a very comprehensive Wikipedia entry on the FASTA format.
+There is a very comprehensive Wikipedia entry on the FASTA format: "Sequences may be protein sequences or nucleic acid sequences, and they can contain gaps or alignment characters (see sequence alignment). Sequences are expected to be represented in the standard IUB/IUPAC amino acid and nucleic acid codes, with these exceptions: lower-case letters are accepted and are mapped into upper-case; a single hyphen or dash can be used to represent a gap character; and in amino acid sequences, U and \* are acceptable letters (see below). Numerical digits are not allowed but are used in some databases to indicate the position in the sequence." (source: <https://en.wikipedia.org/wiki/FASTA_format>)
 
-"Sequences may be protein sequences or nucleic acid sequences, and they can contain gaps or alignment characters (see sequence alignment). Sequences are expected to be represented in the standard IUB/IUPAC amino acid and nucleic acid codes, with these exceptions: lower-case letters are accepted and are mapped into upper-case; a single hyphen or dash can be used to represent a gap character; and in amino acid sequences, U and \* are acceptable letters (see below). Numerical digits are not allowed but are used in some databases to indicate the position in the sequence." ((source: <https://en.wikipedia.org/wiki/FASTA_format>))
+The nucleic-acid code specification of FASTA:
 
 | Nucleic Acid Code | Meaning | Mnemonic |
 |:----------------------:|:----------------------:|:----------------------:|
@@ -58,7 +55,7 @@ There is a very comprehensive Wikipedia entry on the FASTA format.
 | N | A C G T U | **N**ucleic acid |
 | \- | gap of indeterminate length |  |
 
-The amino acid codes supported (22 amino acids and 3 special codes) are:
+The amino acid codes specification (22 amino acids and 3 special codes) of FASTA:
 
 | Amino Acid Code | Meaning |
 |:----------------------------------:|:----------------------------------:|
@@ -99,21 +96,21 @@ In the example, we retrieve the **human coding DNA sequences (CDS)**, which repr
 
 While our ultimate goal is to model the entire human genome—and potentially multiple genomes across species or individuals—such tasks require significant computational resources. The tutorials in this book are designed to be accessible, running efficiently on a MacBook or Google Colab. Therefore, we focus on **CDS**, which are highly structured DNA sequences within genes, that are directly transcribed into RNA which is in turn translated into proteins. The table below contains the direct translation from 3-letter DNA sequences to amino acids (which are the building blocks of proteins).
 
-![The Genetic code to translate codins (3-letter DNA sequences) to amino-acids that are in turn the building blocks of proteins (source: https://a-little-book-of-r-for-bioinformatics.readthedocs.io/en/latest/_images/P7_image1.png)](images/paste-3.png){fig-align="center"}
+![The Genetic code to translate codins (3-letter DNA sequences) to amino-acids that are in turn the building blocks of proteins (source: https://a-little-book-of-r-for-bioinformatics.readthedocs.io/en/latest/\_images/P7_image1.png)](images/paste-3.png){fig-align="center"}
 
 In contrast, much of the rest of the genome consists of regulatory regions, which are more complex and less structured. CDS sequences provide a strong foundation for a small DNA-based language model because they contain well-defined biological structure, making them a logical starting point before expanding to more complex genomic elements.
 
 ## Why Upload DNA Data to Hugging Face?
 
-Hugging Face provides a robust ecosystem for hosting and sharing datasets, particularly for machine learning applications. Some key advantages include: - **Easy accessibility**: Researchers and models can easily retrieve datasets. - **Standardized format**: Datasets are structured for seamless integration with deep learning frameworks. - **Direct integration with Hugging Face tools**: The data on the Hugging Face Hub integrates seamlessly with their **Transformers** and **Trainer** Python libraries, making it easy to load datasets and train models. - **Version control and updates**: Data can be refined and expanded over time.
+Hugging Face provides a robust ecosystem for hosting and sharing datasets, particularly for machine learning applications. Some key advantages include: - **Easy accessibility**: Researchers and models can easily retrieve datasets. - **Standardized format**: Datasets are structured for seamless integration with deep learning frameworks. - **Direct integration with Hugging Face tools**: The data on the Hugging Face Hub integrates seamlessly with their **Transformers** and **Trainer** Python libraries, during training you can can stream data directly from the hub which means you dont have to wait for a massive download. - **Version control and updates**: Data is hosted on reporsitories, and can be refined and expanded over time.
 
-By storing our dataset on Hugging Face, we enable efficient training and collaboration for DNA language modeling.
+By storing our dataset on Hugging Face, we can facilitate efficient training and collaboration.
 
 ## The Script: Downloading and Formatting Human CDS Data
 
 Below is the R script that downloads human CDS from Ensembl using BioMart, extracts metadata, and saves the processed data into a CSV file. The package we use, `biomartr`, isn't the official R package, but it's a great option! It has very extensive documentation, so if you want to download other sequences in the future, make sure to start here: <https://docs.ropensci.org/biomartr/>
 
-```r
+``` r
 # Install necessary packages
 install.packages("biomartr", dependencies = TRUE)
 if (!requireNamespace("BiocManager", quietly = TRUE)) {
@@ -173,10 +170,10 @@ write.csv(metadata_df, "genome_sequences.csv", row.names = FALSE, quote = TRUE)
 head(metadata_df)
 ```
 
-You can run the script yourself, but I have also gone ahead and uploaded it to Huggingface: <https://huggingface.co/datasets/MichelNivard/Human-genome-CDS-GRCh38>
+You can run the script yourself, but I have also gone ahead and uploaded this particular dataset to Huggingface: <https://huggingface.co/datasets/MichelNivard/Human-genome-CDS-GRCh38>
 
 ## Summary
 
-In this chapter, we: - Introduced **Ensembl** and **BioMart** as tools for retrieving genomic data. - Explained **FASTA files** and **human CDS**, which form the core of our dataset. - Discussed the advantages of **uploading datasets to Hugging Face**, emphasizing its integration with **Transformers** and **Trainer** libraries. - Provided an **R script** to download, process, and store human CDS in a structured format.
+In this chapter, we: - Introduced Ensembl and BioMart as tools for retrieving genomic data. - Explained FASTA files and human CDS, which form the core of our dataset. - Discussed the advantages of uploading datasets to Hugging Face, emphasizing its integration with `Transformers` and `Trainer` python libraries. - Provided an R script to download, process, and store human CDS in a structured format.
 
-In the next chapter, we will explore **preprocessing techniques like tokenization** and strategies for encoding DNA sequences into a format suitable for training a deep learning language model, and we use Huggingface Transformers and Trainer library to train our first little DNA language model!
+In the next chapter, we will explore preprocessing techniques like tokenization and strategies for encoding DNA sequences into a format suitable for training a deep learning language model, and we use Huggingface Transformers and Trainer library to train our first little DNA language model!
