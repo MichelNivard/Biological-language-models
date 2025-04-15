@@ -1,4 +1,4 @@
-# The software stack {.unnumbered}
+# The software stack  {.unnumbered}
 
 To do any kind of machine learning at scale, you need a machine learning library that takes care of interfacing between your high level programming language (almost always `Python` if you are into niche/alt things `Julia` or if you are really into punishing yourself `R` (I tried...)) and low level matrix operations on CPU/GPU.
 
@@ -68,9 +68,23 @@ $$
 
 This is the same whether in PyTorch, Keras, torch for R, or JAX — only the **syntax** changes, not the **structure**.
 
-These scripts then all contain the folloing structural elements related tot the model, and to the optimisatino of the model given data:
+### The machinery around the model
 
-*Model definition:* This is where the architecture of the neural network is specified, including how inputs are transformed through layers to produce outputs. Forward pass: In this step, input data is passed through the model to compute predictions based on the current weights. *Loss computation:* The model's predictions are compared to the true target values using a loss function that quantifies the prediction error. *Backpropagation:* The gradients of the loss with respect to each model parameter are calculated by propagating the error backward through the network. *Weight updates:* The model’s parameters are adjusted using an optimization algorithm (like stochastic gradient descent) to reduce the loss in future predictions.
+These scripts then all contain the folloing structural elements related tot the model, and to the optimisation of the model given data:
+
+*Model definition:* This is where the architecture of the neural network is specified, including a forward function, which defines how inputs are transformed through layers to produce outputs.
+
+*Ioss-function and optimizer:* After the model makes a prediction we need to somehow compare the prediction to the ground truth in the training data, the loss function defines how this comparison is made, and summarized into a single value. The user can also specify an optimizer, which is a mathermatical functino that determines, based on the gradients of the parameters with respect tot he loss in this and sometimes previous iterations, on how to change the parameters in order to minimize the loss.
+
+having defined the model, loss and optimizer the user specifies a training loop:
+
+*Forward pass:* In this step, input data is passed through the model to compute predictions based on the current weights.
+
+*Loss computation:* The model's predictions are compared to the true target values using a loss function that quantifies the prediction error.
+
+*Backpropagation:* The gradients of the loss with respect to each model parameter are calculated by propagating the error backward through the network.
+
+*Weight updates:* The model’s parameters are adjusted using an optimization algorithm (like stochastic gradient descent) to reduce the loss in future predictions.
 
 ::: panel-tabset
 ## PyTorch (Python)
@@ -207,4 +221,4 @@ for x, y in data:
 ```
 :::
 
-The models clearly are the same, and the different frameworks/languages vary in their verbosity, in keras in R is only a few lines, many common operations such as mean square error loss (mse) are baked in, while in JAX things are defined more manually. I feel very comfortable with `PyTorch` myself and it does have a wide user base in the language/sequence/image deep-learing communities which means there is a lot of great code available. Switching form one to the other will make you stumble, but its not as insurmountable as many people believe.
+The models clearly are the same, and the different frameworks/languages vary in their verbosity, in keras in R is only a few lines, many common operations such as mean square error loss (mse) are baked in, while in JAX things are defined more manually. I feel very comfortable with `PyTorch` myself and it does have a wide user base in the language/sequence/image deep-learning communities which means there is a lot of great code available. Switching form one to the other will make you stumble, but its not as insurmountable as many people believe.
