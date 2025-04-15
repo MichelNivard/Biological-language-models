@@ -8,7 +8,7 @@ In Chapter 5, we will put these two models — Vanilla BERT and GPN-MSA-BERT —
 -   Predicting masked bases (MLM accuracy)
 -   Predicting the functional impact of mutations
 
-This head-to-head comparison will highlight the strengths and weaknesses of each approach. Finally, **we'll build a hybrid model**, in which the DNA sequence model is trained in both evolutionary context and sequence context, and the results are blended—a model architecture similar to AlphaFold, the Nobel-winning protein language model developed at Google DeepMind.
+This head-to-head comparison will highlight the strengths and weaknesses of each approach. The scripts and tests we cover in this chapter are really abstractions of full evaluations, and there an entirely literature around DNA language model evaluation you should familiarize yourself with if you are going to evaluate these models for academic or industry use[@Tang2024; @patel2024; @marin2023].
 
 All scripts for this chapter are found here: <https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/DNA/Chapter_5>
 :::

@@ -54,7 +54,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -335,7 +355,7 @@ Abstract
 <li>Predicting masked bases (MLM accuracy)</li>
 <li>Predicting the functional impact of mutations</li>
 </ul>
-<p>This head-to-head comparison will highlight the strengths and weaknesses of each approach. Finally, <strong>we’ll build a hybrid model</strong>, in which the DNA sequence model is trained in both evolutionary context and sequence context, and the results are blended—a model architecture similar to AlphaFold, the Nobel-winning protein language model developed at Google DeepMind.</p>
+<p>This head-to-head comparison will highlight the strengths and weaknesses of each approach. The scripts and tests we cover in this chapter are really abstractions of full evaluations, and there an entirely literature around DNA language model evaluation you should familiarize yourself with if you are going to evaluate these models for academic or industry use<span class="citation" data-cites="Tang2024 patel2024 marin2023">(<a href="references.html#ref-Tang2024" role="doc-biblioref">Tang et al. 2024</a>; <a href="references.html#ref-patel2024" role="doc-biblioref">Patel et al. 2024</a>; <a href="references.html#ref-marin2023" role="doc-biblioref">Marin et al. 2023</a>)</span>.</p>
 <p>All scripts for this chapter are found here: <a href="https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/DNA/Chapter_5" class="uri">https://github.com/MichelNivard/Biological-language-models/tree/main/scripts/DNA/Chapter_5</a></p>
 </div>
 </div>
@@ -491,6 +511,17 @@ Abstract
 <p>The code and detailed analysis for all experiments are available in the project repository, allowing for reproduction and extension of these results.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-marin2023" class="csl-entry" role="listitem">
+Marin, Frederikke Isa, Felix Teufel, Marc Horlacher, Dennis Madsen, Dennis Pultz, Ole Winther, and Wouter Boomsma. 2023. <span>“BEND: Benchmarking DNA Language Models on Biologically Meaningful Tasks.”</span> <a href="https://doi.org/10.48550/ARXIV.2311.12570">https://doi.org/10.48550/ARXIV.2311.12570</a>.
+</div>
+<div id="ref-patel2024" class="csl-entry" role="listitem">
+Patel, Aman, Arpita Singhal, Austin Wang, Anusri Pampari, Maya Kasowski, and Anshul Kundaje. 2024. <span>“DART-Eval: A Comprehensive DNA Language Model Evaluation Benchmark on Regulatory DNA.”</span> <a href="https://doi.org/10.48550/ARXIV.2412.05430">https://doi.org/10.48550/ARXIV.2412.05430</a>.
+</div>
+<div id="ref-Tang2024" class="csl-entry" role="listitem">
+Tang, Ziqi, Nirali Somia, Yiyang Yu, and Peter K Koo. 2024. <span>“Evaluating the Representational Power of Pre-Trained DNA Language Models for Regulatory Genomics.”</span> <a href="http://dx.doi.org/10.1101/2024.02.29.582810">http://dx.doi.org/10.1101/2024.02.29.582810</a>.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->

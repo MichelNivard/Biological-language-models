@@ -11,6 +11,7 @@ book:
   navbar:
     search: true
     logo: DNA.png
+    favicon: DNA.png
   chapters:
     - index.qmd
     - Preamble1.qmd

@@ -71,20 +71,20 @@ The **evolutionary history of a genomic position — how conserved it is, how it
 | Token Embedding | Fully learned | No unique encoding for each token, but predefined based on token-specific evolutionary history |
 | Neighboring Context | Defines meaning | Defines local motifs, but evolutionary context adds extra layer |
 
-: **Table 4.1** Key Differences Between Language and DNA
+: **Table 1** Key Differences Between Language and DNA
 
 To capture this **cross-species evolutionary context**, we need an **embedding strategy that combines:**
 
 1.  **The identity of the nucleotide itself (A, T, G, C, -)**.
 2.  **The state of this position in aligned species (what bases appear at the same position in other species).**
 
-This evolutionary-aware encoding is at the heart of the **Genomic Pre-trained Network (GPN)** architecture and various famous protein language models like AlphaFold[@Benegas2024; @Lupo2022; @jumper2021]. In DNA networks, we'll discuss in this chapter, the encoding is computed for each base given its history. So while the model has 5 tokens (G, C, T, A, and -), these tokens do not map to a fixed embedding; rather, the base "A" maps to an encoding (one-hot encoding) for A, but then also for the same base in aligned sequences of 99 non-human species. This fundamentally changes the model architecture, changing it from a language model applied to DNA as we did in Chapter 3 to a DNA language model, or maybe even just a DNA model.
+This evolutionary-aware modelling is at the heart of the **Genomic Pre-trained Network (GPN)** architecture and various famous protein language models like AlphaFold[@Benegas2024; @Lupo2022; @jumper2021]. In the specific DNA language model we'll discuss in this chapter, the encoding is computed for each base given its history. So while the model has 5 tokens (G, C, T, A, and -), these tokens do not map to a fixed embedding; rather, the base "A" maps to an encoding (one-hot encoding) for A, but then also for the same base in aligned sequences of 99 non-human species. This fundamentally changes the model architecture, changing it from a language model applied to DNA as we did in Chapter 3 to a DNA language model, or maybe even just a DNA model.
 
 ## 4. Introducing GPN-MSA-BERT
 
 GPN-MSA-BERT (inspired by @Benegas2024) adapts BERT-style masked language modeling (MLM) to DNA sequences, but **incorporates multispecies alignment (MSA) data directly into the model's input**.
 
-![**Figure 4.2** An example multiple sequence alignment (MSA) across 7 sequences (usually species). Source: <https://www.biorender.com/template/multiple-sequence-alignment-dna> author: [Eunice Huang](https://app.biorender.com/profile/eunice_huang)](images/paste-15.png)
+![**Figure 2** An example multiple sequence alignment (MSA) across 7 sequences (usually species). Source: <https://www.biorender.com/template/multiple-sequence-alignment-dna> author: [Eunice Huang](https://app.biorender.com/profile/eunice_huang)](images/paste-15.png)
 
 ### Key Idea: Dynamic Position Embeddings
 
@@ -236,9 +236,9 @@ class GPNBERTMaskedLM(nn.Module):
 
 ## What are we masking?
 
-I promised we'd have to deeply consider what we count as prediction, and that's going to have to happen right now. In Chapter 2, we trained a DNA language model, and in Chapter 3, we saw how well it did and did not predict specific features. In **Figure 3.3**, you saw the model predicts the true bases in the DRD2 gene with about 40%. What if I told you I can predict the bases in the human reference genome with \> 95% probability with a "model" based on a supervised model? To do so, I'd just pick the consensus base across other species! Human DNA and chimpanzee DNA are \> 90% identical, and human and mouse genomes are remarkably similar (85%, I think). In **Figure 4.3** (from [@initial2002]), we see the human sequences that are preserved well in the mouse genome, and they cover a staggering portion of it. This means we can "beat" base predictions made by our previous model by a mile, simply by picking the base that is most frequent across evolutionary history.
+I promised we'd have to deeply consider what we count as prediction, and that's going to have to happen right now. In Chapter 2, we trained a DNA language model, and in Chapter 3, we saw how well it did and did not predict specific features. In **Figure 3**, you saw the model predicts the true bases in the DRD2 gene with about 40%. What if I told you I can predict the bases in the human reference genome with \> 95% probability with a "model" based on a supervised model? To do so, I'd just pick the consensus base across other species! Human DNA and chimpanzee DNA are \> 90% identical, and human and mouse genomes are remarkably similar (85%, I think). In **Figure 4** (from [@initial2002]), we see the human sequences that are preserved well in the mouse genome, and they cover a staggering portion of it. This means we can "beat" base predictions made by our previous model by a mile, simply by picking the base that is most frequent across evolutionary history.
 
-![**Figure 4.3** The mouse genome, with sections of the human genome (color-coded) that are largely preserved across evolution (Figure 3 in [@initial2002])](images/paste-18.png){fig-align="center"}
+![**Figure 4** The mouse genome, with sections of the human genome (color-coded) that are largely preserved across evolution (Figure 3 in [@initial2002])](images/paste-18.png){fig-align="center"}
 
 In training our GPNBert model with auxiliary sequences, we train by **masking the human base only** (following [@Benegas2024]). This very obviously and dramatically improves base prediction, and does so very quickly. After a few hundred iterations (trained on about 5,000 genes), the model learns that it should just assign the base most often found in other species. But as the evaluations in the original GPN-MSA paper make clear, eventually the model learns more than that. The model outperforms just picking the consensus base across species. They are able to show fairly convincingly that the predicted probabilities are a better predictor of the allele frequency in humans than just picking the allele frequency across species (Figure 2B in @Benegas2024) as an estimate of the allele frequency within humans. Furthermore, their model is able to identify deleterious mutations better than CADD scores, based on supervised machine learning ([@rentzsch2021]), or than sophisticated evolutionary constraint scores ([@sullivan2023]).
 
