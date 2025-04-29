@@ -4,8 +4,8 @@ project:
 
 
 book:
-  title: "Sequence Language Models & Deep Learning in Genomics & Biology"
-  subtitle: "A book for statistical geneticists, psychiatric geneticists, and epidemiologist that are late to the AI party and trying to catch up."
+  title: "Sequence Language Models & Deep Learning in Genomics"
+  subtitle: "A book for those late to the AI party and trying to catch up."
   reader-mode: true
   author: "Michel Nivard"
   date: today
