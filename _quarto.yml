@@ -4,7 +4,7 @@ project:
 
 
 book:
-  title: "Biological Language Models & Neural Networks"
+  title: "Sequence language models and Deep learning for genetics and genomics"
   reader-mode: true
   author: "Michel Nivard"
   date: today

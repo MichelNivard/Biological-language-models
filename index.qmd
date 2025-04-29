@@ -1,6 +1,6 @@
 # Preface {.unnumbered}
 
-These are my study notes on training DNA/RNA/Protein and other biomedical language models overt he last \~year, year and a half. The text/book is intended for people who want to explore the field before they on-ramp to actually training large DNA/Biological language models, or for their PIs—anxious aging millennial or wise Gen-X'ers who want to be able to understand the next generation of computational genomics that is about to wash over us all.
+These are my study notes on training DNA/RNA/Protein sequence models and other biological deeplearning models, over the last ~year, year and a half. The text/book is intended for people who want to explore the field before they on-ramp to actually training large DNA/Biological language models, or for their PIs—anxious aging millennial or wise Gen-X'ers who want to be able to understand the next generation of computational genomics that is about to wash over us all.
 
 At all times, I'll try to add some biological context (though I am no biologist!) for people who have an ML background but no college bio experience, and I'll try to add context on ML concepts (though I am not an AI engineer!) for those with a bio background but limited experience with language models/deeplearning.
 

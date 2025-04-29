@@ -2,9 +2,9 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Biological Language Models & Neural Networks",
+    "title": "Sequence language models and Deep learning for genetics and genomics",
     "section": "",
-    "text": "Preface\nThese are my study notes on training DNA/RNA/Protein and other biomedical language models overt he last ~year, year and a half. The text/book is intended for people who want to explore the field before they on-ramp to actually training large DNA/Biological language models, or for their PIs—anxious aging millennial or wise Gen-X’ers who want to be able to understand the next generation of computational genomics that is about to wash over us all.\nAt all times, I’ll try to add some biological context (though I am no biologist!) for people who have an ML background but no college bio experience, and I’ll try to add context on ML concepts (though I am not an AI engineer!) for those with a bio background but limited experience with language models/deeplearning.",
+    "text": "Preface\nThese are my study notes on training DNA/RNA/Protein sequence models and other biological deeplearning models, over the last ~year, year and a half. The text/book is intended for people who want to explore the field before they on-ramp to actually training large DNA/Biological language models, or for their PIs—anxious aging millennial or wise Gen-X’ers who want to be able to understand the next generation of computational genomics that is about to wash over us all.\nAt all times, I’ll try to add some biological context (though I am no biologist!) for people who have an ML background but no college bio experience, and I’ll try to add context on ML concepts (though I am not an AI engineer!) for those with a bio background but limited experience with language models/deeplearning.",
     "crumbs": [
       "Preface"
     ]
@@ -12,7 +12,7 @@
   {
     "objectID": "index.html#the-times-we-live-in",
     "href": "index.html#the-times-we-live-in",
-    "title": "Biological Language Models & Neural Networks",
+    "title": "Sequence language models and Deep learning for genetics and genomics",
     "section": "The Times We Live In",
     "text": "The Times We Live In\nMore than natural language models, biological/sequence language models rely heavily on NIH-funded databases, datasets, resources, and scientists. The data we train on was bought and paid for by taxpayers all over the globe. The Human Genome Project was to a great extent funded, directed, and conceived under the auspices of the US federal government, under both Democratic and Republican presidents. Had they not, pharmaceutical companies might have done it, and while those can be highly innovative, there would have been no space for startups, no space for Google DeepMind to come in and iterate, revolutionize, or grow biological modeling. There is no uproar over training data in biology because under the firm guidance of US federal policy, all the data sequencers generate is generally in the public domain, or accessible for those willing and able to meet ethical standards. All scientists reading this know this—should you find yourself as someone from Silicon Valley, from a well-funded startup even, take a beat and think through whether you’d stand a snowball’s chance in hell to compete if the next wave of sequence data isn’t public but generated inside Google/Microsoft/pharma. Then adjust your politics accordingly.",
     "crumbs": [
@@ -22,7 +22,7 @@
   {
     "objectID": "index.html#acknowledgements",
     "href": "index.html#acknowledgements",
-    "title": "Biological Language Models & Neural Networks",
+    "title": "Sequence language models and Deep learning for genetics and genomics",
     "section": "Acknowledgements",
     "text": "Acknowledgements\nThese notes are written by me, Michel Nivard, a professor of Epidemiology at the University of Bristol, and as this book is not a core output for my job, I rely on LLMs to help me with drafting, spelling, and formatting.\nThese study notes are influenced by discussions with Robbee Wedow and Seyedeh Zahra Paylakhi, with whom I work on related projects.",
     "crumbs": [
