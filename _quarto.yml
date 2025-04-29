@@ -10,6 +10,7 @@ book:
   author: "Michel Nivard"
   date: today
   navbar:
+    sharing: true
     search: true
     logo: DNA.png
     favicon: DNA.png
