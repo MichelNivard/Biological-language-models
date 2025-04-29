@@ -16,17 +16,17 @@ All scripts for this chapter are found here: <https://github.com/MichelNivard/Bi
 
 Now that we have collected and formatted a DNA dataset in Chapter 1, we can proceed to train a language model using the (Modern)BERT model architecture. In this chapter, we will walk through the process of tokenizing DNA sequences, configuring a BERT model, and training it using the **Masked Language Modeling (MLM)** objective.
 
-We will cover the utility and rationale behind DNA language models, and the key concepts behind tokenization, the BERT model, and the idea of masked language modeling (MLM) before diving into the Python script that trains the actual model.
+We will cover the utility and rationale behind DNA language models, and we'll dive into the key concepts behind tokenization. Then we'll disucss key parts of the acrchitecture the BERT model, and the logicl of masked language model(MLM) training, before diving into the Python script that trains the actual model. Note that while we briefly discuss key elements of the model architecture like attention we dont get into the nitty gritty just jett to make sure the chapters arent to dense, we'll discuss individual parts fo the transformer model achrchitecture in far greater detail in later chapters.
 
 ## Why would we train DNA language models?
 
-For a full review of the utility of language models, you should dig into the literature. I can recommend [@benegas2025] for example. Genomic language models (gLMs) apply AI techniques to DNA sequences, enabling breakthroughs in variant effect prediction, sequence design, and genomic analysis.
+For a full review of the utility of language models, you should dig into the literature. I can recommend [@benegas2025] for example. Genomic language models (gLMs) apply AI techniques to DNA sequences, enabling breakthroughs in variant effect prediction, sequence design, and genomic analysis. After we learn about DNA language model we'll briefly review the current offerings available in @sec-DNAreview.
 
-Like larger language models like ChatGPT, DNA language models (DNA-LM) have "emergent properties". If you train genomic Language models (gLM, strictly speaking a slightly more general class of models than DNA-LMs, so also RNA or protein LMs) on the reference genome sequence of humans and various other species, then the model that emerges is able to detect damaging mutations, without ever being trained on mutations (as mutations are defined as deviations from the reference)[@benegas2023]. To assess functional constraints, a widely used metric is the **log-likelihood ratio (LLR)** between two alleles. This measures the probability of a nucleotide variant appearing in a given context, with lower probabilities indicating potential deleterious effects. This application will be one of the examples I use throughout, simply because my experience in genetics aligns with it.
+Like larger language models like ChatGPT, DNA language models (DNA-LM) have "emergent properties". If you train an DNA-LM, or a genomic Language models (gLM). which strictly speaking a slightly more general class of models than DNA-LMs, so also RNA or protein LMs, on the reference genome sequence of humans and various other species, then that model is able to detect damaging mutations. It can do so without ever being trained on mutations explicitly as damaging mutations are very unlikely to occur across the many references genomes on which the model is trained[@benegas2023]. To assess functional constraints, a widely used metric is the **log-likelihood ratio (LLR)**, the ratio of log likelihoods of the various alleles given the model. This measures the probability of a nucleotide variant appearing in a given context, with lower probabilities indicating potential deleterious effects. This application will be one of the examples I use throughout, simply because my experience in genetics aligns with it.
 
-Another key application is transfer learning, where pretrained DNA-LMs improve predictions in tasks like gene expression and chromatin accessibility. However, training effective models is difficult due to the vast, complex, and often non-functional nature of genomes. Unlike protein models, DNA-LMs struggle with limited genomic diversity in training data and require more sophisticated benchmarks for evaluation.
+Another key application are types of "transfer learning", where pre-trained DNA-LMs improve predictions of gene expression, regulatory sequence structure, or chromatin accessibility of a section of DNA in a specific tissue. However, training effective models is difficult due to the vast, complex, and often non-functional nature of genomes. Unlike protein models, DNA-LMs struggle with limited genomic diversity in training data and require sophisticated benchmarks for evaluation.
 
-Future advancements will focus on improving long-range genomic interactions, integrating multimodal biological data, and refining sequence design for practical applications. Despite challenges, gLMs hold great promise for revolutionizing genome research, advancing genetic disease understanding, and enabling synthetic biology innovations.
+Current state of the art models[@nguyen2024] are trained on hundreds of thousands of genomes and focus on improving long-range genomic interactions (i.e. are able to generate realistic genome segments of \> 1 million bases long), integrating multi-modal biological data (are effectively joint DNA/RNA/Protein models), and refining sequence design for practical applications. DNA-LM or gLMs hold great promise for revolutionizing genome research, advancing genetic disease understanding, and enabling synthetic biology innovations.
 
 ## Understanding Tokenization
 
@@ -208,7 +208,8 @@ To accomplish this, we define a custom BERT model designed specifically for proc
 
 The **`max_position_embeddings`** defines the longest sequence the model can process at once, which is crucial for biological sequences like genomes or proteins that can vary widely in length. To help the model understand where each token appears in the sequence, position embeddings are added to the token embeddings, giving the model a sense of order and distance, which is especially important when analyzing long-range interactions, like regulatory elements controlling distant genes.
 
-With this in mind, let's move forward and define a standard BERT architecture, which we'll apply to DNA sequences. Because we'll train a standard model, we can basically get away with defining the dimensions of certain aspects of the model.
+With this in mind, let's move forward and define a standard BERT architecture, which we'll apply to DNA sequences. Because we'll train a standard model, we can basically get away with defining the dimensions of certain aspects of the model. Recall in the chapter on the software stack we discussed the general outlien of a machinne learning model? We coudl write a script like that for a BERT model, but the huggingface `transformers` library  proviced standard models, while the `Trainer` class abstracts away ahaving to write a training loop. 
+
 
 **Python Code:**
 
@@ -275,7 +276,7 @@ While I have enabled it here, I can recommend tracking your training runs on wan
 Since we are training our DNA BERT model using **masked language modeling (MLM)**, we need to handle introducing masked tokens properly. This is done using the **`DataCollatorForLanguageModeling`**, which:
 
 -   **Randomly masks nucleotides** in the training sequences.
--   **Creates `labels` automatically**, meaning the model learns by trying to predict these masked tokens.
+-   **Creates `labels` automatically**, meaning the model learns by trying to predict these labeled masked tokens.
 -   **Uses a masking probability of 5%-15%**, ensuring that a small but meaningful portion of the sequence is masked during training.
 
 By applying MLM, we allow the model to generalize nucleotide relationships and capture sequence dependencies, just like how BERT learns relationships between words in text.
@@ -298,8 +299,7 @@ With our configuration and data collator in place, we now train the model. We us
 -   **Gradient updates:** Adjusts model weights based on training loss.
 -   **Logging & saving:** Tracks training progress and stores checkpoints.
 
-Once training begins, the model will gradually learn nucleotide dependencies and improve its ability to predict missing DNA bases.
-
+Once training begins, the model will gradually learn nucleotide dependencies and improve its ability to predict missing DNA bases. 
 **Python Code:**
 
 ``` python
@@ -318,7 +318,7 @@ If you have set up a free wandb account, you can track your training runs, where
 
 ![**Figure 2:** a training loss curve screen capped from wandb.com during training](images/paste-4.png)
 
-I't valuable to consider the meaning of the loss. In this case the cross entropy loss can be transformed into a probability: $e^{-loss} = p$ the predicted masked token is the true token in the training data. So as you can see in DNA data that is absolutely dominated by the tokens for G,C,T and A 9and has no, or very few ambiguous nucleotide tokens) the loss almost immediately drops to below \~ -1.4, which is very close too random guess in of those four nocleotides: $e^{-1.4}  = 0.25$. In other words it takes the model 1 iteration to learn almost all bases are G,C,T or A in the FASTA. after half an hour the loss is near 1.2, which corresponds to a probability of predicting the masked token correctly of: $e^{-1.2}  = 0.30$. We'll dig deeper into the meaning of the loss in @sec-DNAeval.
+I't valuable to consider the meaning of the loss. In this case the cross entropy loss can be transformed into a probability: $e^{-loss} = p$ the predicted masked token is the true token in the training data. So as you can see in DNA data that is absolutely dominated by the tokens for G,C,T and A (the training data has no, or very very few, ambiguous nucleotide tokens) the loss almost immediately drops to below \~ -1.4, which is very close too random guess in of those four nocleotides: $e^{-1.4}  = 0.25$. In other words it takes the model 1 iteration to learn almost all bases are G,C,T or A in the FASTA. after half an hour the loss is near 1.2, which corresponds to a probability of predicting the masked token correctly of: $e^{-1.2}  = 0.30$. We'll dig deeper into the meaning of the loss in @sec-DNAeval.
 
 ### Saving the Trained Model
 

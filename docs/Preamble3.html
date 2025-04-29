@@ -344,6 +344,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#matrices-and-vectors-in-the-model" id="toc-matrices-and-vectors-in-the-model" class="nav-link" data-scroll-target="#matrices-and-vectors-in-the-model">Matrices and Vectors in the Model</a></li>
   <li><a href="#mathematical-equation-of-the-model" id="toc-mathematical-equation-of-the-model" class="nav-link" data-scroll-target="#mathematical-equation-of-the-model">Mathematical Equation of the Model</a></li>
+  <li><a href="#the-machinery-around-the-model" id="toc-the-machinery-around-the-model" class="nav-link" data-scroll-target="#the-machinery-around-the-model">The machinery around the model</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -435,8 +436,17 @@ Important
 f(\mathbf{x}) = \left( \text{ReLU}(\mathbf{x} \mathbf{W}_1 + \mathbf{b}_1) \right) \mathbf{W}_2 + \mathbf{b}_2
 \]</span></p>
 <p>This is the same whether in PyTorch, Keras, torch for R, or JAX — only the <strong>syntax</strong> changes, not the <strong>structure</strong>.</p>
-<p>These scripts then all contain the folloing structural elements related tot the model, and to the optimisatino of the model given data:</p>
-<p><em>Model definition:</em> This is where the architecture of the neural network is specified, including how inputs are transformed through layers to produce outputs. Forward pass: In this step, input data is passed through the model to compute predictions based on the current weights. <em>Loss computation:</em> The model’s predictions are compared to the true target values using a loss function that quantifies the prediction error. <em>Backpropagation:</em> The gradients of the loss with respect to each model parameter are calculated by propagating the error backward through the network. <em>Weight updates:</em> The model’s parameters are adjusted using an optimization algorithm (like stochastic gradient descent) to reduce the loss in future predictions.</p>
+</section>
+<section id="the-machinery-around-the-model" class="level3">
+<h3 class="anchored" data-anchor-id="the-machinery-around-the-model">The machinery around the model</h3>
+<p>These scripts then all contain the folloing structural elements related tot the model, and to the optimisation of the model given data:</p>
+<p><em>Model definition:</em> This is where the architecture of the neural network is specified, including a forward function, which defines how inputs are transformed through layers to produce outputs.</p>
+<p><em>Ioss-function and optimizer:</em> After the model makes a prediction we need to somehow compare the prediction to the ground truth in the training data, the loss function defines how this comparison is made, and summarized into a single value. The user can also specify an optimizer, which is a mathermatical functino that determines, based on the gradients of the parameters with respect tot he loss in this and sometimes previous iterations, on how to change the parameters in order to minimize the loss.</p>
+<p>having defined the model, loss and optimizer the user specifies a training loop:</p>
+<p><em>Forward pass:</em> In this step, input data is passed through the model to compute predictions based on the current weights.</p>
+<p><em>Loss computation:</em> The model’s predictions are compared to the true target values using a loss function that quantifies the prediction error.</p>
+<p><em>Backpropagation:</em> The gradients of the loss with respect to each model parameter are calculated by propagating the error backward through the network.</p>
+<p><em>Weight updates:</em> The model’s parameters are adjusted using an optimization algorithm (like stochastic gradient descent) to reduce the loss in future predictions.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">PyTorch (Python)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">torch for R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Keras (R)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">Keras (Python)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false">JAX</a></li></ul>
 <div class="tab-content">
@@ -560,7 +570,7 @@ f(\mathbf{x}) = \left( \text{ReLU}(\mathbf{x} \mathbf{W}_1 + \mathbf{b}_1) \righ
 </div>
 </div>
 </div>
-<p>The models clearly are the same, and the different frameworks/languages vary in their verbosity, in keras in R is only a few lines, many common operations such as mean square error loss (mse) are baked in, while in JAX things are defined more manually. I feel very comfortable with <code>PyTorch</code> myself and it does have a wide user base in the language/sequence/image deep-learing communities which means there is a lot of great code available. Switching form one to the other will make you stumble, but its not as insurmountable as many people believe.</p>
+<p>The models clearly are the same, and the different frameworks/languages vary in their verbosity, in keras in R is only a few lines, many common operations such as mean square error loss (mse) are baked in, while in JAX things are defined more manually. I feel very comfortable with <code>PyTorch</code> myself and it does have a wide user base in the language/sequence/image deep-learning communities which means there is a lot of great code available. Switching form one to the other will make you stumble, but its not as insurmountable as many people believe.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
