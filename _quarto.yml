@@ -50,7 +50,7 @@ format:
       margin-width: 200px
     comments:
       utterances:
-         repo: MichelNivard/Biological-language-models
+         repo: MichelNivard/biobook
     theme:
       - cosmo
       - style.scss
