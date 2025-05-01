@@ -4,11 +4,11 @@ These are my study notes on training DNA/RNA/Protein sequence models and other b
 
 The text/book is intended for people who want to on-ramp into the field and begin to actually train large DNA/Biological language models,, but also for their PIs—anxious aging millennial or Gen-X'ers who want to be able to understand the next generation of computational genomics tools that are about to wash over us all.
 
-As I come at this from my background in statistical genetics/psychiatric genetics/epidemiology, I'll clearly be interest in how mutations or variants I might identify in GWAS alter proteins function, and how protein models can help me asses/model those consequences. In later chapters (currently being drafted) I tackle issues more closely related to statistical genetics, like finemapping and how (language) models of protein complexes might enable prioritisiation of long range co-evolution between amino-acids and help us prioritize potential GxG interactions between distal variants, or help study biological mechanisms for trans-QTLs.
+As I come at this from my background in statistical genetics/psychiatric genetics/epidemiology, I'll clearly be interest in how mutations or variants I might identify in GWAS alter proteins function, and how protein models can help me asses/model those consequences. In later chapters (currently being drafted) I tackle issues more closely related to statistical genetics, like finemapping and how (language) models of protein complexes might enable prioritization of long range co-evolution between amino-acids and help us prioritize potential GxG interactions between distal variants, or help study biological mechanisms for trans-QTLs.
 
 At all times, I'll try to add some biological context (though I am no biologist!) for people who have an ML background but no college bio experience, and I'll try to add context on ML concepts (though I am not an AI engineer!) for those with a bio background but limited experience with language models/deeplearning.
 
-If you have a formal training in Machine Learnign and abackground in biology or genomics, this book might be too basic for you, and in fact I'd love it if you could flag any errors or omissions (which I am sure exist), each page has a comments section or you can email me at: m.g.nivard (at) bristol (dot) ac.uk
+If you have a formal training in Machine Learnign **and** a background in biology or genomics, this book might be too basic for you, and in fact I'd love it if you could flag any errors or omissions (which I am sure exist), each page has a comments section or you can email me at: m.g.nivard (at) bristol (dot) ac.uk
 
 ## The Times We Live In
 
@@ -16,6 +16,6 @@ More than natural language models, biological/sequence language models rely heav
 
 ## Acknowledgements
 
-These notes are written by me, **Michel Nivard**, a professor of Epidemiology at the University of Bristol, and as this book is not a core output for my job, I frequently rely on LLMs to help me with grammar, spelling, review, coding, and formatting to a level that exceeds my reliance on those for publications orteaching materils for Uni courses.
+These notes are written by me, **Michel Nivard**, a professor of Epidemiology at the University of Bristol, and as this book is not a core output for my job, I frequently rely on LLMs to help me with grammar, spelling, review, coding, and formatting to a level that exceeds my reliance on those for publications or teaching materials for Uni courses.
 
 These study notes are influenced by discussions with **Robbee Wedow** and **Seyedeh Zahra Paylakhi,** with whom I work on related projects.
