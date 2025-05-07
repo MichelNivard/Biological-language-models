@@ -16,7 +16,7 @@ All scripts for this chapter are found here: <https://github.com/MichelNivard/Bi
 
 Now that we have collected and formatted a DNA dataset in Chapter 1, we can proceed to train a language model using the (Modern)BERT model architecture. In this chapter, we will walk through the process of tokenizing DNA sequences, configuring a BERT model, and training it using the **Masked Language Modeling (MLM)** objective.
 
-We will cover the utility and rationale behind DNA language models, and we'll dive into the key concepts behind tokenization. Then we'll disucss key parts of the acrchitecture the BERT model, and the logicl of masked language model(MLM) training, before diving into the Python script that trains the actual model. Note that while we briefly discuss key elements of the model architecture like attention we dont get into the nitty gritty just jett to make sure the chapters arent to dense, we'll discuss individual parts fo the transformer model achrchitecture in far greater detail in later chapters.
+We will cover the utility and rationale behind DNA language models, and we'll dive into the key concepts behind tokenization. Then we'll discuss key parts of the architecture the BERT model, and the logic of masked language model(MLM) training, before diving into the Python script that trains the actual model. Note that while we briefly discuss key elements of the model architecture like attention we don't get into the nitty gritty just yet to make sure the chapters aren't to dense, we'll discuss individual parts fof the transformer model architecture in far greater detail in later chapters.
 
 ## Why would we train DNA language models?
 
@@ -208,8 +208,7 @@ To accomplish this, we define a custom BERT model designed specifically for proc
 
 The **`max_position_embeddings`** defines the longest sequence the model can process at once, which is crucial for biological sequences like genomes or proteins that can vary widely in length. To help the model understand where each token appears in the sequence, position embeddings are added to the token embeddings, giving the model a sense of order and distance, which is especially important when analyzing long-range interactions, like regulatory elements controlling distant genes.
 
-With this in mind, let's move forward and define a standard BERT architecture, which we'll apply to DNA sequences. Because we'll train a standard model, we can basically get away with defining the dimensions of certain aspects of the model. Recall in the chapter on the software stack we discussed the general outlien of a machinne learning model? We coudl write a script like that for a BERT model, but the huggingface `transformers` library  proviced standard models, while the `Trainer` class abstracts away ahaving to write a training loop. 
-
+With this in mind, let's move forward and define a standard BERT architecture, which we'll apply to DNA sequences. Because we'll train a standard model, we can basically get away with defining the dimensions of certain aspects of the model. Recall in the chapter on the software stack we discussed the general outline of a machine learning model? We could write a script like that for a BERT model, but the Hugging Face `transformers` library provided standard models, while the `Trainer` class abstracts away having to write a training loop.
 
 **Python Code:**
 
@@ -299,8 +298,7 @@ With our configuration and data collator in place, we now train the model. We us
 -   **Gradient updates:** Adjusts model weights based on training loss.
 -   **Logging & saving:** Tracks training progress and stores checkpoints.
 
-Once training begins, the model will gradually learn nucleotide dependencies and improve its ability to predict missing DNA bases. 
-**Python Code:**
+Once training begins, the model will gradually learn nucleotide dependencies and improve its ability to predict missing DNA bases. **Python Code:**
 
 ``` python
 trainer = Trainer(
@@ -314,7 +312,7 @@ trainer = Trainer(
 trainer.train()
 ```
 
-If you have set up a free wandb account, you can track your training runs, wherever they are running, on a central dashboard. You then get a dashboard full of pretty loss vs progress plots like the one below in **figure 2**, which I screencapped about ± 30 minutes into training a tiny version of the model on my MacBook.
+If you have set up a free `wandb` account, you can track your training runs, wherever they are running, on a central dashboard. You then get a dashboard full of pretty loss vs progress plots like the one below in **figure 2**, which I screencapped about ± 30 minutes into training a tiny version of the model on my MacBook.
 
 ![**Figure 2:** a training loss curve screen capped from wandb.com during training](images/paste-4.png)
 

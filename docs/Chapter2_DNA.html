@@ -184,7 +184,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_DNA.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter2_DNA.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Training our first DNA Language Model</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_DNA.html">DNA models</a></li><li class="breadcrumb-item"><a href="./Chapter2_DNA.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Training our first DNA Language Model</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -229,7 +229,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">DNA</span></a>
+ <span class="menu-text">DNA models</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -282,7 +282,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">Proteins</span></a>
+ <span class="menu-text">Protein models</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -321,13 +321,26 @@ window.Quarto = {
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Multi-Modal-Biology</span></span>
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Multi-Modal-Biology</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter1_MMB.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Multi-Modal Biology</span></span></a>
+  </div>
+</li>
+      </ul>
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -379,7 +392,7 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_DNA.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter2_DNA.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Training our first DNA Language Model</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_DNA.html">DNA models</a></li><li class="breadcrumb-item"><a href="./Chapter2_DNA.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Training our first DNA Language Model</span></a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title"><span id="sec-DNALM" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Training our first DNA Language Model</span></span></h1>
 </div>
@@ -417,7 +430,7 @@ Abstract
 <section id="introduction" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">2.1</span> Introduction</h2>
 <p>Now that we have collected and formatted a DNA dataset in Chapter 1, we can proceed to train a language model using the (Modern)BERT model architecture. In this chapter, we will walk through the process of tokenizing DNA sequences, configuring a BERT model, and training it using the <strong>Masked Language Modeling (MLM)</strong> objective.</p>
-<p>We will cover the utility and rationale behind DNA language models, and we’ll dive into the key concepts behind tokenization. Then we’ll disucss key parts of the acrchitecture the BERT model, and the logicl of masked language model(MLM) training, before diving into the Python script that trains the actual model. Note that while we briefly discuss key elements of the model architecture like attention we dont get into the nitty gritty just jett to make sure the chapters arent to dense, we’ll discuss individual parts fo the transformer model achrchitecture in far greater detail in later chapters.</p>
+<p>We will cover the utility and rationale behind DNA language models, and we’ll dive into the key concepts behind tokenization. Then we’ll discuss key parts of the architecture the BERT model, and the logic of masked language model(MLM) training, before diving into the Python script that trains the actual model. Note that while we briefly discuss key elements of the model architecture like attention we don’t get into the nitty gritty just yet to make sure the chapters aren’t to dense, we’ll discuss individual parts fof the transformer model architecture in far greater detail in later chapters.</p>
 </section>
 <section id="why-would-we-train-dna-language-models" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="why-would-we-train-dna-language-models"><span class="header-section-number">2.2</span> Why would we train DNA language models?</h2>
@@ -591,7 +604,7 @@ Important
 <p>In DNA modeling, understanding sequence context is just as critical as in language modeling. Just as BERT learns that “fox” fits within a given sentence structure, our model should learn that specific nucleotide sequences appear in biologically meaningful patterns. This could involve recognizing gene coding regions, regulatory motifs, or conserved sequence elements across different genomes.</p>
 <p>To accomplish this, we define a custom BERT model designed specifically for processing DNA sequences. Unlike traditional text-based models, our DNA BERT model uses a character-level vocabulary of nucleotides (A, T, C, G) and special tokens to represent sequence structure. By leveraging masked language modeling (MLM), the model will learn to predict missing nucleotides based on surrounding context, allowing it to capture meaningful genomic features.</p>
 <p>The <strong><code>max_position_embeddings</code></strong> defines the longest sequence the model can process at once, which is crucial for biological sequences like genomes or proteins that can vary widely in length. To help the model understand where each token appears in the sequence, position embeddings are added to the token embeddings, giving the model a sense of order and distance, which is especially important when analyzing long-range interactions, like regulatory elements controlling distant genes.</p>
-<p>With this in mind, let’s move forward and define a standard BERT architecture, which we’ll apply to DNA sequences. Because we’ll train a standard model, we can basically get away with defining the dimensions of certain aspects of the model. Recall in the chapter on the software stack we discussed the general outlien of a machinne learning model? We coudl write a script like that for a BERT model, but the huggingface <code>transformers</code> library proviced standard models, while the <code>Trainer</code> class abstracts away ahaving to write a training loop.</p>
+<p>With this in mind, let’s move forward and define a standard BERT architecture, which we’ll apply to DNA sequences. Because we’ll train a standard model, we can basically get away with defining the dimensions of certain aspects of the model. Recall in the chapter on the software stack we discussed the general outline of a machine learning model? We could write a script like that for a BERT model, but the Hugging Face <code>transformers</code> library provided standard models, while the <code>Trainer</code> class abstracts away having to write a training loop.</p>
 <p><strong>Python Code:</strong></p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> ModernBertConfig, ModernBertForMaskedLM</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -681,7 +694,7 @@ Important
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>trainer.train()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>If you have set up a free wandb account, you can track your training runs, wherever they are running, on a central dashboard. You then get a dashboard full of pretty loss vs progress plots like the one below in <strong>figure 2</strong>, which I screencapped about ± 30 minutes into training a tiny version of the model on my MacBook.</p>
+<p>If you have set up a free <code>wandb</code> account, you can track your training runs, wherever they are running, on a central dashboard. You then get a dashboard full of pretty loss vs progress plots like the one below in <strong>figure 2</strong>, which I screencapped about ± 30 minutes into training a tiny version of the model on my MacBook.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/paste-4.png" class="img-fluid figure-img"></p>

@@ -1,6 +1,5 @@
 # Evolution-Aware Encoders {#sec-DNAMSA}
 
-
 ::: callout-tip
 ## Abstract
 
@@ -242,7 +241,7 @@ I promised we'd have to deeply consider what we count as prediction, and that's 
 
 In training our GPNBert model with auxiliary sequences, we train by **masking the human base only** (following [@Benegas2024]). This very obviously and dramatically improves base prediction, and does so very quickly. After a few hundred iterations (trained on about 5,000 genes), the model learns that it should just assign the base most often found in other species. But as the evaluations in the original GPN-MSA paper make clear, eventually the model learns more than that. The model outperforms just picking the consensus base across species. They are able to show fairly convincingly that the predicted probabilities are a better predictor of the allele frequency in humans than just picking the allele frequency across species (Figure 2B in @Benegas2024) as an estimate of the allele frequency within humans. Furthermore, their model is able to identify deleterious mutations better than CADD scores, based on supervised machine learning ([@rentzsch2021]), or than sophisticated evolutionary constraint scores ([@sullivan2023]).
 
-## Recap of Our Approach
+## Recap
 
 In Chapter 2, we trained a vanilla BERT on DNA sequences alone — treating DNA as just another language. That model only had access to the human sequence, with no evolutionary context.
 
@@ -254,9 +253,9 @@ In this chapter, we've re-imagined that process. Instead of treating A, T, G, C,
 
 ## Preview of Chapter 5
 
-In **Chapter 5**, we will put these two models — **Vanilla BERT** and **GPN-BERT** — to the test. We will evaluate their performance on:
+In Chapter 5, we will put these two models — Vanilla BERT and GPN-BERT — to the test. We will evaluate their performance on:
 
 -   Predicting masked bases (MLM accuracy).
 -   Predicting the functional impact of mutations.
 
-This head-to-head comparison will highlight the **strengths and weaknesses** of each approach and show the value of embedding **evolutionary context directly into genomic language models**.
+This head-to-head comparison will highlight the strengths and weaknesses of each approach and show the value of embedding evolutionary context directly into genomic language models.

@@ -20,7 +20,7 @@ book:
     - Preamble2.qmd
     - Preamble3.qmd
     - Preamble4.qmd
-    - part: "DNA"
+    - part: "DNA models"
       chapters: 
         - Chapter1_DNA.qmd
         - Chapter2_DNA.qmd
@@ -29,7 +29,7 @@ book:
         - Chapter5_DNA.qmd
         - Chapter6_DNA.qmd
     - Scaling_training.qmd    
-    - part: "Proteins"
+    - part: "Protein models"
       chapters:
         - Chapter1_Proteins.qmd
         - Chapter2_Proteins.qmd
@@ -37,6 +37,8 @@ book:
         - Chapter4_Proteins.qmd
         - Chapter5_Proteins.qmd
     - part: "Multi-Modal-Biology"
+      chapters: 
+        - Chapter1_MMB.qmd
     - summary.qmd
     - references.qmd
 

@@ -121,7 +121,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_DNA.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter6_DNA.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_DNA.html">DNA models</a></li><li class="breadcrumb-item"><a href="./Chapter6_DNA.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -166,7 +166,7 @@ div.csl-indent {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">DNA</span></a>
+ <span class="menu-text">DNA models</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -219,7 +219,7 @@ div.csl-indent {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">Proteins</span></a>
+ <span class="menu-text">Protein models</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -258,13 +258,26 @@ div.csl-indent {
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Multi-Modal-Biology</span></span>
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Multi-Modal-Biology</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter1_MMB.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Multi-Modal Biology</span></span></a>
+  </div>
+</li>
+      </ul>
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -286,14 +299,17 @@ div.csl-indent {
   <li><a href="#modeling-paradigms" id="toc-modeling-paradigms" class="nav-link active" data-scroll-target="#modeling-paradigms"><span class="header-section-number">6.1</span> Modeling Paradigms</a></li>
   <li><a href="#architectural-innovations" id="toc-architectural-innovations" class="nav-link" data-scroll-target="#architectural-innovations"><span class="header-section-number">6.2</span> Architectural Innovations</a></li>
   <li><a href="#applications" id="toc-applications" class="nav-link" data-scroll-target="#applications"><span class="header-section-number">6.3</span> Applications</a></li>
-  <li><a href="#challenges-and-future-directions" id="toc-challenges-and-future-directions" class="nav-link" data-scroll-target="#challenges-and-future-directions"><span class="header-section-number">6.4</span> Challenges and Future Directions</a></li>
+  <li><a href="#challenges-and-future-directions" id="toc-challenges-and-future-directions" class="nav-link" data-scroll-target="#challenges-and-future-directions"><span class="header-section-number">6.4</span> Challenges and Future Directions</a>
+  <ul class="collapse">
+  <li><a href="#key-challenge-do-these-models-memorize-sequences-or-learn-biology" id="toc-key-challenge-do-these-models-memorize-sequences-or-learn-biology" class="nav-link" data-scroll-target="#key-challenge-do-these-models-memorize-sequences-or-learn-biology"><span class="header-section-number">6.4.1</span> Key challenge: Do these models memorize sequences, or learn biology?</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_DNA.html">DNA</a></li><li class="breadcrumb-item"><a href="./Chapter6_DNA.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Chapter1_DNA.html">DNA models</a></li><li class="breadcrumb-item"><a href="./Chapter6_DNA.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title"><span id="sec-DNAreview" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">A Review of Current DNA Language Models</span></span></h1>
 </div>
@@ -312,7 +328,19 @@ div.csl-indent {
 </header>
 
 
-<p>This is not an academic review; those are obviously far more comprehensive. See <span class="citation" data-cites="benegas2025">Benegas et al. (<a href="references.html#ref-benegas2025" role="doc-biblioref">2025</a>)</span> for a review I really liked.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Abstract
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This is not an academic review; those are obviously far more comprehensive. See <span class="citation" data-cites="benegas2025">Benegas et al. (<a href="references.html#ref-benegas2025" role="doc-biblioref">2025</a>)</span> for a review I really liked. This chapter will provided a brief overview of key innovations and sbreaktrough models published over the last few years and discuss key challenges and next steps for the field. We briefly discuss and acknoledge a balanced critique of the interpretation of what DNA language models actually do (whether they memorize or actually learn fundemental rules/laws of biuiology) see <span class="citation" data-cites="consens2025">(<a href="references.html#ref-consens2025" role="doc-biblioref">Consens et al. 2025</a>)</span> and <span class="citation" data-cites="hassan2025">(<a href="references.html#ref-hassan2025" role="doc-biblioref">Hassan et al. 2025</a>)</span>.</p>
+</div>
+</div>
 <section id="modeling-paradigms" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="modeling-paradigms"><span class="header-section-number">6.1</span> Modeling Paradigms</h2>
 <p>As we learned in the first 5 chapters, gLMs (genomic Language Models) borrow from natural language processing by treating DNA sequences as “text” composed of four characters (A, C, G, T). Early models used k-mer tokenization (e.g., DNABERT), but newer approaches experiment with both nucleotide‐level and subword tokenizations (such as 3-mer or 6-mer) to better capture biological semantics.</p>
@@ -382,7 +410,7 @@ div.csl-indent {
 </tr>
 <tr class="odd">
 <td><strong>Evo 2</strong></td>
-<td>Evo 2 is a state of the art DNA language model (avaialble in 1B, 7B and 40B sizes) for long context modeling and design. Evo 2 models DNA sequences at single-nucleotide resolution at up to 1 million base pair context length using the&nbsp;<a href="https://github.com/Zymrael/savanna/blob/main/paper.pdf">StripedHyena 2</a>architecture. Evo 2 was pretrained using&nbsp;<a href="https://github.com/Zymrael/savanna">Savanna</a>. Evo 2 was trained autoregressively on&nbsp;<a href="https://huggingface.co/datasets/arcinstitute/opengenome2">OpenGenome2</a>, a dataset containing 8.8 trillion tokens from all domains of life.</td>
+<td>Evo 2 is a state of the art DNA language model (available in 1B, 7B and 40B sizes) for long context modeling and design. Evo 2 models DNA sequences at single-nucleotide resolution at up to 1 million base pair context length using the&nbsp;<a href="https://github.com/Zymrael/savanna/blob/main/paper.pdf">StripedHyena 2</a>architecture. Evo 2 was pretrained using&nbsp;<a href="https://github.com/Zymrael/savanna">Savanna</a>. Evo 2 was trained autoregressively on&nbsp;<a href="https://huggingface.co/datasets/arcinstitute/opengenome2">OpenGenome2</a>, a dataset containing 8.8 trillion tokens from all domains of life.</td>
 <td><a href="https://www.biorxiv.org/content/10.1101/2025.02.18.638918v1">Preprint</a></td>
 <td><a href="https://github.com/arcinstitute/evo2">Github</a> <a href="https://huggingface.co/arcinstitute">Hugging Face collection</a></td>
 </tr>
@@ -396,9 +424,14 @@ div.csl-indent {
 </section>
 <section id="challenges-and-future-directions" class="level2" data-number="6.4">
 <h2 data-number="6.4" class="anchored" data-anchor-id="challenges-and-future-directions"><span class="header-section-number">6.4</span> Challenges and Future Directions</h2>
-<p>There are some interesting immediate challenges that become apparent form the literature. One very obvious one is a better grasp of the relation between training data (multi-species sequences vs intra human variation) and model performance. The nucleotide transformer paper <span class="citation" data-cites="dalla-torre2024">(<a href="references.html#ref-dalla-torre2024" role="doc-biblioref">Dalla-Torre et al. 2024</a>)</span> highlights how as things stand training on human sequences does not improve the model over multi-species training. Its obviously true that most bases are identical for most people, and so the human training data has low variability, which might adversely impact the model. It could also be that for the specific validation tests evolutionary constraint convey’s more information than the limited human variation in 1000-genomes.</p>
+<p>There are some interesting immediate challenges that become apparent form the literature. One very obvious one is a better grasp of the relation between training data (multi-species sequences vs intra-human variation) and model performance. The nucleotide transformer paper <span class="citation" data-cites="dalla-torre2024">(<a href="references.html#ref-dalla-torre2024" role="doc-biblioref">Dalla-Torre et al. 2024</a>)</span> highlights how as things stand training on human sequences does not improve the model over multi-species training. Its obviously true that most bases are identical for most people, and so the human training data has low variability, which might adversely impact the model. It could also be that for the specific validation tests evolutionary constraint convey’s more information than the limited human variation in 1000-genomes.</p>
 <p>one specific avenue for exploration could therefore be to deeply consider the order in which training data is presented (first train across species, then train within humans) and the effect of learning rate on specific segments of training. YOu could imagine training at a high learning rate using the high variance intra-species data and then train at a lower learning rate with the low variance sequences, only modestly updating the model in that phase. Alternatively you could consider “low rank training”, where the model is first trained on multi-species data and then only fine-tuned on human data, restricting the degrees of freedom in that second phase trough low rank matrix approximation (LoRa)<span class="citation" data-cites="hu2021">(<a href="references.html#ref-hu2021" role="doc-biblioref">Hu et al. 2021</a>)</span> which learns less, but also forgets less from previous training epochs<span class="citation" data-cites="biderman2024">(<a href="references.html#ref-biderman2024" role="doc-biblioref">Biderman et al. 2024</a>)</span>.</p>
 <p>In any field that receives outsized attention (and I feel we can conclude AI is currently such a field) its always critical to <strong>evaluate</strong> innovations. There is a growing literature around DNA language model evaluation you should familiarize yourself with if you are going to evaluate these models for academic or industry use <span class="citation" data-cites="Tang2024 patel2024 marin2023">(<a href="references.html#ref-Tang2024" role="doc-biblioref">Tang et al. 2024</a>; <a href="references.html#ref-patel2024" role="doc-biblioref">Patel et al. 2024</a>; <a href="references.html#ref-marin2023" role="doc-biblioref">Marin et al. 2023</a>)</span>. For specific tasks its good to continually evaluate whether DNA language models are overkill. Does your model outperform alpha-missense, for which the scores are already available? How does it fair against older, and computationally likely lighter, supervised models like CADD<span class="citation" data-cites="schubach2024">(<a href="references.html#ref-schubach2024" role="doc-biblioref">Schubach et al. 2024</a>)</span>? Don’t just trust the original authors, they are biased (we all are) consider independent evaluations, like for example: <span class="citation" data-cites="ljungdahl2023">(<a href="references.html#ref-ljungdahl2023" role="doc-biblioref">Ljungdahl et al. 2023</a>)</span>.</p>
+<section id="key-challenge-do-these-models-memorize-sequences-or-learn-biology" class="level3" data-number="6.4.1">
+<h3 data-number="6.4.1" class="anchored" data-anchor-id="key-challenge-do-these-models-memorize-sequences-or-learn-biology"><span class="header-section-number">6.4.1</span> Key challenge: Do these models memorize sequences, or learn biology?</h3>
+<p>Genomic language models have shown remarkable ability to capture statistical patterns in DNA sequences, yet recent analyses underscore a fundamental limitation: these models often rely on memorizing recurring motifs rather than internalizing the complex regulatory “grammar” of the genome.Some critique is focused on the fact that simple evaluation might not distinguish between memorization and understanding or learning<span class="citation" data-cites="consens2025">(<a href="references.html#ref-consens2025" role="doc-biblioref">Consens et al. 2025</a>)</span>. In <a href="Chapter4_DNA.html" class="quarto-xref"><span>Chapter 4</span></a> we discussed language models that lean on Multiuple Sequence alignment, and while these arguably do very well at some task, these clearly memorize the value of the MSA. A recent critical analytical review tries to empirically illustrate that DNA language models more broadly just memorizing <span class="citation" data-cites="hassan2025">(<a href="references.html#ref-hassan2025" role="doc-biblioref">Hassan et al. 2025</a>)</span> by assessing the models relative performance on species represented well or poorly inside the training datasets.</p>
+<p>This tendency toward memorization becomes especially apparent when examining early gLM architectures such as DNABERT and GROVER. Research on DNABERT revealed that performance gains often stem from recalling frequent k-mer patterns in the training corpus, rather than modeling the long-range dependencies essential for regulatory element function<span class="citation" data-cites="consens2025">(<a href="references.html#ref-consens2025" role="doc-biblioref">Consens et al. 2025</a>)</span>. Similarly, <span class="citation" data-cites="consens2025">(<a href="references.html#ref-consens2025" role="doc-biblioref">Consens et al. 2025</a>)</span> note, benchmarks relying on distinguishing real from randomly generated sequences predominantly are tests of motif frequency and fail to probe higher-order sequence logic.</p>
+<p>Taken together, these critiques argue that merely increasing parameter counts or context windows will not suffice to endow DNA language models with a genuine understanding of genomic “laws.” Instead, both works call for integrating evolutionary constraints, structural information, and explicit functional representations into model design. <span class="citation" data-cites="hassan2025">(<a href="references.html#ref-hassan2025" role="doc-biblioref">Hassan et al. 2025</a>)</span> emphasizes that overcoming inherent architectural limitations might require paradigms beyond autoregressive next-token prediction (The authors do not go into how CLM and MLM might differ in this respect). While <span class="citation" data-cites="consens2025">(<a href="references.html#ref-consens2025" role="doc-biblioref">Consens et al. 2025</a>)</span> urges the development of biologically meaningful benchmarks that can distinguish true comprehension from pattern memorization&nbsp;Without such advances, DNA language models risk remaining powerful pattern matchers—valuable for certain tasks but ultimately limited in their ability to unveil the deep regulatory principles critical for biomedical discovery.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
@@ -408,8 +441,14 @@ Benegas, Gonzalo, Chengzhong Ye, Carlos Albors, Jianan Canal Li, and Yun S. Song
 <div id="ref-biderman2024" class="csl-entry" role="listitem">
 Biderman, Dan, Jacob Portes, Jose Javier Gonzalez Ortiz, Mansheej Paul, Philip Greengard, Connor Jennings, Daniel King, et al. 2024. <span>“LoRA Learns Less and Forgets Less.”</span> <a href="https://doi.org/10.48550/ARXIV.2405.09673">https://doi.org/10.48550/ARXIV.2405.09673</a>.
 </div>
+<div id="ref-consens2025" class="csl-entry" role="listitem">
+Consens, Micaela Elisa, Ben Li, Anna R. Poetsch, and Stephen Gilbert. 2025. <span>“Genomic Language Models Could Transform Medicine but Not Yet.”</span> <em>Npj Digital Medicine</em> 8 (1). <a href="https://doi.org/10.1038/s41746-025-01603-4">https://doi.org/10.1038/s41746-025-01603-4</a>.
+</div>
 <div id="ref-dalla-torre2024" class="csl-entry" role="listitem">
 Dalla-Torre, Hugo, Liam Gonzalez, Javier Mendoza-Revilla, Nicolas Lopez Carranza, Adam Henryk Grzywaczewski, Francesco Oteri, Christian Dallago, et al. 2024. <span>“Nucleotide Transformer: Building and Evaluating Robust Foundation Models for Human Genomics.”</span> <em>Nature Methods</em> 22 (2): 287–97. <a href="https://doi.org/10.1038/s41592-024-02523-z">https://doi.org/10.1038/s41592-024-02523-z</a>.
+</div>
+<div id="ref-hassan2025" class="csl-entry" role="listitem">
+Hassan, Hassan, Kyle Puhger, Ali Saadat, Johannes Mayer, and Maximilian Sprang. 2025. <span>“Life as a Function: Why Transformer Architectures Struggle to Gain Genome-Level Foundational Capabilities.”</span> <a href="http://dx.doi.org/10.1101/2025.01.13.632745">http://dx.doi.org/10.1101/2025.01.13.632745</a>.
 </div>
 <div id="ref-hu2021" class="csl-entry" role="listitem">
 Hu, Edward J., Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang, Lu Wang, and Weizhu Chen. 2021. <span>“LoRA: Low-Rank Adaptation of Large Language Models.”</span> <a href="https://doi.org/10.48550/ARXIV.2106.09685">https://doi.org/10.48550/ARXIV.2106.09685</a>.
@@ -430,6 +469,7 @@ Schubach, Max, Thorben Maass, Lusiné Nazaretyan, Sebastian Röner, and Martin K
 Tang, Ziqi, Nirali Somia, Yiyang Yu, and Peter K Koo. 2024. <span>“Evaluating the Representational Power of Pre-Trained DNA Language Models for Regulatory Genomics.”</span> <a href="http://dx.doi.org/10.1101/2024.02.29.582810">http://dx.doi.org/10.1101/2024.02.29.582810</a>.
 </div>
 </div>
+</section>
 </section>
 
 </main> <!-- /main -->
