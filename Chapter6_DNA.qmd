@@ -34,7 +34,7 @@ This table highlights each model’s core features and provides direct access to
 
 ## Applications
 
-These models have demonstrated state-of-the-art performance across multiple downstream tasks including: - **Variant Effect Prediction:** Unsupervised approaches can predict deleterious mutations by modeling the “grammar” of the genome. - **Regulatory Element Identification:** By learning long-range interactions, gLMs help detect promoters, enhancers, and other regulatory motifs. - **Sequence Generation and Protein Tasks:** Some models generate synthetic regulatory sequences or transform coding DNA into meaningful protein representations, bridging genomics and proteomics.
+These models have demonstrated state-of-the-art performance across multiple downstream tasks including: **Variant Effect Prediction:** Unsupervised approaches can predict deleterious mutations by modeling the “grammar” of the genome. **Regulatory Element Identification:** By learning long-range interactions, gLMs help detect promoters, enhancers, and other regulatory motifs. **Sequence Generation and Protein Tasks:** Some models generate synthetic regulatory sequences or transform coding DNA into meaningful protein representations, bridging genomics and proteomics.
 
 ## Challenges and Future Directions
 

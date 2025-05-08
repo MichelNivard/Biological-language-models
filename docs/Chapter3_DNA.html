@@ -422,7 +422,7 @@ Abstract
 </section>
 <section id="biological-background-the-genetic-code-and-mutation-types" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="biological-background-the-genetic-code-and-mutation-types"><span class="header-section-number">3.2</span> Biological Background: The Genetic Code and Mutation Types</h2>
-<p>Before diving into code, it’s useful to recall the basics of how DNA encodes proteins. DNA is transcribed into RNA, and RNA is translated into proteins using <strong>codons</strong>, groups of three nucleotides. Each codon corresponds to a specific amino acid — this mapping is called the <strong>genetic code</strong>.</p>
+<p>Before diving into code, it’s useful to recall the basics of how DNA encodes proteins. DNA is transcribed into RNA, and RNA is translated into proteins using <strong>codons</strong>, groups of three nucleotides. Each codon corresponds to a specific amino acid, this mapping is called the <strong>genetic code</strong>.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/paste-29.png" class="img-fluid figure-img" width="667"></p>
@@ -619,14 +619,8 @@ Abstract
 </table>
 <p>A <strong>single nucleotide mutation</strong> can cause:</p>
 <ul>
-<li><strong>A synonymous mutation</strong>: The amino acid does not change, meaning the mutation is “silent” in terms of protein sequence.
-<ul>
-<li>For example, in row 1 of the table, we see that if we mutate the codon <strong>TTT to TTC</strong>, both before and after the mutation the amino acid F (phe) is produced. While it’s not guaranteed by any means that a synonymous mutation is entirely harmless, they’re very likely to be harmless.</li>
-</ul></li>
-<li><strong>A missense mutation</strong>: The amino acid changes, potentially altering protein structure and function.
-<ul>
-<li>For example, in row 1 of the table, we see that if we mutate the codon <strong>TTT to TTA</strong>, the amino acid F (phe) is replaced by L (leu) in the protein, potentially changing the function. While missense mutations aren’t always damaging, they are far more likely to be damaging.</li>
-</ul></li>
+<li><strong>A synonymous mutation</strong>: The amino acid does not change, meaning the mutation is “silent” in terms of protein sequence. For example, in row 1 of the table, we see that if we mutate the codon <strong>TTT to TTC</strong>, both before and after the mutation the amino acid F (phe) is produced. While it’s not guaranteed by any means that a synonymous mutation is entirely harmless, they’re very likely to be harmless.</li>
+<li><strong>A missense mutation</strong>: The amino acid changes, potentially altering protein structure and function. For example, in row 1 of the table, we see that if we mutate the codon <strong>TTT to TTA</strong>, the amino acid F (phe) is replaced by L (leu) in the protein, potentially changing the function. While missense mutations aren’t always damaging, they are far more likely to be damaging.</li>
 </ul>
 <p>Earlier, we trained a DNA language model on coding sequences for humans, and I actually expanded that to a training run of 2 epochs (the data was all used twice) on 500k sequences from 13 vertebrate species. This model should, with probabilities slightly above chance,</p>
 </section>
@@ -648,8 +642,8 @@ Tip
 </div>
 <p>For each mutation, we check the original amino acid and the new amino acid using the standard genetic code table. This allows us to classify each mutation as either:</p>
 <ul>
-<li><p>Synonymous — Same amino acid, no apparent change to the protein.</p></li>
-<li><p>Missense — Different amino acid, potential change to protein function.</p></li>
+<li><p>Synonymous: Same amino acid, no apparent change to the protein.</p></li>
+<li><p>Missense: Different amino acid, potential change to protein function.</p></li>
 </ul>
 <p>This step is crucial in genomics, where we often want to prioritize functional variants — mutations that actually change protein products, rather than silent changes that do not.</p>
 <p>I have a preference for R myself, so I wrote this specific job in R. We provide the gene sequence, starting at the start codon; I use the dopamine receptor gene DRD2. Based on the genetic code, which translates DNA to the amino acids that eventually are produced, we then write code to mutate each codon in a gene.</p>

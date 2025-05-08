@@ -391,7 +391,7 @@ Abstract
 </div>
 <section id="introduction" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">4.1</span> Introduction</h2>
-<p>In previous chapters, we introduced the basic principles of <strong>BERT for DNA sequences</strong>. We took inspiration from natural language processing (NLP), treating DNA as a <strong>language</strong>, where sequences of nucleotides (A, T, C, G, -) could be processed using transformers. This approach, while powerful, carries over several assumptions from natural language that do not perfectly align with biological sequences. In this chapter, we will re-examine how we encode genomic data and introduce <strong>a new design paradigm — evolutionary-aware encoding — inspired by the recently proposed GPN (Genomic Pre-trained Network).</strong></p>
+<p>In previous chapters, we introduced the basic principles of <strong>BERT for DNA sequences</strong>. We took inspiration from natural language processing (NLP), treating DNA as a <strong>language</strong>, where sequences of nucleotides (A, T, C, G, -) could be processed using transformers. This approach, while powerful, carries over several assumptions from natural language that do not perfectly align with biological sequences. In this chapter, we will re-examine how we encode genomic data and introduce <strong>a new design paradigm, evolutionary-aware encoding, inspired by the recently proposed GPN (Genomic Pre-trained Network).</strong></p>
 </section>
 <section id="tokenization-and-embedding-in-language-models" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="tokenization-and-embedding-in-language-models"><span class="header-section-number">4.2</span> Tokenization and Embedding in Language Models</h2>
@@ -404,7 +404,7 @@ Abstract
 <li>Subwords (“cat” might break into “c”, “at”).</li>
 <li>Even characters (in rare cases).</li>
 </ul>
-<p>Since the number of tokens is so large, <strong>each token is assigned a unique vector embedding — a dense, learnable representation of its “meaning”</strong>. These embeddings are gradually refined during training as the model learns how tokens behave in different contexts. The model learns, based on the massive amounts of training data, what the word means, what other words have similar or related meanings. This is essential because linguists and those who study language have vast knowledge of word meaning, numerically encoding that knowledge so that a computational model could process isn’t currently a feasible task. Therefore, in a natural (as opposed to biological) large language model, word embeddings are learned from the data, the data being all the text on the internet.</p>
+<p>Since the number of tokens is so large, each token is assigned a unique vector embedding, a dense, learnable representation of its “meaning”. These embeddings are gradually refined during training as the model learns how tokens behave in different contexts. The model learns, based on the massive amounts of training data, what the word means, what other words have similar or related meanings. This is essential because linguists and those who study language have vast knowledge of word meaning, numerically encoding that knowledge so that a computational model could process isn’t currently a feasible task. Therefore, in a natural (as opposed to biological) large language model, word embeddings are learned from the data, the data being all the text on the internet.</p>
 </section>
 <section id="the-embedding-process-nlp-bert" class="level3" data-number="4.2.2">
 <h3 data-number="4.2.2" class="anchored" data-anchor-id="the-embedding-process-nlp-bert"><span class="header-section-number">4.2.2</span> The Embedding Process (NLP BERT)</h3>
@@ -438,7 +438,7 @@ Step 3 - Transformer Layers:
 </section>
 <section id="evolutionary-context-as-an-embedding" class="level3" data-number="4.2.5">
 <h3 data-number="4.2.5" class="anchored" data-anchor-id="evolutionary-context-as-an-embedding"><span class="header-section-number">4.2.5</span> Evolutionary Context as an Embedding</h3>
-<p>The <strong>evolutionary history of a genomic position — how conserved it is, how it varies across species — directly influences our estimation of its importance and its tolerance to mutation</strong>. A nucleotide in a highly conserved enhancer region requires different levels of attention (from the model or us scientists) than a nucleotide in a rapidly evolving spacer.</p>
+<p>The evolutionary history of a genomic position, how conserved it is, how it varies across species, directly influences our estimation of its importance and its tolerance to mutation. A nucleotide in a highly conserved enhancer region requires different levels of attention (from the model or us scientists) than a nucleotide in a rapidly evolving spacer.</p>
 </section>
 <section id="section" class="level3" data-number="4.2.6">
 <h3 data-number="4.2.6" class="anchored" data-anchor-id="section"><span class="header-section-number">4.2.6</span> </h3>

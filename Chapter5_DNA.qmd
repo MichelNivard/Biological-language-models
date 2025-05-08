@@ -3,7 +3,7 @@
 ::: callout-tip
 ## Abstract
 
-In Chapter 5, we will put these two models — Vanilla BERT and GPN-MSA-BERT — to the test. We will evaluate their performance on:
+In Chapter 5, we will put these two models, Vanilla BERT and GPN-MSA-BERT, to the test. We will evaluate their performance on:
 
 -   Predicting masked bases (MLM accuracy)
 -   Predicting the functional impact of mutations
@@ -90,7 +90,7 @@ def get_predictions(pos, input_ids_gpn, attention_mask_gpn, aux_features,
 
 ## Evaluating Model accuracy (results)
 
-When evaluating up to 500 bases (first 500) for the first 30 genes, and all bases where the human base doesn't match the most frequently observed ancestral base across 100 species we can generate model accuracy stats. Here we use the mean \# bases correctly called by the model (where called means the model assigns the true human references base the highest probability when predicting it.). As expected the GPN based Bert model we trained, which has access to the evolutionary history of the base, blows vanilla DNA Bert out of the water. This isn't unexpected though, very large portions of the coding sequences are conserved across species, and training on human species and 12 aligned species, where those other species are available at inference time just makes prediction VERY easy. However as per our first hypothesis the GPN model doesn't do well if we mask the bases evolutionary history. In those cases, it's bested by DNA Bert, which is trained to predict sequences without explicit evolutionary history and so does a reasonable job at it.
+When evaluating up to 500 bases (first 500) for the first 30 genes, and all bases where the human base doesn't match the most frequently observed ancestral base across 100 species we can generate model accuracy stats. Here we use the mean number of bases correctly called by the model (where called means the model assigns the true human references base the highest probability when predicting it.). As expected the GPN based Bert model we trained, which has access to the evolutionary history of the base, blows vanilla DNA Bert out of the water. This isn't unexpected though, very large portions of the coding sequences are conserved across species, and training on human species and 12 aligned species, where those other species are available at inference time just makes prediction VERY easy. However as per our first hypothesis the GPN model doesn't do well if we mask the bases evolutionary history. In those cases, it's bested by DNA Bert, which is trained to predict sequences without explicit evolutionary history and so does a reasonable job at it.
 
 ``` python
 # 1. Overall Accuracy Bar Plot
