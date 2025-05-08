@@ -446,7 +446,7 @@
     "href": "Chapter6_DNA.html#applications",
     "title": "6  A Review of Current DNA Language Models",
     "section": "6.3 Applications",
-    "text": "6.3 Applications\nThese models have demonstrated state-of-the-art performance across multiple downstream tasks including: - Variant Effect Prediction: Unsupervised approaches can predict deleterious mutations by modeling the “grammar” of the genome. - Regulatory Element Identification: By learning long-range interactions, gLMs help detect promoters, enhancers, and other regulatory motifs. - Sequence Generation and Protein Tasks: Some models generate synthetic regulatory sequences or transform coding DNA into meaningful protein representations, bridging genomics and proteomics.",
+    "text": "6.3 Applications\nThese models have demonstrated state-of-the-art performance across multiple downstream tasks including: Variant Effect Prediction: Unsupervised approaches can predict deleterious mutations by modeling the “grammar” of the genome. Regulatory Element Identification: By learning long-range interactions, gLMs help detect promoters, enhancers, and other regulatory motifs. Sequence Generation and Protein Tasks: Some models generate synthetic regulatory sequences or transform coding DNA into meaningful protein representations, bridging genomics and proteomics.",
     "crumbs": [
       "DNA models",
       "<span class='chapter-number'>6</span>  <span class='chapter-title'>A Review of Current DNA Language Models</span>"
